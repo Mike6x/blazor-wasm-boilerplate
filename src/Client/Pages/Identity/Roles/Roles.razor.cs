@@ -46,10 +46,16 @@ public partial class Roles
             createFunc: async role => await RolesClient.RegisterRoleAsync(role),
             updateFunc: async (_, role) => await RolesClient.RegisterRoleAsync(role),
             deleteFunc: async id => await RolesClient.DeleteAsync(id),
+
+            //exportFunc: async filter =>
+            //{
+            //    var exportFilter = filter.Adapt<ExportRolesRequest>();
+            //    return await RolesClient.ExportAsync(exportFilter);
+            //},
+
             hasExtraActionsFunc: () => _canViewRoleClaims,
             canUpdateEntityFunc: e => !FSHRoles.IsDefault(e.Name),
-            canDeleteEntityFunc: e => !FSHRoles.IsDefault(e.Name),
-            exportAction: string.Empty);
+            canDeleteEntityFunc: e => !FSHRoles.IsDefault(e.Name));
     }
 
     private void ManagePermissions(string? roleId)

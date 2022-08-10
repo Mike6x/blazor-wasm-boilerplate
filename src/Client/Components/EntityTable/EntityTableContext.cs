@@ -1,4 +1,5 @@
-﻿using FSH.WebApi.Shared.Authorization;
+﻿using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient;
+using FSH.WebApi.Shared.Authorization;
 using MudBlazor;
 
 namespace FSH.BlazorWebAssembly.Client.Components.EntityTable;
@@ -27,6 +28,13 @@ public abstract class EntityTableContext<TEntity, TId, TRequest>
     /// No need to check for error messages or api exceptions. These are automatically handled by the component.
     /// </summary>
     public Func<Task<TRequest>>? GetDefaultsFunc { get; }
+
+    /// <summary>
+    /// A function that executes the ImportFunc method on the api (or supplies defaults locally) and returns
+    /// a Task of Result of TRequest. When not supplied, a TRequest is simply newed up.
+    /// No need to check for error messages or api exceptions. These are automatically handled by the component.
+    /// </summary>
+    //public Func<FileUploadRequest, Task>? ImportFunc { get; }
 
     /// <summary>
     /// A function that executes the Create method on the api with the supplied entity and returns a Task of Result.
@@ -107,6 +115,13 @@ public abstract class EntityTableContext<TEntity, TId, TRequest>
     public string ExportAction { get; }
 
     /// <summary>
+    /// The permission name of the import permission. This is FSHAction.Import by default.
+    /// </summary>
+    public string ImportAction { get; }
+
+    public Func<Task>? ImportFormInitializedFunc { get; }
+
+    /// <summary>
     /// Use this if you want to run initialization during OnInitialized of the AddEdit form.
     /// </summary>
     public Func<Task>? EditFormInitializedFunc { get; }
@@ -131,10 +146,11 @@ public abstract class EntityTableContext<TEntity, TId, TRequest>
         List<EntityField<TEntity>> fields,
         Func<TEntity, TId>? idFunc,
         Func<Task<TRequest>>? getDefaultsFunc,
-        Func<TRequest, Task>? createFunc,
         Func<TId, Task<TRequest>>? getDetailsFunc,
+        Func<TRequest, Task>? createFunc,
         Func<TId, TRequest, Task>? updateFunc,
         Func<TId, Task>? deleteFunc,
+        // Func<FileUploadRequest, Task>? importFunc,
         string? entityName,
         string? entityNamePlural,
         string? entityResource,
@@ -143,7 +159,9 @@ public abstract class EntityTableContext<TEntity, TId, TRequest>
         string? updateAction,
         string? deleteAction,
         string? exportAction,
+        string? importAction,
         Func<Task>? editFormInitializedFunc,
+        Func<Task>? importFormInitializedFunc,
         Func<bool>? hasExtraActionsFunc,
         Func<TEntity, bool>? canUpdateEntityFunc,
         Func<TEntity, bool>? canDeleteEntityFunc)
@@ -154,8 +172,8 @@ public abstract class EntityTableContext<TEntity, TId, TRequest>
         EntityNamePlural = entityNamePlural;
         IdFunc = idFunc;
         GetDefaultsFunc = getDefaultsFunc;
-        CreateFunc = createFunc;
         GetDetailsFunc = getDetailsFunc;
+        CreateFunc = createFunc;
         UpdateFunc = updateFunc;
         DeleteFunc = deleteFunc;
         SearchAction = searchAction ?? FSHAction.Search;
@@ -163,7 +181,9 @@ public abstract class EntityTableContext<TEntity, TId, TRequest>
         UpdateAction = updateAction ?? FSHAction.Update;
         DeleteAction = deleteAction ?? FSHAction.Delete;
         ExportAction = exportAction ?? FSHAction.Export;
+        ImportAction = importAction ?? FSHAction.Import;
         EditFormInitializedFunc = editFormInitializedFunc;
+        ImportFormInitializedFunc = importFormInitializedFunc;
         HasExtraActionsFunc = hasExtraActionsFunc;
         CanUpdateEntityFunc = canUpdateEntityFunc;
         CanDeleteEntityFunc = canDeleteEntityFunc;
@@ -178,6 +198,16 @@ public abstract class EntityTableContext<TEntity, TId, TRequest>
     public IAddEditModal<TRequest> AddEditModal =>
         _addEditModalRef?.Dialog as IAddEditModal<TRequest>
         ?? throw new InvalidOperationException("AddEditModal is only available when the modal is shown.");
+
+    // Import modal
+    private IDialogReference? _importModalRef;
+
+    internal void SetImportModalRef(IDialogReference dialog) =>
+    _importModalRef = dialog;
+
+    public IImportModal<FileUploadRequest> ImportModal =>
+        _addEditModalRef?.Dialog as IImportModal<FileUploadRequest>
+        ?? throw new InvalidOperationException("ImportModal is only available when the modal is shown.");
 
     // Shortcuts
     public EntityClientTableContext<TEntity, TId, TRequest>? ClientContext => this as EntityClientTableContext<TEntity, TId, TRequest>;

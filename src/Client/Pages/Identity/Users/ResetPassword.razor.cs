@@ -3,34 +3,50 @@ using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient;
 using FSH.BlazorWebAssembly.Client.Shared;
 using FSH.WebApi.Shared.Multitenancy;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.WebUtilities;
 using MudBlazor;
+using System.Text;
 
-namespace FSH.BlazorWebAssembly.Client.Pages.Authentication;
+namespace FSH.BlazorWebAssembly.Client.Pages.Identity.Users;
 
-public partial class SelfRegister
+public partial class ResetPassword
 {
-    private readonly CreateUserRequest _createUserRequest = new();
+    private readonly ResetPasswordRequest _resetPasswordRequest = new();
+
     private CustomValidation? _customValidation;
     private bool BusySubmitting { get; set; }
 
     [Inject]
     private IUsersClient UsersClient { get; set; } = default!;
-
     private string Tenant { get; set; } = MultitenancyConstants.Root.Id;
+
+    protected override void OnInitialized()
+    {
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("Token", out var param))
+        {
+            string? queryToken = param[0];
+            _resetPasswordRequest.Token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(queryToken));
+        }
+        else
+        {
+            Navigation.NavigateTo("/login");
+        }
+
+    }
 
     private async Task SubmitAsync()
     {
         BusySubmitting = true;
 
         string? sucessMessage = await ApiHelper.ExecuteCallGuardedAsync(
-            () => UsersClient.SelfRegisterAsync(Tenant, _createUserRequest),
+            () => UsersClient.ResetPasswordAsync(Tenant, _resetPasswordRequest),
             Snackbar,
             _customValidation);
 
         if (sucessMessage != null)
         {
             Snackbar.Add(sucessMessage, Severity.Info);
-            Navigation.NavigateTo("/login");
         }
 
         BusySubmitting = false;

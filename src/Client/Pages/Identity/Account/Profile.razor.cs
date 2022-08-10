@@ -40,6 +40,8 @@ public partial class Profile
             _profileModel.PhoneNumber = user.GetPhoneNumber();
             _imageUrl = string.IsNullOrEmpty(user?.GetImageUrl()) ? string.Empty : (Config[ConfigNames.ApiBaseUrl] + user?.GetImageUrl());
             if (_userId is not null) _profileModel.Id = _userId;
+            _profileModel.IsActive = true;
+            _profileModel.EmailConfirmed = true;
         }
 
         if (_profileModel.FirstName?.Length > 0)
@@ -54,6 +56,7 @@ public partial class Profile
             () => PersonalClient.UpdateProfileAsync(_profileModel), Snackbar, _customValidation))
         {
             Snackbar.Add(L["Your Profile has been updated. Please Login again to Continue."], Severity.Success);
+
             await AuthService.ReLoginAsync(Navigation.Uri);
         }
     }
@@ -82,7 +85,7 @@ public partial class Profile
         }
     }
 
-    public async Task RemoveImageAsync()
+    private async Task RemoveImageAsync()
     {
         string deleteContent = L["You're sure you want to delete your Profile Image?"];
         var parameters = new DialogParameters

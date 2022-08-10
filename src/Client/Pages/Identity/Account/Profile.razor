@@ -15,7 +15,7 @@
                     }
                 </div>
                 <MudText Typo="Typo.h6" Align="Align.Center">@_profileModel.FirstName @_profileModel.LastName</MudText>
-                <MudText Align="Align.Center">@_profileModel.Email</MudText>
+                @*<MudText Align="Align.Center">@_profileModel.Email</MudText>*@
             </MudCardContent>
             <MudCardActions Class="d-flex justify-center">
                 <InputFile id="fileInput" OnChange="UploadFiles" hidden accept=".jpg,.jpeg,.png" />
@@ -28,7 +28,7 @@
                 {
                     <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" Target="_blank"
                         StartIcon="@Icons.Filled.RemoveRedEye" Link="@_imageUrl" Style="margin-left: 5px;" >
-                        @L["View"]
+                       @* @L["View"]*@
                     </MudButton>
 
                     <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Error" Size="Size.Small"

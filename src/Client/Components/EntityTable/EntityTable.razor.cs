@@ -49,12 +49,16 @@ public partial class EntityTable<TEntity, TId, TRequest>
     private bool _canUpdate;
     private bool _canDelete;
     private bool _canExport;
+    private bool _canImport;
 
     private bool _advancedSearchExpanded;
+    private bool _buttonStatus = false;
 
     private MudTable<TEntity> _table = default!;
     private IEnumerable<TEntity>? _entityList;
     private int _totalItems;
+
+    private HashSet<TEntity> _selectedItems = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -64,6 +68,7 @@ public partial class EntityTable<TEntity, TId, TRequest>
         _canUpdate = await CanDoActionAsync(Context.UpdateAction, state);
         _canDelete = await CanDoActionAsync(Context.DeleteAction, state);
         _canExport = await CanDoActionAsync(Context.ExportAction, state);
+        _canImport = await CanDoActionAsync(Context.ImportAction, state);
 
         await LocalLoadDataAsync();
     }
@@ -90,6 +95,7 @@ public partial class EntityTable<TEntity, TId, TRequest>
 
     private async Task LocalLoadDataAsync()
     {
+        _selectedItems.Clear(); // Reset list of selected items
         if (Loading || Context.ClientContext is null)
         {
             return;
@@ -118,6 +124,7 @@ public partial class EntityTable<TEntity, TId, TRequest>
 
     private async Task ServerLoadDataAsync()
     {
+        _selectedItems.Clear();
         if (Context.IsServerContext)
         {
             await _table.ReloadServerData();
@@ -151,25 +158,36 @@ public partial class EntityTable<TEntity, TId, TRequest>
 
     private async Task ExportAsync()
     {
-        if (!Loading && Context.ServerContext is not null)
+        if (Loading) return;
+        Loading = true;
+        _buttonStatus = true;
+
+        var filter = GetBaseFilter();
+
+        if (Context.ServerContext is not null && Context.ServerContext.ExportFunc is not null)
         {
-            if (Context.ServerContext.ExportFunc is not null)
+            if (await ApiHelper.ExecuteCallGuardedAsync(
+                    () => Context.ServerContext.ExportFunc(filter), Snackbar)
+                is { } result)
             {
-                Loading = true;
-
-                var filter = GetBaseFilter();
-
-                if (await ApiHelper.ExecuteCallGuardedAsync(
-                        () => Context.ServerContext.ExportFunc(filter), Snackbar)
-                    is { } result)
-                {
-                    using var streamRef = new DotNetStreamReference(result.Stream);
-                    await JS.InvokeVoidAsync("downloadFileFromStream", $"{Context.EntityNamePlural}.xlsx", streamRef);
-                }
-
-                Loading = false;
+                using var streamRef = new DotNetStreamReference(result.Stream);
+                await JS.InvokeVoidAsync("downloadFileFromStream", $"{Context.EntityNamePlural}.xlsx", streamRef);
             }
         }
+        else
+        if(Context.ClientContext is not null && Context.ClientContext.ExportFunc is not null)
+        {
+            if (await ApiHelper.ExecuteCallGuardedAsync(
+                    () => Context.ClientContext.ExportFunc(filter), Snackbar)
+                is { } result)
+            {
+                using var streamRef = new DotNetStreamReference(result.Stream);
+                await JS.InvokeVoidAsync("downloadFileFromStream", $"{Context.EntityNamePlural}.xlsx", streamRef);
+            }
+        }
+
+        Loading = false;
+        _buttonStatus = false;
     }
 
     private PaginationFilter GetPaginationFilter(TableState state)
@@ -294,6 +312,44 @@ public partial class EntityTable<TEntity, TId, TRequest>
         }
     }
 
+    // developing
+    private async Task ImportAsync(FileUploadRequest request)
+    {
+        Loading = true;
+
+        if (await ApiHelper.ExecuteCallGuardedAsync(
+                () => Context.ServerContext.ImportFunc(request), Snackbar)
+            is { } result)
+        {
+
+        }
+
+        Loading = false;
+    }
+
+    private async Task InvokeImportModal()
+    {
+        var parameters = new DialogParameters
+            {
+                { nameof(ImportModal.ModelName), Context.EntityName },
+                { nameof(ImportModal.OnInitializedFunc), Context.ImportFormInitializedFunc },
+            };
+
+        Func<FileUploadRequest, Task> importFunc = ImportAsync;
+
+        parameters.Add(nameof(ImportModal.ImportFunc), importFunc);
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
+
+        var dialog = DialogService.Show<ImportModal>(@L["Import"], parameters, options);
+
+        var result = await dialog.Result;
+
+        if (!result.Cancelled)
+        {
+            await ReloadDataAsync();
+        }
+    }
+
     private async Task Delete(TEntity entity)
     {
         _ = Context.IdFunc ?? throw new InvalidOperationException("IdFunc can't be null!");
@@ -314,6 +370,121 @@ public partial class EntityTable<TEntity, TId, TRequest>
             await ApiHelper.ExecuteCallGuardedAsync(
                 () => Context.DeleteFunc(id),
                 Snackbar);
+
+            await ReloadDataAsync();
+        }
+    }
+
+    private async Task EditSelectedAsync(HashSet<TEntity> selectedItems)
+    {
+        string contentText;
+        switch (selectedItems.Count)
+        {
+            case 1:
+                await InvokeModal(selectedItems.First());
+                return;
+            case 0:
+                contentText = "You do not select any item!";
+                break;
+            default:
+                contentText = "You have to select one item only!";
+                break;
+        }
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
+        var parameters = new DialogParameters
+                    {
+                        { "ContentText", contentText },
+                        { "ButtonText", " OK " },
+                        { "ButtonColor", Color.Error },
+                        { "TitleIcon", Icons.Material.Filled.Warning },
+                        { "TitleText", "Warning!" }
+                    };
+        DialogService.Show<DialogNotification>("Warning", parameters, options);
+    }
+
+    private async Task DeleteSelectedAsync(HashSet<TEntity> selectedItems)
+    {
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
+        if (selectedItems.Count == 0)
+        {
+            var parameters = new DialogParameters
+                    {
+                        { "ContentText", "You have selected atleast one item!" },
+                        { "ButtonText", " OK " },
+                        { "ButtonColor", Color.Error},
+                        { "titleIcon", Icons.Material.Filled.Warning},
+                        { "titleText", "Warning!"}
+                    };
+            DialogService.Show<DialogNotification>("Warning", parameters, options);
+        }
+        else
+        {
+            const string contentText = "Do you really want to delete these {0} records? This process cannot be undone.";
+            var parameters = new DialogParameters
+                    {
+                        { "ContentText", string.Format(contentText, selectedItems.Count) },
+                        { "ButtonText", "Delete" },
+                        { "ButtonColor", Color.Error},
+                        { "titleIcon", Icons.Material.Filled.Delete},
+                        { "titleText", "Delete Comfirmation"}
+                    };
+            var dialog = DialogService.Show<DialogComfirmation>("Delete", parameters, options);
+
+            var result = await dialog.Result;
+            if (!result.Cancelled)
+            {
+                int n = 0;
+                foreach (var entity in selectedItems)
+                {
+                    _ = Context.IdFunc ?? throw new InvalidOperationException("IdFunc can't be null!");
+                    TId id = Context.IdFunc(entity);
+                    _ = Context.DeleteFunc ?? throw new InvalidOperationException("DeleteFunc can't be null!");
+
+                    bool response = await ApiHelper.ExecuteCallGuardedAsync(
+                        () => Context.DeleteFunc(id),
+                        Snackbar);
+
+                    if (!response) break;
+
+                    n++;
+                }
+
+                if (n > 1) Snackbar.Add(L[string.Format("{0} records were deleted", n), Severity.Success]);
+                await ReloadDataAsync();
+
+                // OnSearch(_searchString);
+                // await HubConnection.SendAsync(ApplicationConstants.SignalR.SendUpdateDashboard);
+            }
+        }
+    }
+
+    private async Task ClearAllAsync()
+    {
+        const string contentText = "Do you really want to erase all data? This process cannot be recovered.";
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
+        var parameters = new DialogParameters
+                    {
+                        { "ContentText", contentText},
+                        { "ButtonText", "Erase All" },
+                        { "ButtonColor", Color.Error},
+                        { "titleIcon", Icons.Material.Filled.Delete},
+                        { "titleText", "Erase"}
+                    };
+        var dialog = DialogService.Show<DialogComfirmation>("Delete", parameters, options);
+
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            parameters = new DialogParameters
+                    {
+                        { "ContentText", "This is coming soom!" },
+                        { "ButtonText", " OK " },
+                        { "ButtonColor", Color.Error},
+                        { "titleIcon", Icons.Material.Filled.Warning},
+                        { "titleText", "Warning!"}
+                    };
+            DialogService.Show<DialogNotification>("Warning", parameters, options);
 
             await ReloadDataAsync();
         }

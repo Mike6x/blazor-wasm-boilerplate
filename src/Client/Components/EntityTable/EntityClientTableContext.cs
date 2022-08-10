@@ -1,4 +1,6 @@
-﻿namespace FSH.BlazorWebAssembly.Client.Components.EntityTable;
+﻿using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient;
+
+namespace FSH.BlazorWebAssembly.Client.Components.EntityTable;
 
 /// <summary>
 /// Initialization Context for the EntityTable Component.
@@ -18,16 +20,28 @@ public class EntityClientTableContext<TEntity, TId, TRequest>
     /// </summary>
     public Func<string?, TEntity, bool> SearchFunc { get; }
 
+    /// <summary>
+    /// A function that exports the specified data from the API.
+    /// </summary>
+    public Func<BaseFilter, Task<FileResponse>>? ExportFunc { get; }
+
+    /// <summary>
+    /// A function that import the specified data from the API.
+    /// </summary>
+    public Func<FileUploadRequest, Task>? ImportFunc { get; }
+
     public EntityClientTableContext(
         List<EntityField<TEntity>> fields,
         Func<Task<List<TEntity>?>> loadDataFunc,
         Func<string?, TEntity, bool> searchFunc,
+        Func<BaseFilter, Task<FileResponse>>? exportFunc = null,
         Func<TEntity, TId>? idFunc = null,
         Func<Task<TRequest>>? getDefaultsFunc = null,
-        Func<TRequest, Task>? createFunc = null,
         Func<TId, Task<TRequest>>? getDetailsFunc = null,
+        Func<TRequest, Task>? createFunc = null,
         Func<TId, TRequest, Task>? updateFunc = null,
         Func<TId, Task>? deleteFunc = null,
+        Func<FileUploadRequest, Task>? importFunc = null,
         string? entityName = null,
         string? entityNamePlural = null,
         string? entityResource = null,
@@ -36,7 +50,9 @@ public class EntityClientTableContext<TEntity, TId, TRequest>
         string? updateAction = null,
         string? deleteAction = null,
         string? exportAction = null,
+        string? importAction = null,
         Func<Task>? editFormInitializedFunc = null,
+        Func<Task>? importFormInitializedFunc = null,
         Func<bool>? hasExtraActionsFunc = null,
         Func<TEntity, bool>? canUpdateEntityFunc = null,
         Func<TEntity, bool>? canDeleteEntityFunc = null)
@@ -44,8 +60,8 @@ public class EntityClientTableContext<TEntity, TId, TRequest>
             fields,
             idFunc,
             getDefaultsFunc,
-            createFunc,
             getDetailsFunc,
+            createFunc,
             updateFunc,
             deleteFunc,
             entityName,
@@ -56,12 +72,16 @@ public class EntityClientTableContext<TEntity, TId, TRequest>
             updateAction,
             deleteAction,
             exportAction,
+            importAction,
             editFormInitializedFunc,
+            importFormInitializedFunc,
             hasExtraActionsFunc,
             canUpdateEntityFunc,
             canDeleteEntityFunc)
     {
         LoadDataFunc = loadDataFunc;
         SearchFunc = searchFunc;
+        ExportFunc = exportFunc;
+        ImportFunc = importFunc;
     }
 }

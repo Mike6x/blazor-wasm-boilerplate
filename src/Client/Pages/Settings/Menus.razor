@@ -1,0 +1,41 @@
+﻿@page "/settings/menus"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.Menus)]
+
+@inject IStringLocalizer<Menus> L
+
+<FshTitle Title="@L["Menus"]" Description="@L["Manage Menus."]" />
+
+<EntityTable TEntity="MenuDto" TId="Guid" TRequest="UpdateMenuRequest" Context="@Context">
+
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="6">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"Internal Id"]" />
+            </MudItem>
+        }
+        <MudItem xs="12" md="6">
+            <MudTextField T="int" For="@(() => context.Code)" @bind-Value="context.Code" Label="@L["Code"]" />
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <MudTextField T="int" For="@(() => context.Parent)" @bind-Value="context.Parent" Label="@L["Parrent"]" />
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <MudTextField T="int" For="@(() => context.Order)" @bind-Value="context.Order" Label="@L["Order"]" />
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <MudTextField T="string" For="@(() => context.Name)" @bind-Value="context.Name" Label="@L["Name"]" />
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <MudTextField T="string" For="@(() => context.Href)" @bind-Value="context.Href" Label="@L["Href"]" />
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <MudTextField T="string" For="@(() => context.Icon)" @bind-Value="context.Icon" Label="@L["Icon"]" />
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <MudTextField For="@(() => context.Description)" @bind-Value="context.Description"
+                Label="@L["Description"]" />
+        </MudItem>
+    </EditFormContent>
+
+</EntityTable>

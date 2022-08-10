@@ -36,6 +36,7 @@ public partial class Tenants
             searchAction: FSHAction.View,
             deleteAction: string.Empty,
             updateAction: string.Empty,
+            exportAction: string.Empty,
             fields: new()
             {
                 new(tenant => tenant.Id, L["Id"]),
@@ -49,8 +50,9 @@ public partial class Tenants
                 string.IsNullOrWhiteSpace(searchString)
                     || tenantDto.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase),
             createFunc: tenant => TenantsClient.CreateAsync(tenant.Adapt<CreateTenantRequest>()),
-            hasExtraActionsFunc: () => true,
-            exportAction: string.Empty);
+            //updateFunc: async (id, tenant) => await TenantsClient.UpdateAsync(id, tenant),
+            //deleteFunc: async id => await TenantsClient.DeleteAsync(id),
+            hasExtraActionsFunc: () => true);
 
         var state = await AuthState;
         _canUpgrade = await AuthService.HasPermissionAsync(state.User, FSHAction.UpgradeSubscription, FSHResource.Tenants);

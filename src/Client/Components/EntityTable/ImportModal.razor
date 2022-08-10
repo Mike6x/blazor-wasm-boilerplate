@@ -1,0 +1,46 @@
+﻿@inject IStringLocalizer<ImportModal> L
+
+<EditForm Model="@UploadModel" OnValidSubmit="SaveAsync">
+    <MudDialog>
+        <TitleContent>
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Material.Filled.ImportExport" Class="mr-3 mb-n1" />
+                @L["Import"]: @ModelName
+            </MudText>
+        </TitleContent>
+        <DialogContent>
+            <DataAnnotationsValidator />
+            <CustomValidation @ref="_customValidation" />
+            <MudGrid>
+                <MudItem xs="12">
+                    <InputFile id="fileInput" hidden OnChange="UploadFiles" accept=".xlsx" />
+                    <br />
+                    @if (_file != null)
+                    {
+                        <MudAlert ShowCloseIcon="true" CloseIconClicked="(() => _file = null)" OnClick="(() => _file = null)">@_file.Name</MudAlert>
+                    }
+                    else
+                    {
+                        <MudAlert Severity="Severity.Info">@L["Please click to UPLOAD button for selecting a excel file!"]</MudAlert>
+                    }
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton
+                HtmlTag="label"
+                Variant="Variant.Filled"
+                Color="Color.Info"
+                StartIcon="@Icons.Filled.CloudUpload"
+                for="fileInput">@L["Upload"]
+            </MudButton>
+            <MudButton DisableElevation Variant="Variant.Filled" StartIcon="@Icons.Filled.Cancel" OnClick="MudDialog.Cancel">@L["Cancel"]</MudButton>
+            <MudButton DisableElevation Variant="Variant.Filled" StartIcon="@Icons.Filled.Update" Color="Color.Tertiary" Class="mr-4" 
+                ButtonType="ButtonType.Submit" Disabled="@(_file == null)">@L["Import"]</MudButton>
+        </DialogActions>
+
+    </MudDialog>
+    <MudOverlay Visible="_uploading" LightBackground="true" Absolute="true">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    </MudOverlay>
+</EditForm>

@@ -31,10 +31,10 @@
                     <MudTextField T="string" Label="Tenant Name" Variant="Variant.Outlined" @bind-Value="Tenant"
                                   For="@(() => Tenant)" Required />
                 </MudItem>
-                   <MudItem xs="12" md="6">
-                    <MudTextField T="string" Label="User Name" Variant="Variant.Outlined"
-                                  @bind-Value="_createUserRequest.UserName" For="@(() => _createUserRequest.UserName)"
-                                  InputType="InputType.Text" Adornment="Adornment.End" />
+                <MudItem xs="12" md="6">
+                <MudTextField T="string" Label="User Name" Variant="Variant.Outlined"
+                                @bind-Value="_createUserRequest.UserName" For="@(() => _createUserRequest.UserName)"
+                                InputType="InputType.Text" Adornment="Adornment.End" />
                 </MudItem>
                 <MudItem xs="12" md="12">
                     <MudTextField T="string" Label="E-mail" Variant="Variant.Outlined"
@@ -50,9 +50,7 @@
                     <MudTextField T="string" Label="Last Name" Variant="Variant.Outlined"
                                   @bind-Value="_createUserRequest.LastName" For="@(() => _createUserRequest.LastName)"
                                   InputType="InputType.Text" Adornment="Adornment.End" />
-                </MudItem>
-
-             
+                </MudItem>             
                 <MudItem xs="12" md="6">
                     <MudTextField Label="@L["Password"]" Variant="Variant.Outlined" @bind-Value="_createUserRequest.Password"
                                   For="@(() => _createUserRequest.Password)" InputType="@_passwordInput" Adornment="Adornment.End"

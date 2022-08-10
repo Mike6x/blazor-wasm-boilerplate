@@ -20,6 +20,11 @@ public class EntityServerTableContext<TEntity, TId, TRequest>
     /// </summary>
     public Func<BaseFilter, Task<FileResponse>>? ExportFunc { get; }
 
+    /// <summary>
+    /// A function that import the specified data from the API.
+    /// </summary>
+    public Func<FileUploadRequest, Task>? ImportFunc { get; }
+
     public bool EnableAdvancedSearch { get; }
 
     public EntityServerTableContext(
@@ -29,10 +34,11 @@ public class EntityServerTableContext<TEntity, TId, TRequest>
         bool enableAdvancedSearch = false,
         Func<TEntity, TId>? idFunc = null,
         Func<Task<TRequest>>? getDefaultsFunc = null,
-        Func<TRequest, Task>? createFunc = null,
         Func<TId, Task<TRequest>>? getDetailsFunc = null,
+        Func<TRequest, Task>? createFunc = null,
         Func<TId, TRequest, Task>? updateFunc = null,
         Func<TId, Task>? deleteFunc = null,
+        Func<FileUploadRequest, Task>? importFunc = null,
         string? entityName = null,
         string? entityNamePlural = null,
         string? entityResource = null,
@@ -41,7 +47,9 @@ public class EntityServerTableContext<TEntity, TId, TRequest>
         string? updateAction = null,
         string? deleteAction = null,
         string? exportAction = null,
+        string? importAction = null,
         Func<Task>? editFormInitializedFunc = null,
+        Func<Task>? importFormInitializedFunc = null,
         Func<bool>? hasExtraActionsFunc = null,
         Func<TEntity, bool>? canUpdateEntityFunc = null,
         Func<TEntity, bool>? canDeleteEntityFunc = null)
@@ -49,8 +57,8 @@ public class EntityServerTableContext<TEntity, TId, TRequest>
             fields,
             idFunc,
             getDefaultsFunc,
-            createFunc,
             getDetailsFunc,
+            createFunc,
             updateFunc,
             deleteFunc,
             entityName,
@@ -61,13 +69,16 @@ public class EntityServerTableContext<TEntity, TId, TRequest>
             updateAction,
             deleteAction,
             exportAction,
+            importAction,
             editFormInitializedFunc,
+            importFormInitializedFunc,
             hasExtraActionsFunc,
             canUpdateEntityFunc,
             canDeleteEntityFunc)
     {
         SearchFunc = searchFunc;
         ExportFunc = exportFunc;
+        ImportFunc = importFunc;
         EnableAdvancedSearch = enableAdvancedSearch;
     }
 }

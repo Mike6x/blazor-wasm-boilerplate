@@ -12,4 +12,12 @@ public static class ApplicationConstants
     public static readonly int MaxImageWidth = 1500;
     public static readonly int MaxImageHeight = 1500;
     public static readonly long MaxAllowedSize = 1000000; // Allows Max File Size of 1 Mb.
+
+    public static readonly List<string> SupportedExcelFormats = new()
+    {
+        ".xls",
+        ".xlsx"
+    };
+    public static readonly long MaxExcelFileSize = 20000000;
+    public static readonly string StandardExcelFormat = "excel/xlsx";
 }

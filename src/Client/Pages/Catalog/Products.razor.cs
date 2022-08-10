@@ -67,6 +67,7 @@ public partial class Products
                 await ProductsClient.UpdateAsync(id, prod.Adapt<UpdateProductRequest>());
                 prod.ImageInBytes = string.Empty;
             },
+            deleteFunc: async id => await ProductsClient.DeleteAsync(id),
             exportFunc: async filter =>
             {
                 var exportFilter = filter.Adapt<ExportProductsRequest>();
@@ -76,8 +77,7 @@ public partial class Products
                 exportFilter.MaximumRate = SearchMaximumRate;
 
                 return await ProductsClient.ExportAsync(exportFilter);
-            },
-            deleteFunc: async id => await ProductsClient.DeleteAsync(id));
+            });
 
     // Advanced Search
 

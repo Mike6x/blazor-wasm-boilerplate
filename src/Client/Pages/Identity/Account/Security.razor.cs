@@ -1,5 +1,6 @@
 ﻿using FSH.BlazorWebAssembly.Client.Components.Common;
 using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient;
+using FSH.BlazorWebAssembly.Client.Infrastructure.Auth;
 using FSH.BlazorWebAssembly.Client.Shared;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -8,6 +9,8 @@ namespace FSH.BlazorWebAssembly.Client.Pages.Identity.Account;
 
 public partial class Security
 {
+    [Inject]
+    protected IAuthenticationService AuthService { get; set; } = default!;
     [Inject]
     public IPersonalClient PersonalClient { get; set; } = default!;
 
@@ -26,6 +29,7 @@ public partial class Security
             _passwordModel.Password = string.Empty;
             _passwordModel.NewPassword = string.Empty;
             _passwordModel.ConfirmNewPassword = string.Empty;
+            await AuthService.ReLoginAsync(Navigation.Uri);
         }
     }
 

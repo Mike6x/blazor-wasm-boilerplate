@@ -2,10 +2,12 @@
 using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient;
 using FSH.BlazorWebAssembly.Client.Infrastructure.Auth;
 using FSH.WebApi.Shared.Authorization;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
+using System.Security.Claims;
 
 namespace FSH.BlazorWebAssembly.Client.Pages.Identity.Users;
 
@@ -23,28 +25,28 @@ public partial class Users
 
     private bool _canExportUsers;
     private bool _canViewRoles;
+    private string _currentUserId = string.Empty;
+
+    // private int _activeIndex = 0;
 
     // Fields for editform
-    protected string Password { get; set; } = string.Empty;
-    protected string ConfirmPassword { get; set; } = string.Empty;
-
-    private bool _passwordVisibility;
-    private InputType _passwordInput = InputType.Password;
-    private string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
+    //protected string Password { get; set; } = string.Empty;
+    //protected string ConfirmPassword { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        var user = (await AuthState).User;
-        _canExportUsers = await AuthService.HasPermissionAsync(user, FSHAction.Export, FSHResource.Users);
-        _canViewRoles = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.UserRoles);
+        if ((await AuthState).User is { } user)
+        {
+            _canViewRoles = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.UserRoles);
+            _canExportUsers = await AuthService.HasPermissionAsync(user, FSHAction.Export, FSHResource.Users);
+            _currentUserId = user.GetUserId() ?? string.Empty;
+        }
 
         Context = new(
             entityName: L["User"],
             entityNamePlural: L["Users"],
             entityResource: FSHResource.Users,
             searchAction: FSHAction.View,
-            updateAction: string.Empty,
-            deleteAction: string.Empty,
             fields: new()
             {
                 new(user => user.FirstName, L["First Name"]),
@@ -64,9 +66,29 @@ public partial class Users
                     || user.Email?.Contains(searchString, StringComparison.OrdinalIgnoreCase) == true
                     || user.PhoneNumber?.Contains(searchString, StringComparison.OrdinalIgnoreCase) == true
                     || user.UserName?.Contains(searchString, StringComparison.OrdinalIgnoreCase) == true,
+
             createFunc: user => UsersClient.CreateAsync(user),
-            hasExtraActionsFunc: () => true,
-            exportAction: string.Empty);
+            updateFunc: async (id, user) =>
+            {
+                UpdateUserRequest updateRequest = user.Adapt<UpdateUserRequest>();
+                updateRequest.Id = id.ToString();
+
+                updateRequest.IsActive = true;
+                updateRequest.EmailConfirmed = false;
+                updateRequest.LastModifiedBy = _currentUserId;
+                updateRequest.LastModifiedOn = DateTime.UtcNow;
+
+                await UsersClient.UpdateUserAsync(updateRequest);
+            },
+
+            deleteFunc: async id => await UsersClient.DeleteAsync(id.ToString()),
+            exportFunc: async filter =>
+            {
+                var exportFilter = filter.Adapt<UserListFilter>();
+                return await UsersClient.ExportAsync(exportFilter);
+            },
+
+            hasExtraActionsFunc: () => true);
     }
 
     private void ViewProfile(in Guid userId) =>
@@ -74,6 +96,10 @@ public partial class Users
 
     private void ManageRoles(in Guid userId) =>
         Navigation.NavigateTo($"/users/{userId}/roles");
+
+    private bool _passwordVisibility;
+    private InputType _passwordInput = InputType.Password;
+    private string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
 
     private void TogglePasswordVisibility()
     {

@@ -10,6 +10,228 @@
 }
 else
 {
+    <MudTabs Elevation="25" Color="Color.Transparent" Rounded="true" PanelClass="mt-6">
+        <MudTabPanel Text="@_localizer["General"]">
+            <MudGrid>
+                <MudItem xs="12" sm="4" md="3">
+                    <MudCard Elevation="25">
+                        <MudCardContent Style="padding:0px!important">
+                            <div class="d-flex justify-center mb-4">
+                                @if (!string.IsNullOrEmpty(@_imageUrl))
+                                    {
+                                        <MudAvatar Image="@_imageUrl" Style="height:250px; width:250px;"> </MudAvatar>
+                                    }
+                                    else
+                                    {
+                                        <MudAvatar Color="Color.Secondary" Style="height:250px; width:250px;">@_firstLetterOfName</MudAvatar>
+                                    }
+                            </div>
+                            <MudText Typo="Typo.h6" Align="Align.Center">@_profileModel.FirstName @_profileModel.LastName</MudText>
+                            @*<MudText Align="Align.Center">@_profileModel.Email</MudText>*@
+                        </MudCardContent>
+                        <MudCardActions Class="d-flex justify-center">
+                            <InputFile id="fileInput" OnChange="UploadFiles" hidden accept=".jpg,.jpeg,.png" />
+                            <div style="padding-bottom:20px">
+                            <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
+                                StartIcon="@Icons.Filled.CloudUpload" for="fileInput">
+                                @_localizer["Upload"]
+                            </MudButton>
+                            @if(!string.IsNullOrEmpty(_imageUrl))
+                            {
+                                <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" Target="_blank"
+                                    StartIcon="@Icons.Filled.RemoveRedEye" Link="@_imageUrl" Style="margin-left: 5px;" >
+                                    @_localizer["View"]
+                                </MudButton>
+
+                                <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Error" Size="Size.Small"
+                                    StartIcon="@Icons.Filled.Delete" OnClick="RemoveImageAsync" Style="margin-left: 5px;" >
+                                    @_localizer["Delete"]
+                                </MudButton>
+                            }
+                            </div>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+                <MudItem xs="12" sm="8" md="9">
+                    <EditForm Model="@_profileModel" OnValidSubmit="UpdateUserAsync">
+                    <MudCard Elevation="25">
+                        <MudCardContent>
+                            <MudGrid>
+                                <DataAnnotationsValidator />
+                                <CustomValidation @ref="_customValidation" />
+                                <MudItem xs="12" md="4">
+                                    <MudTextField @bind-Value="@_profileModel.UserName" For="@(() => _profileModel.UserName)"
+                                        Label="@_localizer["User Name"]" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="12" md="4">
+                                    <MudTextField @bind-Value="@_profileModel.FirstName" For="@(() => _profileModel.FirstName)"
+                                        Label="@_localizer["First Name"]" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="12" md="4">
+                                    <MudTextField @bind-Value="@_profileModel.LastName" For="@(() => _profileModel.LastName)"
+                                        Label="@_localizer["Last Name"]" Variant="Variant.Outlined" />
+                                </MudItem>
+
+                               <MudItem xs="12" md="4">
+                                    <MudTextField @bind-Value="@_profileModel.Email" Label="@_localizer["Email"]"
+                                        For="@(() => _profileModel.Email)" Variant="Variant.Outlined"
+                                        InputType="InputType.Email" Disabled=true />
+                                </MudItem>
+                                <MudItem xs="12" md="4">
+                                    <MudTextField @bind-Value="@_profileModel.PhoneNumber"
+                                        For="@(() => _profileModel.PhoneNumber)" Label="@_localizer["Phone Number"]"
+                                        Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="12" md="4">
+                                </MudItem>
+
+                                <MudItem xs="12" md="12">
+                                    <MudTextField @bind-Value="@_profileModel.ImageUrl" For="@(() => _profileModel.ImageUrl)" Label="@_localizer["User Picture URL"]" Variant="Variant.Outlined" />
+                                </MudItem>
+
+                                <MudItem xs="12" md="3">
+                                    <MudTextField T="string" @bind-Value="@_profileModel.Password"
+                                        For="@(() => @_profileModel.Password)" Label="@_localizer["Password"]" Variant="Variant.Outlined"
+                                        InputType="_passwordInput" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon"
+                                        OnAdornmentClick="@(() => TogglePasswordVisibility())" />
+                                </MudItem>
+                                <MudItem xs="12" md="3">
+                                    <MudTextField T="string" @bind-Value="@_profileModel.ConfirmPassword"
+                                        For="@(() => _profileModel.ConfirmPassword)" Label="@_localizer["Password Confirmation"]"
+                                        Variant="Variant.Outlined" InputType="_passwordInput" Adornment="Adornment.End"
+                                        AdornmentIcon="@_passwordInputIcon"
+                                        OnAdornmentClick="@(() => TogglePasswordVisibility())" />
+                                </MudItem>
+
+                                <MudItem xs="12" md="3">
+                                    <MudDatePicker Label="@_localizer["LockedDate"]" Editable="true" @bind-Date="LockoutEndDate" DisableToolbar="true" Variant="Variant.Outlined" />
+                                </MudItem>
+                                <MudItem xs="12" md="3">
+                                    <MudTimePicker Label="@_localizer["LockedTime"]" Editable="true" @bind-Time="LockoutEndTime" DisableToolbar="true" Variant="Variant.Outlined" />
+                                </MudItem>
+
+                                <MudItem xs="12" md="4">
+                                    <MudCheckBox @bind-Checked="_profileModel.IsActive" For="@(() => _profileModel.IsActive)" Label="@_localizer["Active"]"></MudCheckBox>
+                                </MudItem>
+                                <MudItem xs="12" md="4">
+                                    <MudCheckBox @bind-Checked="_profileModel.EmailConfirmed" For="@(() => _profileModel.EmailConfirmed)" Label="@_localizer["Email Confirmation"]"></MudCheckBox>
+                                </MudItem>
+                                <MudItem xs="12" md="4">
+                                    <MudCheckBox @bind-Checked="IsLocked" For="@(() => IsLocked)" Label="@_localizer["is Locked"]" ReadOnly></MudCheckBox>
+                                </MudItem>
+                            </MudGrid>
+                        </MudCardContent>
+                        <MudCardActions Class="pb-4 pl-4">
+                            <MudButton OnClick="BackToUsers" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" Style="margin-right: 5px;">@_localizer["Back"]</MudButton>
+                            <MudButton OnClick="ToggleUserStatusAsync" Variant="Variant.Filled" Color="Color.Warning"
+                                StartIcon="@Icons.Material.Filled.ToggleOn" Style="margin-right: 5px;">@_localizer["Act/Dis"]</MudButton>
+                            <MudButton OnClick="SendVerificationEmailAsync" Variant="Variant.Filled" Color="Color.Info" Style="margin-right: 5px;">@_localizer["Verify Email"]</MudButton>
+                            <MudButton OnClick="SendRecoveryPasswordEmailAsync" Variant="Variant.Filled" Color="Color.Success" Style="margin-right: 5px;">@_localizer["Recovery Pass"]</MudButton>
+                            <MudButton OnClick="UnlockUserAsync" Disabled="@(!IsLocked)" Variant="Variant.Filled" Color="Color.Tertiary" Style="margin-right: 5px;">@_localizer["Unlock"]</MudButton>
+                            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Secondary" Style="margin-right: 5px;">@_localizer["Update"]</MudButton>
+                        </MudCardActions>
+
+                    </MudCard>
+                    </EditForm>
+                </MudItem>
+            </MudGrid>
+        </MudTabPanel>
+
+        <MudTabPanel Text="@_localizer["Reference"]">
+
+        </MudTabPanel>
+
+        <MudTabPanel Text="@_localizer["Audit Trails"]">
+            <MudItem xs="12" md="2">
+                @*<MudIconButton OnClick="LoadCreatByInfoAsync"
+                Icon="@Icons.Material.Filled.InfoOutline" Color="Color.Info" Size="Size.Large"></MudIconButton>*@
+            </MudItem>
+            <MudItem xs="12" md="7">
+                <MudTextField Disabled="true" For="@(() => _profileModel.CreatedBy)" @bind-Value="_profileModel.CreatedBy" Label="@_localizer["CreatedBy"]" />
+            </MudItem>
+            <MudItem xs="12" md="3">
+                <MudTextField Disabled="true" For="@(() => _profileModel.CreatedOn)" @bind-Value="_profileModel.CreatedOn" Label="@_localizer["CreatedOn"]" />
+            </MudItem>
+            <MudItem xs="12" md="2">
+                @*<MudIconButton OnClick="LoadLastModifiedByInfoAsync"
+                Icon="@Icons.Material.Filled.InfoOutline" Color="Color.Info" Size="Size.Large"></MudIconButton>*@
+            </MudItem>
+            <MudItem xs="12" md="7">
+                <MudTextField Disabled="true" For="@(() => _profileModel.LastModifiedBy)" @bind-Value="_profileModel.LastModifiedBy" Label="@_localizer["LastModifiedBy"]" />
+            </MudItem>
+            <MudItem xs="12" md="3">
+                <MudTextField Disabled="true" For="@(() => _profileModel.LastModifiedOn)" @bind-Value="_profileModel.LastModifiedOn" Label="@_localizer["LastModifiedOn"]" />
+            </MudItem>
+
+        </MudTabPanel>
+
+    </MudTabs>
+}
+
+@code
+{
+public class CustomStringToBoolConverter : BoolConverter<string>
+    {
+
+        public CustomStringToBoolConverter()
+        {
+            SetFunc = OnSet;
+            GetFunc = OnGet;
+        }
+        private string TrueString = "User Active";
+        private string FalseString = "no, at all";
+        private string NullString = "I don't know";
+
+        private string OnGet(bool? value)
+        {
+            try
+            {
+                return (value == true) ? TrueString : FalseString;
+            }
+            catch (Exception e)
+            {
+                UpdateGetError("Conversion error: " + e.Message);
+                return NullString;
+            }
+        }
+
+        private bool? OnSet(string arg)
+        {
+            if (arg == null)
+                return null;
+            try
+            {
+                if (arg == TrueString)
+                    return true;
+                if (arg == FalseString)
+                    return false;
+                else
+                    return null;
+            }
+            catch (FormatException e)
+            {
+                UpdateSetError("Conversion error: " + e.Message);
+                return null;
+            }
+        }
+
+    }
+}
+
+
+
+@*@page "/users/{Id}/profile"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.Users)]
+
+@inject IStringLocalizer<UserProfile> _localizer
+
+<FshTitle Title="@Title" Description="@Description" />
+@if (!_loaded)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
     <MudGrid>
         <AuthorizeView>
             @if (_canToggleUserStatus)
@@ -28,7 +250,7 @@ else
                                 <MudCheckBox ReadOnly @bind-Checked="@_emailConfirmed" Disabled Label="@_localizer["Email Confirmed?"]" Color="Color.Secondary">
                                     </MudCheckBox>
                                 <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto"
-                            OnClick="ToggleUserStatus" ButtonType="ButtonType.Submit">@_localizer["Save Changes"]
+                                    OnClick="ToggleUserStatus" ButtonType="ButtonType.Submit">@_localizer["Save Changes"]
                                 </MudButton>
                             </MudGrid>
                         </MudCardContent>
@@ -145,4 +367,4 @@ public class CustomStringToBoolConverter : BoolConverter<string>
         }
 
     }
-}
+}*@

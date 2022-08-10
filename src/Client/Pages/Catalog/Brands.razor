@@ -48,5 +48,16 @@
             createFunc: async brand => await BrandsClient.CreateAsync(brand.Adapt<CreateBrandRequest>()),
             updateFunc: async (id, brand) => await BrandsClient.UpdateAsync(id, brand),
             deleteFunc: async id => await BrandsClient.DeleteAsync(id),
-            exportAction: string.Empty);
+            exportFunc: async filter =>
+            {
+                var exportFilter = filter.Adapt<ExportBrandsRequest>();
+                return await BrandsClient.ExportAsync(exportFilter);
+            },
+            importFunc: async FileUploadRequest => 
+            {
+                var request = new ImportBrandsRequest() { ExcelFile = FileUploadRequest};
+                await BrandsClient.ImportAsync(request);
+            }
+            //exportAction: string.Empty
+            );
 }

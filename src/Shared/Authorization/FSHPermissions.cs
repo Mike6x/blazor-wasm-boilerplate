@@ -10,20 +10,26 @@ public static class FSHAction
     public const string Update = nameof(Update);
     public const string Delete = nameof(Delete);
     public const string Export = nameof(Export);
-    public const string Generate = nameof(Generate);
+    public const string Import = nameof(Import);
     public const string Clean = nameof(Clean);
+
+    public const string Generate = nameof(Generate);
     public const string UpgradeSubscription = nameof(UpgradeSubscription);
 }
 
 public static class FSHResource
 {
-    public const string Tenants = nameof(Tenants);
+    public const string Menus = nameof(Menus);
+
     public const string Dashboard = nameof(Dashboard);
     public const string Hangfire = nameof(Hangfire);
+
+    public const string Tenants = nameof(Tenants);
     public const string Users = nameof(Users);
     public const string UserRoles = nameof(UserRoles);
     public const string Roles = nameof(Roles);
     public const string RoleClaims = nameof(RoleClaims);
+
     public const string Products = nameof(Products);
     public const string Brands = nameof(Brands);
 }
@@ -32,38 +38,68 @@ public static class FSHPermissions
 {
     private static readonly FSHPermission[] _all = new FSHPermission[]
     {
+        new("View Menus", FSHAction.View, FSHResource.Menus),
+        new("Search Menus", FSHAction.Search, FSHResource.Menus),
+        new("Create Menus", FSHAction.Create, FSHResource.Menus),
+        new("Update Menus", FSHAction.Update, FSHResource.Menus),
+        new("Delete Menus", FSHAction.Delete, FSHResource.Menus),
+        new("Export Menus", FSHAction.Export, FSHResource.Menus),
+        new("Import Menus", FSHAction.Import, FSHResource.Menus),
+
         new("View Dashboard", FSHAction.View, FSHResource.Dashboard),
         new("View Hangfire", FSHAction.View, FSHResource.Hangfire),
-        new("View Users", FSHAction.View, FSHResource.Users),
+
+        new("View Users", FSHAction.View, FSHResource.Users, IsBasic: true),
         new("Search Users", FSHAction.Search, FSHResource.Users),
         new("Create Users", FSHAction.Create, FSHResource.Users),
         new("Update Users", FSHAction.Update, FSHResource.Users),
         new("Delete Users", FSHAction.Delete, FSHResource.Users),
         new("Export Users", FSHAction.Export, FSHResource.Users),
+        new("Import Users", FSHAction.Import, FSHResource.Users),
+
         new("View UserRoles", FSHAction.View, FSHResource.UserRoles),
         new("Update UserRoles", FSHAction.Update, FSHResource.UserRoles),
+
         new("View Roles", FSHAction.View, FSHResource.Roles),
+        new("Search Roles", FSHAction.Search, FSHResource.Roles),
         new("Create Roles", FSHAction.Create, FSHResource.Roles),
         new("Update Roles", FSHAction.Update, FSHResource.Roles),
         new("Delete Roles", FSHAction.Delete, FSHResource.Roles),
+        new("Export Roles", FSHAction.Export, FSHResource.Roles),
+        new("Import Roles", FSHAction.Import, FSHResource.Roles),
+
         new("View RoleClaims", FSHAction.View, FSHResource.RoleClaims),
         new("Update RoleClaims", FSHAction.Update, FSHResource.RoleClaims),
+
         new("View Products", FSHAction.View, FSHResource.Products, IsBasic: true),
         new("Search Products", FSHAction.Search, FSHResource.Products, IsBasic: true),
         new("Create Products", FSHAction.Create, FSHResource.Products),
         new("Update Products", FSHAction.Update, FSHResource.Products),
         new("Delete Products", FSHAction.Delete, FSHResource.Products),
         new("Export Products", FSHAction.Export, FSHResource.Products),
+        new("Import Products", FSHAction.Import, FSHResource.Products),
+        new("Clean Products", FSHAction.Clean, FSHResource.Products),
+
         new("View Brands", FSHAction.View, FSHResource.Brands, IsBasic: true),
         new("Search Brands", FSHAction.Search, FSHResource.Brands, IsBasic: true),
         new("Create Brands", FSHAction.Create, FSHResource.Brands),
         new("Update Brands", FSHAction.Update, FSHResource.Brands),
         new("Delete Brands", FSHAction.Delete, FSHResource.Brands),
-        new("Generate Brands", FSHAction.Generate, FSHResource.Brands),
+        new("Export Brands", FSHAction.Export, FSHResource.Brands),
+        new("Import Brands", FSHAction.Import, FSHResource.Brands),
         new("Clean Brands", FSHAction.Clean, FSHResource.Brands),
+
+        new("Generate Brands", FSHAction.Generate, FSHResource.Brands),
+
         new("View Tenants", FSHAction.View, FSHResource.Tenants, IsRoot: true),
+        new("Search Tenants", FSHAction.Search, FSHResource.Tenants, IsRoot: true),
         new("Create Tenants", FSHAction.Create, FSHResource.Tenants, IsRoot: true),
         new("Update Tenants", FSHAction.Update, FSHResource.Tenants, IsRoot: true),
+
+        new("Delete Tenants", FSHAction.Delete, FSHResource.Tenants, IsRoot: true),
+        new("Export Tenants", FSHAction.Export, FSHResource.Tenants, IsRoot: true),
+        new("Import Tenants", FSHAction.Import, FSHResource.Tenants, IsRoot: true),
+
         new("Upgrade Tenant Subscription", FSHAction.UpgradeSubscription, FSHResource.Tenants, IsRoot: true)
     };
 
