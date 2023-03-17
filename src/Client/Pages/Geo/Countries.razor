@@ -1,0 +1,123 @@
+﻿@page "/Geo/Countries"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.Countries)]
+
+@inject IStringLocalizer<Countries> L
+@inject ICountriesClient CountriesClient
+
+<FshTitle Title="@L["Countries"]" Description="@L["Manage Countries."]" />
+
+<EntityTable TEntity="CountryDto" TId="Guid" TRequest="UpdateCountryRequest" Context="@Context">
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="12">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"Country Id"]" />
+            </MudItem>
+        }
+
+        <MudTabs Elevation="2" Rounded="true" Color="@Color.Transparent" PanelClass="mt-6">
+            <MudTabPanel Text="Basic Info">
+                <MudGrid>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Order"]" For="@(() => context.Order)" @bind-Value="context.Order" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Code"]" For="@(() => context.Code)" @bind-Value="context.Code" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Name"]" For="@(() => context.Name)" @bind-Value="context.Name" T="string" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Formal Name"]" For="@(() => context.FullName)" @bind-Value="context.FullName" T="string" />
+                    </MudItem>
+
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["IOS2 Code"]" For="@(() => context.Iso2)" @bind-Value="context.Iso2" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["IOS3 Code"]" For="@(() => context.Iso3)" @bind-Value="context.Iso3" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Formal Native Name"]" For="@(() => context.NativeName)" @bind-Value="context.NativeName" T="string" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Full Native Name"]" For="@(() => context.FullNativeName)" @bind-Value="context.FullNativeName" T="string" />
+                    </MudItem>
+
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Numeric Code"]" For="@(() => context.NumericCode)" @bind-Value="context.NumericCode" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Currency Code"]" For="@(() => context.CurrencyCode)" @bind-Value="context.CurrencyCode" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Currency Name"]" For="@(() => context.CurrencyName)" @bind-Value="context.CurrencyName" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Currency Symbol"]" For="@(() => context.CurrencySymbol)" @bind-Value="context.CurrencySymbol" />
+                    </MudItem>
+
+                    <MudItem xs="12" md="3">
+                        <GeoAdminUnitAutocomplete For="@(() => context.ContinentId)" @bind-Value="context.ContinentId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter"
+                                                  Label="@L["Continent"]" UnitType="GeoAdminUnitType.Continent" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <GeoAdminUnitAutocomplete For="@(() => context.SubContinentId)" @bind-Value="context.SubContinentId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter"
+                                                  Label="@L["SubContinent"]" UnitType="GeoAdminUnitType.SubContinent" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <GeoAdminUnitAutocomplete For="@(() => context.TypeId)" @bind-Value="context.TypeId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter"
+                                                  Label="@L["Country Type"]" UnitType="GeoAdminUnitType.Country" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <GeoAdminUnitAutocomplete For="@(() => context.SubTypeId)" @bind-Value="context.SubTypeId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter"
+                                                  Label="@L["Country Sub Type"]" UnitType="GeoAdminUnitType.SubCountry" />
+                    </MudItem>
+                </MudGrid>
+            </MudTabPanel>
+            <MudTabPanel Text="Other Info">
+                <MudGrid>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Sovereignty"]" For="@(() => context.Sovereignty)" @bind-Value="context.Sovereignty" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Capital"]" For="@(() => context.Capital)" @bind-Value="context.Capital" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Phone Code"]" For="@(() => context.PhoneCode)" @bind-Value="context.PhoneCode" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Internet Code"]" For="@(() => context.InternetCode)" @bind-Value="context.InternetCode" />
+                    </MudItem>
+
+
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Emoji"]" For="@(() => context.Emoji)" @bind-Value="context.Emoji" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["EmojiU"]" For="@(() => context.EmojiU)" @bind-Value="context.EmojiU" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Latitude"]" For="@(() => context.Latitude)" @bind-Value="context.Latitude" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Longitude"]" For="@(() => context.Longitude)" @bind-Value="context.Longitude" />
+                    </MudItem>
+
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["FlagPath"]" For="@(() => context.FlagPath)" @bind-Value="context.FlagPath" />
+                    </MudItem>
+                    <MudItem xs="12" md="3"></MudItem>
+                    <MudItem xs="12" md="3"></MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+                    </MudItem>
+
+                    <MudItem xs="12" md="12">
+                        <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
+                    </MudItem>
+                </MudGrid>
+            </MudTabPanel>
+        </MudTabs>
+    </EditFormContent>
+</EntityTable>

@@ -1,0 +1,32 @@
+﻿@page "/Catalog/BusinessLines"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.BusinessLines)]
+
+@inject IStringLocalizer<BusinessLines> L
+@inject IBusinessLinesClient BusinessLinesClient
+
+<FshTitle Title="@L["BusinessLines"]" Description="@L["Manage BusinessLines."]" />
+
+<EntityTable TEntity="BusinessLineDto" TId="Guid" TRequest="UpdateBusinessLineRequest" Context="@Context">
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="12">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"BusinessLine Id"]" />
+            </MudItem>
+        }
+
+        <MudItem xs="12" md="4">
+            <MudTextField Label="@L["Code"]" For="@(() => context.Code)" @bind-Value="context.Code" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="4">
+            <MudTextField Label="@L["Name"]" For="@(() => context.Name)" @bind-Value="context.Name" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="4">
+            <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+        </MudItem>
+        <MudItem xs="12" md="12">
+            <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
+        </MudItem>
+    </EditFormContent>
+
+</EntityTable>

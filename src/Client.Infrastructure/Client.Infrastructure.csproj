@@ -7,20 +7,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
-        <PackageReference Include="MediatR.Courier.DependencyInjection" Version="5.0.0" />
-        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.7" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.7" />
+        <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
+        <!--<PackageReference Include="MediatR.Courier.DependencyInjection" Version="5.0.0" />-->
+
+        <PackageReference Include="MediatR" Version="12.0.1" />
+
+        <PackageReference Include="MediatR.Courier" Version="6.0.0" />
+        <!--<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />-->
+        <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.15" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.15" />
         <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.7" />
-        <PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="6.0.7" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.15" />
+        <PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="6.0.15" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.7" />
-        <PackageReference Include="MudBlazor" Version="6.0.11" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-        <PackageReference Include="NSwag.MSBuild" Version="13.16.1">
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.15" />
+        <PackageReference Include="MudBlazor" Version="6.1.9" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="NSwag.MSBuild" Version="13.18.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -31,7 +35,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Update="Roslynator.Analyzers" Version="4.1.1">
+      <PackageReference Update="Roslynator.Analyzers" Version="4.2.0">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>

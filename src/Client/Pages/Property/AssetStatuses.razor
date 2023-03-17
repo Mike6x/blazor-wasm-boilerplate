@@ -1,0 +1,38 @@
+﻿@page "/Property/AssetStatuses"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.AssetStatuses)]
+
+@inject IStringLocalizer<AssetStatuses> L
+@inject IAssetStatusesClient AssetStatusesClient
+
+<FshTitle Title="@L["AssetStatuses"]" Description="@L["Manage AssetStatuses."]" />
+
+<EntityTable TEntity="AssetStatusDto" TId="Guid" TRequest="UpdateAssetStatusRequest" Context="@Context">
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="12">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"AssetStatus Id"]" />
+            </MudItem>
+        }
+
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Code"]" For="@(() => context.Code)" @bind-Value="context.Code" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Name"]" For="@(() => context.Name)" @bind-Value="context.Name" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudSelect Label="Type" @bind-Value="context.Type" OffsetY="true" Variant="Variant.Filled">
+                @foreach (AssetStatusType item in Enum.GetValues(typeof(AssetStatusType)))
+                {
+                    <MudSelectItem Value="@item">@item</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" md="12">
+            <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
+        </MudItem>
+    </EditFormContent>
+</EntityTable>

@@ -1,0 +1,109 @@
+﻿@page "/Property/AssetHistorys"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.AssetHistorys)]
+
+@inject IStringLocalizer<AssetHistorys> L
+@inject IAssetHistorysClient AssetHistorysClient
+
+@using FSH.BlazorWebAssembly.Client.Pages.People
+
+<FshTitle Title="@L["AssetHistorys"]" Description="@L["Manage AssetHistorys."]" />
+
+<EntityTable TEntity="AssetHistoryDto" TId="Guid" TRequest="AssetHistoryViewModel" Context="@Context">
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="12">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"AssetHistory Id"]" />
+            </MudItem>
+@*            <MudItem xs="12" md="6">
+                <MudTextField Disabled="true" For="@(() => context.LastModifiedOn)" @bind-Value="context.LastModifiedOn" Label="@L["LastModifiedOn"]" />
+            </MudItem>*@
+        }
+
+        <MudItem xs="12" md="3">
+            <AssetAutocomplete For="@(() => context.AssetId)" @bind-Value="context.AssetId" OffsetY="true" />
+        </MudItem>
+        <MudItem xs="12" md="3"></MudItem>
+        <MudItem xs="12" md="3">
+            <AssetStatusAutocomplete For="@(() => context.PreviousQualityStatusId)" @bind-Value="context.PreviousQualityStatusId" OffsetY="true"
+                                     Label="@L["Prev. Quality Sta."]" StatusType="AssetStatusType.Quality" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <AssetStatusAutocomplete For="@(() => context.QualityStatusId)" @bind-Value="context.QualityStatusId" OffsetY="true"
+                                     Label="@L["Quality Sta."]" StatusType="AssetStatusType.Quality" />
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <EmployeeAutocomplete For="@(() => context.EmployeeId)" @bind-Value="context.EmployeeId" OffsetY="true" />
+        </MudItem>
+
+        <MudItem xs="12" md="3"></MudItem>
+        <MudItem xs="12" md="3">
+            <AssetStatusAutocomplete For="@(() => context.PreviousUsingStatusId)" @bind-Value="context.PreviousUsingStatusId" OffsetY="true"
+                                     Label="@L["Prev. Using Sta."]" StatusType="AssetStatusType.Using" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <AssetStatusAutocomplete For="@(() => context.UsingStatusId)" @bind-Value="context.UsingStatusId" OffsetY="true"
+                                     Label="@L["Using Sta."]" StatusType="AssetStatusType.Using" />
+        </MudItem>
+        <MudItem xs="12" md="12">
+            <MudTextField Label="@L["DoccumentLink"]" For="@(() => context.DoccumentLink)" @bind-Value="context.DoccumentLink" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="12"> 
+            <MudTextField Label="@L["Note"]" For="@(() => context.Note)" @bind-Value="context.Note" />
+        </MudItem>
+        <MudItem xs="12" md="12">
+            <div>
+                <InputFile id="fileInput" hidden OnChange="UploadFiles" />
+                @if (UploadFile != null && !string.IsNullOrEmpty(context.DoccumentInBytes))
+                {
+                    <MudText>
+                        <MudIcon Icon="@Icons.Material.Filled.AttachFile" Class="mr-3 mb-n1" />
+                            "Attached Doccument:" @UploadFile.Name (<code>@UploadFile.Size bytes)</code>
+                    </MudText>
+                }
+                else if (!string.IsNullOrEmpty(context.DoccumentPath))
+                {
+                    <MudText>
+                        @L["Click UPLOAD button to change new doccument:" + @context.DoccumentPath]
+                    </MudText>
+                
+                }
+                else
+                {
+                    <MudText>
+                        @L["Click UPLOAD button to select a doccument: " ]
+                    </MudText>
+
+                }
+            </div>
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <div>
+                <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
+                           StartIcon="@Icons.Material.Filled.CloudUpload" for="fileInput"> @L["Upload"]
+                </MudButton>
+                @if (!Context.AddEditModal.IsCreate && !string.IsNullOrEmpty(context.DoccumentPath) && string.IsNullOrEmpty(context.DoccumentInBytes))
+                {
+                    <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" Target="_blank"
+                           StartIcon="@Icons.Material.Filled.CloudDownload" Link="@(Config[ConfigNames.ApiBaseUrl] + @context.DoccumentPath)" Style="margin-left: 5px;">
+                        @L["Download"]
+                    </MudButton>
+                    <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Error" Size="Size.Small"
+                           StartIcon="@Icons.Material.Filled.Delete" OnClick="SetDeleteCurrentDoccumentFlag" Style="margin-left: 5px;">
+                        @L["Delete"]
+                    </MudButton>
+                }
+                @if (!string.IsNullOrEmpty(context.DoccumentInBytes))
+                {
+                    <MudButton HtmlTag="label" DisableElevation OnClick="ClearDoccumentInBytes" Variant="Variant.Filled" Color="Color.Warning" Size="Size.Small" Target="_blank"
+                           StartIcon="@Icons.Material.Filled.Clear" Style="margin-left: 5px;">
+                        @L["Clear Media"]
+                    </MudButton>
+                }
+            </div>
+        </MudItem>
+
+
+    </EditFormContent>
+</EntityTable>

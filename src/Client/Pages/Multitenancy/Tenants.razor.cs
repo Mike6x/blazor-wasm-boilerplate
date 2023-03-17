@@ -50,8 +50,9 @@ public partial class Tenants
                 string.IsNullOrWhiteSpace(searchString)
                     || tenantDto.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase),
             createFunc: tenant => TenantsClient.CreateAsync(tenant.Adapt<CreateTenantRequest>()),
-            //updateFunc: async (id, tenant) => await TenantsClient.UpdateAsync(id, tenant),
-            //deleteFunc: async id => await TenantsClient.DeleteAsync(id),
+
+            // updateFunc: async (id, tenant) => await TenantsClient.UpdateAsync(id, tenant),
+            // deleteFunc: async id => await TenantsClient.DeleteAsync(id),
             hasExtraActionsFunc: () => true);
 
         var state = await AuthState;
@@ -86,7 +87,7 @@ public partial class Tenants
         var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
         var dialog = DialogService.Show<UpgradeSubscriptionModal>(L["Upgrade Subscription"], parameters, options);
         var result = await dialog.Result;
-        if (!result.Cancelled)
+        if (!result.Canceled)
         {
             await EntityTable.ReloadDataAsync();
         }

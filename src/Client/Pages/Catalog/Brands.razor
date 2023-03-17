@@ -11,53 +11,23 @@
     <EditFormContent>
         @if (!Context.AddEditModal.IsCreate)
         {
-            <MudItem xs="12" md="6">
+            <MudItem xs="12" md="12">
                 <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"Brand Id"]" />
             </MudItem>
         }
-        <MudItem xs="12" md="6">
+        <MudItem xs="12" md="4">
+            <MudTextField T="string" For="@(() => context.Code)" @bind-Value="context.Code" Label="@L["Code"]" />
+        </MudItem>
+        <MudItem xs="12" md="4">
             <MudTextField T="string" For="@(() => context.Name)" @bind-Value="context.Name" Label="@L["Name"]" />
         </MudItem>
-        <MudItem xs="12" md="6">
+        <MudItem xs="12" md="4">
+            <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+        </MudItem>
+        <MudItem xs="12" md="12">
             <MudTextField For="@(() => context.Description)" @bind-Value="context.Description"
                 Label="@L["Description"]" />
         </MudItem>
     </EditFormContent>
 
 </EntityTable>
-
-@code
-{
-    protected EntityServerTableContext<BrandDto, Guid, UpdateBrandRequest> Context { get; set; } = default!;
-
-    protected override void OnInitialized() =>
-        Context = new(
-            entityName: L["Brand"],
-            entityNamePlural: L["Brands"],
-            entityResource: FSHResource.Brands,
-            fields: new()
-            {
-                new(brand => brand.Id, L["Id"], "Id"),
-                new(brand => brand.Name, L["Name"], "Name"),
-                new(brand => brand.Description, L["Description"], "Description"),
-            },
-            idFunc: brand => brand.Id,
-            searchFunc: async filter => (await BrandsClient
-                .SearchAsync(filter.Adapt<SearchBrandsRequest>()))
-                .Adapt<PaginationResponse<BrandDto>>(),
-            createFunc: async brand => await BrandsClient.CreateAsync(brand.Adapt<CreateBrandRequest>()),
-            updateFunc: async (id, brand) => await BrandsClient.UpdateAsync(id, brand),
-            deleteFunc: async id => await BrandsClient.DeleteAsync(id),
-            exportFunc: async filter =>
-            {
-                var exportFilter = filter.Adapt<ExportBrandsRequest>();
-                return await BrandsClient.ExportAsync(exportFilter);
-            },
-            importFunc: async FileUploadRequest => 
-            {
-                var request = new ImportBrandsRequest() { ExcelFile = FileUploadRequest};
-                await BrandsClient.ImportAsync(request);
-            }
-            //exportAction: string.Empty
-            );
-}

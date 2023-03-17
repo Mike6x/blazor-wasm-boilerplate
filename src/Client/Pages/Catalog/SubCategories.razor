@@ -1,0 +1,42 @@
+﻿@page "/Catalog/SubCategories"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.SubCategories)]
+
+@inject IStringLocalizer<SubCategories> L
+@inject ISubCategoriesClient SubCategoriesClient
+
+<FshTitle Title="@L["SubCategories"]" Description="@L["Manage SubCategories."]" />
+
+<EntityTable TEntity="SubCategorieDto" TId="Guid" TRequest="UpdateSubCategorieRequest" Context="@Context">
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="12">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"Group SubCategorie Id"]" />
+            </MudItem>
+        }
+
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Code"]" For="@(() => context.Code)" @bind-Value="context.Code" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Name"]" For="@(() => context.Name)" @bind-Value="context.Name" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <CategorieAutocomplete For="@(() => context.CategorieId)" @bind-Value="context.CategorieId" OffsetY="true" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudSelect Label="Type" @bind-Value="context.Type" OffsetY="true" Variant="Variant.Filled">
+                @foreach (CatalogType item in Enum.GetValues(typeof(CatalogType)))
+                {
+                        <MudSelectItem Value="@item">@item</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" md="9">
+            <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+        </MudItem>
+    </EditFormContent>
+</EntityTable>

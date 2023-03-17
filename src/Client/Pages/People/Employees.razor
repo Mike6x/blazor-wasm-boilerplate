@@ -1,0 +1,132 @@
+﻿@page "/People/Employees"
+@using FSH.BlazorWebAssembly.Client.Pages.Organization
+@attribute [MustHavePermission(FSHAction.View, FSHResource.Employees)]
+
+@inject IStringLocalizer<Employees> L
+@inject IEmployeesClient EmployeesClient
+
+<FshTitle Title="@L["Employees"]" Description="@L["Manage Employees."]" />
+
+<EntityTable TEntity="EmployeeDto" TId="Guid" TRequest="EmployeeViewModel" Context="@Context">
+    <ExtraActions>
+        <MudMenuItem OnClick="(() => UpdateUser(context.Code))">@L["Create User"]</MudMenuItem>
+
+    </ExtraActions>
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="9">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"Employee Id"]" />
+            </MudItem>
+        }
+        else
+        {
+            <MudItem xs="12" md="9"></MudItem>
+        }
+
+        <MudItem xs="12" md="3">
+            <MudTooltip Text="@(string.IsNullOrEmpty(context.UserId)==true ? @L["Create User required PASSWORD & CONFIRMED PASSWORD more than six charactors and must be same"] : string.Empty )">
+                <MudCheckBox @bind-Checked="context.CreateOrDeleteUser" For="@(() => context.CreateOrDeleteUser)"
+                    Label="@(string.IsNullOrEmpty(context.UserId)==true ? @L["Create User"] : @L["Delete User"] )"
+                             ReadOnly="@context.PasswordCheck">
+                </MudCheckBox>
+            </MudTooltip>
+        </MudItem>
+            
+        <MudTabs Elevation="2" Rounded="true" Color="@Color.Transparent" PanelClass="mt-4">
+            <MudTabPanel Text="Basic Info">
+                <MudGrid>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Code"]" For="@(() => context.Code)" @bind-Value="context.Code" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["FirstName"]" For="@(() => context.FirstName)" @bind-Value="context.FirstName" T="string" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["LastName"]" For="@(() => context.LastName)" @bind-Value="context.LastName" T="string" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudSelect Label="Gender" @bind-Value="context.Gender" OffsetY="true" Variant="Variant.Filled">
+                            @foreach (Gender item in Enum.GetValues(typeof(Gender)))
+                            {
+                                <MudSelectItem Value="@item">@item</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Phone"]" For="@(() => context.PhoneNumber)" @bind-Value="context.PhoneNumber" T="string" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Email"]" For="@(() => context.Email)" @bind-Value="context.Email" T="string" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <TitleAutocomplete For="@(() => context.TitleId)" @bind-Value="context.TitleId" OffsetY="true" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <SuperiorAutocomplete For="@(() => context.SuperiorId)" @bind-Value="context.SuperiorId" OffsetY="true" />
+                    </MudItem>
+
+                </MudGrid>
+            </MudTabPanel>
+            <MudTabPanel Text="More Info">
+                <MudGrid>
+                    <MudItem xs="12" md="3">
+                        <BusinessUnitAutocomplete For="@(() => context.BusinessUnitId)" @bind-Value="context.BusinessUnitId" OffsetY="true" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <DepartmentAutocomplete For="@(() => context.DepartmentId)" @bind-Value="context.DepartmentId" OffsetY="true" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <SubDepartmentAutocomplete For="@(() => context.SubDepartmentId)" @bind-Value="context.SubDepartmentId" OffsetY="true" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <TeamAutocomplete For="@(() => context.TeamId)" @bind-Value="context.TeamId" OffsetY="true" />
+                    </MudItem>
+
+                    <MudItem xs="12" md="3">
+                        <MudDatePicker Label="@L["DateOfBirth"]" Editable="true" @bind-Date="context.DateOfBirth" DisableToolbar="true" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudDatePicker Label="@L["JoiningDate"]" Editable="true" @bind-Date="context.JoiningDate" DisableToolbar="true" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudDatePicker Label="@L["LeavingDate"]" Editable="true" @bind-Date="context.LeavingDate" DisableToolbar="true" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudTextField Label="@L["Address"]" For="@(() => context.Address)" @bind-Value="context.Address" T="string" />
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
+                    </MudItem>
+                </MudGrid>
+            </MudTabPanel>
+            <MudTabPanel Text="User Info">
+                <MudGrid>
+
+                    <MudItem xs="12" md="12">
+                        <MudText Color="Color.Surface" Class="mb-4">@L[$"User Id: "] @(string.IsNullOrEmpty(context.UserId) == true ? "No User" : context.UserId)</MudText>
+                    </MudItem>
+                    @if (string.IsNullOrEmpty(context.UserId))
+                    {
+                        <MudItem xs="12" md="6">
+                            <MudTextField For="@(() => context.Password)" @bind-Value="context.Password" Label="@L["Password"]"
+                                      InputType="@_passwordInput" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon"
+                                      OnAdornmentClick="TogglePasswordVisibility" />
+                        </MudItem>
+                        <MudItem xs="12" md="6">
+                            <MudTextField For="@(() => context.ConfirmPassword)" @bind-Value="context.ConfirmPassword" Label="@L["Confirm Password"]"
+                                      InputType="@_passwordInput" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon"
+                                      OnAdornmentClick="TogglePasswordVisibility" />
+                    </MudItem>
+                    }
+
+                </MudGrid>
+            </MudTabPanel>
+
+        </MudTabs>
+    </EditFormContent>
+</EntityTable>

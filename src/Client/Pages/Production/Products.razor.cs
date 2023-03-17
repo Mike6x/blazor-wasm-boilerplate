@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
 
-namespace FSH.BlazorWebAssembly.Client.Pages.Catalog;
+namespace FSH.BlazorWebAssembly.Client.Pages.Production;
 
 public partial class Products
 {
@@ -18,7 +18,8 @@ public partial class Products
 
     protected EntityServerTableContext<ProductDto, Guid, ProductViewModel> Context { get; set; } = default!;
 
-    private EntityTable<ProductDto, Guid, ProductViewModel> _table = default!;
+    // private EntityTable<ProductDto, Guid, ProductViewModel> _table = default!;
+    private EntityTable<ProductDto, Guid, ProductViewModel>? _table;
 
     protected override void OnInitialized() =>
         Context = new(
@@ -130,7 +131,7 @@ public partial class Products
             Context.AddEditModal.RequestModel.ImageExtension = extension;
             var imageFile = await e.File.RequestImageFileAsync(ApplicationConstants.StandardImageFormat, ApplicationConstants.MaxImageWidth, ApplicationConstants.MaxImageHeight);
             byte[]? buffer = new byte[imageFile.Size];
-            await imageFile.OpenReadStream(ApplicationConstants.MaxAllowedSize).ReadAsync(buffer);
+            await imageFile.OpenReadStream(ApplicationConstants.MaxImageFileSize).ReadAsync(buffer);
             Context.AddEditModal.RequestModel.ImageInBytes = $"data:{ApplicationConstants.StandardImageFormat};base64,{Convert.ToBase64String(buffer)}";
             Context.AddEditModal.ForceRender();
         }

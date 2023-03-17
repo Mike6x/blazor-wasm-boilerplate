@@ -31,11 +31,11 @@
                 HtmlTag="label"
                 Variant="Variant.Filled"
                 Color="Color.Info"
-                StartIcon="@Icons.Filled.CloudUpload"
+                StartIcon="@Icons.Material.Filled.CloudUpload"
                 for="fileInput">@L["Upload"]
             </MudButton>
-            <MudButton DisableElevation Variant="Variant.Filled" StartIcon="@Icons.Filled.Cancel" OnClick="MudDialog.Cancel">@L["Cancel"]</MudButton>
-            <MudButton DisableElevation Variant="Variant.Filled" StartIcon="@Icons.Filled.Update" Color="Color.Tertiary" Class="mr-4" 
+            <MudButton DisableElevation Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Cancel" OnClick="MudDialog.Cancel">@L["Cancel"]</MudButton>
+            <MudButton DisableElevation Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Update" Color="Color.Tertiary" Class="mr-4" 
                 ButtonType="ButtonType.Submit" Disabled="@(_file == null)">@L["Import"]</MudButton>
         </DialogActions>
 

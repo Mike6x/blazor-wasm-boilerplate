@@ -34,7 +34,7 @@ public abstract class EntityTableContext<TEntity, TId, TRequest>
     /// a Task of Result of TRequest. When not supplied, a TRequest is simply newed up.
     /// No need to check for error messages or api exceptions. These are automatically handled by the component.
     /// </summary>
-    //public Func<FileUploadRequest, Task>? ImportFunc { get; }
+    // public Func<FileUploadRequest, Task>? ImportFunc { get; }
 
     /// <summary>
     /// A function that executes the Create method on the api with the supplied entity and returns a Task of Result.
@@ -150,7 +150,6 @@ public abstract class EntityTableContext<TEntity, TId, TRequest>
         Func<TRequest, Task>? createFunc,
         Func<TId, TRequest, Task>? updateFunc,
         Func<TId, Task>? deleteFunc,
-        // Func<FileUploadRequest, Task>? importFunc,
         string? entityName,
         string? entityNamePlural,
         string? entityResource,

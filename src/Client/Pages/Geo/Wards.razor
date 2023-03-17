@@ -1,0 +1,78 @@
+﻿@page "/Geo/Wards"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.Wards)]
+
+@inject IStringLocalizer<Wards> L
+@inject IWardsClient WardsClient
+
+<FshTitle Title="@L["Wards"]" Description="@L["Manage Wards."]" />
+
+<EntityTable TEntity="WardDto" TId="Guid" TRequest="UpdateWardRequest" Context="@Context">
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="12">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"Ward Id"]" />
+            </MudItem>
+        }
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Order"]" For="@(() => context.Order)" @bind-Value="context.Order" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Code"]" For="@(() => context.Code)" @bind-Value="context.Code" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Name"]" For="@(() => context.Name)" @bind-Value="context.Name" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Formal Name"]" For="@(() => context.FullName)" @bind-Value="context.FullName" T="string" />
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <GeoAdminUnitAutocomplete For="@(() => context.TypeId)" Label="@L["Type"]" UnitType="GeoAdminUnitType.Ward" @bind-Value="context.TypeId"
+                                      AnchorOrigin="Origin.BottomCenter" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Numeric Code"]" For="@(() => context.NumericCode)" @bind-Value="context.NumericCode" />
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Formal Native Name"]" For="@(() => context.NativeName)" @bind-Value="context.NativeName" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Full Native Name"]" For="@(() => context.FullNativeName)" @bind-Value="context.FullNativeName" T="string" />
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+        </MudItem>
+        <MudItem xs="12" md="3">
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Latitude"]" For="@(() => context.Latitude)" @bind-Value="context.Latitude" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Longitude"]" For="@(() => context.Longitude)" @bind-Value="context.Longitude" />
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <DistrictAutocomplete For="@(() => context.DistrictId)" @bind-Value="context.DistrictId" AnchorOrigin="Origin.BottomCenter" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <DistrictAutocomplete For="@(() => context.DistrictId)" @bind-Value="context.DistrictId" AnchorOrigin="Origin.BottomCenter" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <DistrictAutocomplete For="@(() => context.DistrictId)" @bind-Value="context.DistrictId" AnchorOrigin="Origin.BottomCenter" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <DistrictAutocomplete For="@(() => context.DistrictId)" @bind-Value="context.DistrictId" AnchorOrigin="Origin.BottomCenter" />
+        </MudItem>
+
+
+        <MudItem xs="12" md="9">
+            <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+        </MudItem>
+
+    </EditFormContent>
+</EntityTable>

@@ -5,6 +5,7 @@ using FSH.BlazorWebAssembly.Client.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
+using System.Diagnostics;
 
 namespace FSH.BlazorWebAssembly.Client.Components.EntityTable;
 
@@ -23,15 +24,13 @@ public partial class ImportModal
     [EditorRequired]
     public Func<FileUploadRequest, Task> ImportFunc { get; set; } = default!;
 
-    public string? SuccessMessage { get; set; }
-
+    // public string? SuccessMessage { get; set; }
+    private CustomValidation? _customValidation;
     [CascadingParameter]
     private MudDialogInstance MudDialog { get; set; } = default!;
 
     private IBrowserFile? _file;
-    private bool _uploading = false;
-
-    private CustomValidation? _customValidation;
+    private bool _uploading;
 
     protected override Task OnInitializedAsync() =>
         OnInitializedFunc is not null
@@ -40,21 +39,28 @@ public partial class ImportModal
 
     private async Task SaveAsync()
     {
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
         _uploading = true;
-        //if (await ApiHelper.ExecuteCallGuardedAsync(
-        //    () => ImportFunc(UploadModel), Snackbar, _customValidation, SuccessMessage))
-        //{
+
+        // if (await ApiHelper.ExecuteCallGuardedAsync(
+        //   () => ImportFunc(UploadModel), Snackbar, _customValidation, SuccessMessage))
+        // {
         //    _uploading = false;
         //    MudDialog.Close();
-        //}
+        // }
+
         if (await ApiHelper.ExecuteCallGuardedAsync(
-            () => ImportFunc(UploadModel), Snackbar))
-                {
-                    _uploading = false;
-                    MudDialog.Close();
-                }
+           () => ImportFunc(UploadModel), Snackbar))
+        {
+            _uploading = false;
+            MudDialog.Close();
+        }
 
         _uploading = false;
+        stopwatch.Stop();
+        TimeSpan ts = stopwatch.Elapsed;
+        Snackbar.Add(string.Format("Processing time is about {0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10));
     }
 
     private async Task UploadFiles(InputFileChangeEventArgs e)

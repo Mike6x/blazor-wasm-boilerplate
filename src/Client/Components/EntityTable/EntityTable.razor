@@ -77,7 +77,7 @@
                     {
                         <MudMenu Variant="Variant.Filled" Dense="true" DisableElevation="true" Style="margin-left: 5px;"
                                     StartIcon="@Icons.Material.Filled.MoreVert" IconColor="Color.Surface" Color="Color.Tertiary"
-                                    AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" OffsetY = "true"
+                                    AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter"
                                     Label="@L["More"]">
                             <ChildContent>
                                 @if (_canExport)
@@ -157,8 +157,8 @@
                     else if (HasActions)
                     {
                         <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true"
-                            EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Secondary" Direction="Direction.Left"
-                            OffsetX="true">
+                             EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Secondary"
+                             AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
                             @if (CanUpdateEntity(context))
                             {
                                 <MudMenuItem @onclick="@(() => InvokeModal(context))">@L["Edit"]</MudMenuItem>

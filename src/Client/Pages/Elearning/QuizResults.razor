@@ -1,0 +1,57 @@
+﻿@page "/elearning/quizresults"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.QuizResults)]
+
+@inject IStringLocalizer<QuizResults> L
+
+<EntityTable @ref="_table" TEntity="QuizResultDto" TId="Guid" TRequest="QuizResultViewModel" Context="@Context">
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+                <MudItem xs="12" md="6">
+                    <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"Quiz Result Id"]" />
+                </MudItem>
+                <MudItem xs="12" md="6"></MudItem>
+        }
+
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Student Point"]" For="@(() => context.Sp)" @bind-Value="context.Sp" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Used Time"]" For="@(() => context.Ut)" @bind-Value="context.Ut" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Time Spent"]" For="@(() => context.Fut)" @bind-Value="context.Fut" />
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Quiz Title"]" For="@(() => context.Qt)" @bind-Value="context.Qt" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Total score"]" For="@(() => context.Tp)" @bind-Value="context.Tp" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Passing score"]" For="@(() => context.Ps)" @bind-Value="context.Ps" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Passing in percent"]" For="@(() => context.Psp)" @bind-Value="context.Psp" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Time Limit"]" For="@(() => context.Tl)" @bind-Value="context.Tl" />
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Quiz Version"]" For="@(() => context.V)" @bind-Value="context.V" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudSelect Label="Select Quiz Type" @bind-Value="context.T" OffsetY="true" Variant="Variant.Filled">
+                @foreach (QuizType item in Enum.GetValues(typeof(QuizType)))
+                {
+                    <MudSelectItem Value="@item.ToString().ToLower()">@item</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <QuizAutocomplete For="@(() => context.QuizId)" @bind-Value="context.QuizId" OffsetY="true" />
+        </MudItem>
+    </EditFormContent>
+</EntityTable>

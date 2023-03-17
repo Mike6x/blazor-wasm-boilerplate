@@ -1,0 +1,42 @@
+﻿@page "/Catalog/Categories"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.Categories)]
+
+@inject IStringLocalizer<Categories> L
+@inject ICategoriesClient CategoriesClient
+
+<FshTitle Title="@L["Categories"]" Description="@L["Manage Categories."]" />
+
+<EntityTable TEntity="CategorieDto" TId="Guid" TRequest="UpdateCategorieRequest" Context="@Context">
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="12">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"Group Categorie Id"]" />
+            </MudItem>
+        }
+
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Code"]" For="@(() => context.Code)" @bind-Value="context.Code" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Name"]" For="@(() => context.Name)" @bind-Value="context.Name" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <GroupCategorieAutocomplete For="@(() => context.GroupCategorieId)" @bind-Value="context.GroupCategorieId" OffsetY="true" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudSelect Label="Type" @bind-Value="context.Type" OffsetY="true" Variant="Variant.Filled">
+                @foreach (CatalogType item in Enum.GetValues(typeof(CatalogType)))
+                {
+                    <MudSelectItem Value="@item">@item</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" md="9">
+            <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+        </MudItem>
+    </EditFormContent>
+</EntityTable>

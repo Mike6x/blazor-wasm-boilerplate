@@ -30,8 +30,8 @@ public partial class Users
     // private int _activeIndex = 0;
 
     // Fields for editform
-    //protected string Password { get; set; } = string.Empty;
-    //protected string ConfirmPassword { get; set; } = string.Empty;
+    // protected string Password { get; set; } = string.Empty;
+    // protected string ConfirmPassword { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {

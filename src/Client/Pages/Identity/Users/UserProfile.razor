@@ -33,18 +33,18 @@ else
                             <InputFile id="fileInput" OnChange="UploadFiles" hidden accept=".jpg,.jpeg,.png" />
                             <div style="padding-bottom:20px">
                             <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
-                                StartIcon="@Icons.Filled.CloudUpload" for="fileInput">
+                                StartIcon="@Icons.Material.Filled.CloudUpload" for="fileInput">
                                 @_localizer["Upload"]
                             </MudButton>
                             @if(!string.IsNullOrEmpty(_imageUrl))
                             {
                                 <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" Target="_blank"
-                                    StartIcon="@Icons.Filled.RemoveRedEye" Link="@_imageUrl" Style="margin-left: 5px;" >
+                                    StartIcon="@Icons.Material.Filled.RemoveRedEye" Link="@_imageUrl" Style="margin-left: 5px;" >
                                     @_localizer["View"]
                                 </MudButton>
 
                                 <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Error" Size="Size.Small"
-                                    StartIcon="@Icons.Filled.Delete" OnClick="RemoveImageAsync" Style="margin-left: 5px;" >
+                                    StartIcon="@Icons.Material.Filled.Delete" OnClick="RemoveImageAsync" Style="margin-left: 5px;" >
                                     @_localizer["Delete"]
                                 </MudButton>
                             }
@@ -122,7 +122,7 @@ else
                             </MudGrid>
                         </MudCardContent>
                         <MudCardActions Class="pb-4 pl-4">
-                            <MudButton OnClick="BackToUsers" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" Style="margin-right: 5px;">@_localizer["Back"]</MudButton>
+                            <MudButton OnClick="BackToUsers" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.List" Style="margin-right: 5px;">@_localizer["Users"]</MudButton>
                             <MudButton OnClick="ToggleUserStatusAsync" Variant="Variant.Filled" Color="Color.Warning"
                                 StartIcon="@Icons.Material.Filled.ToggleOn" Style="margin-right: 5px;">@_localizer["Act/Dis"]</MudButton>
                             <MudButton OnClick="SendVerificationEmailAsync" Variant="Variant.Filled" Color="Color.Info" Style="margin-right: 5px;">@_localizer["Verify Email"]</MudButton>
@@ -280,7 +280,7 @@ else
                         @if (!string.IsNullOrEmpty(_imageUrl))
                         {
                             <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Info"
-                        Size="Size.Small" Target="_blank" StartIcon="@Icons.Filled.RemoveRedEye" Link="@_imageUrl"
+                        Size="Size.Small" Target="_blank" StartIcon="@Icons.Material.Filled.RemoveRedEye" Link="@_imageUrl"
                         Style="margin-left: 5px;">
                                 @_localizer["View"]
                             </MudButton>
