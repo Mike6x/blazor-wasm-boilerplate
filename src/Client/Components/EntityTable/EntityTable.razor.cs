@@ -52,7 +52,7 @@ public partial class EntityTable<TEntity, TId, TRequest>
     private bool _canImport;
 
     private bool _advancedSearchExpanded;
-    private bool _buttonStatus = false;
+    private bool _buttonStatus;
 
     private MudTable<TEntity> _table = default!;
     private IEnumerable<TEntity>? _entityList;
@@ -341,6 +341,8 @@ public partial class EntityTable<TEntity, TId, TRequest>
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
 
         var dialog = DialogService.Show<ImportModal>(@L["Import"], parameters, options);
+
+        Context.SetImportModalRef(dialog);
 
         var result = await dialog.Result;
 

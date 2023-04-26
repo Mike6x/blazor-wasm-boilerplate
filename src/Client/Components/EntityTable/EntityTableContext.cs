@@ -200,12 +200,11 @@ public abstract class EntityTableContext<TEntity, TId, TRequest>
 
     // Import modal
     private IDialogReference? _importModalRef;
-
     internal void SetImportModalRef(IDialogReference dialog) =>
-    _importModalRef = dialog;
+        _importModalRef = dialog;
 
     public IImportModal<FileUploadRequest> ImportModal =>
-        _addEditModalRef?.Dialog as IImportModal<FileUploadRequest>
+        _importModalRef?.Dialog as IImportModal<FileUploadRequest>
         ?? throw new InvalidOperationException("ImportModal is only available when the modal is shown.");
 
     // Shortcuts

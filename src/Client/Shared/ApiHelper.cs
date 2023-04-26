@@ -1,6 +1,7 @@
 ﻿using FSH.BlazorWebAssembly.Client.Components.Common;
 using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient;
 using MudBlazor;
+using System.Diagnostics;
 
 namespace FSH.BlazorWebAssembly.Client.Shared;
 
@@ -15,12 +16,19 @@ public static class ApiHelper
         customValidation?.ClearErrors();
         try
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             var result = await call();
 
             if (!string.IsNullOrWhiteSpace(successMessage))
             {
                 snackbar.Add(successMessage, Severity.Info);
             }
+
+            stopwatch.Stop();
+            TimeSpan ts = stopwatch.Elapsed;
+            snackbar.Add(string.Format("Processing time is about {0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10));
 
             return result;
         }
