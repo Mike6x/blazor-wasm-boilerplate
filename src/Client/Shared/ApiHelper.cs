@@ -2,6 +2,7 @@
 using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient;
 using MudBlazor;
 using System.Diagnostics;
+using static MudBlazor.Defaults.Classes;
 
 namespace FSH.BlazorWebAssembly.Client.Shared;
 
@@ -28,7 +29,8 @@ public static class ApiHelper
 
             stopwatch.Stop();
             TimeSpan ts = stopwatch.Elapsed;
-            snackbar.Add(string.Format("Processing time is about {0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10));
+            snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
+            snackbar.Add(string.Format("Processing time is about {0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10), Severity.Info);
 
             return result;
         }
