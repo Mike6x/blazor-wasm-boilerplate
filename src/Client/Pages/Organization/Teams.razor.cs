@@ -17,6 +17,7 @@ public partial class Teams
             fields: new()
             {
                 // new(Team => Team.Id, L["Id"], "Id"),
+                new(Team => Team.Order, L["Order"], "Order"),
                 new(Team => Team.Code, L["Code"], "Code"),
                 new(Team => Team.Name, L["Name"], "Name"),
                 new(Team => Team.Description, L["Description"], "Description"),

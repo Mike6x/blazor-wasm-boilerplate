@@ -7,6 +7,17 @@ namespace FSH.BlazorWebAssembly.Client.Pages.Geo;
 
 public partial class Provinces
 {
+    private Guid _countryId;
+    public Guid CountryId
+    {
+        get => _countryId;
+        set
+        {
+            _countryId = value;
+            Context.AddEditModal.ForceRender();
+        }
+    }
+
     protected EntityServerTableContext<ProvinceDto, Guid, UpdateProvinceRequest> Context { get; set; } = default!;
 
     protected override void OnInitialized() =>
@@ -20,11 +31,13 @@ public partial class Provinces
                 new(Province => Province.NumericCode, L["Numeric"], "NumericCode"),
                 new(Province => Province.Code, L["Code"], "Code"),
                 new(Province => Province.Name, L["Name"], "Name"),
+
                 new(Province => Province.TypeName, L["Type"], "Type" ),
+                new(Province => Province.StateName, L["State"], "State"),
+
                 new(Province => Province.NativeName, L["Navtive Name"], "NativeName"),
                 new(Province => Province.TypeNativeName, L["Type"], "Type" ),
-                new(Province => Province.StateName, L["State"], "State"),
-                new(Province => Province.StateNativeName, L["State"], "StateNativeName"),
+                new(Province => Province.StateNativeName, L["St. Native Name"], "StateNativeName"),
 
                 // new(Province => Province.Metropolis, L["Metropolis"], "Metropolis"),
                 // new(Province => Province.Description, L["Description"], "Description"),

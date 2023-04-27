@@ -43,8 +43,12 @@
         </MudItem>
 
         <MudItem xs="12" md="3">
+            <CountryAutocomplete For="@(() => CountryId)" @bind-Value="CountryId"
+                                 AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
         </MudItem>
         <MudItem xs="12" md="3">
+            <StateAutocomplete For="@(() => StateId)" @bind-Value="StateId" FatherId="CountryId"
+                               AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
         </MudItem>
         <MudItem xs="12" md="3">
             <MudTextField Label="@L["Latitude"]" For="@(() => context.Latitude)" @bind-Value="context.Latitude" />
@@ -54,24 +58,22 @@
         </MudItem>
 
         <MudItem xs="12" md="3">
-            <DistrictAutocomplete For="@(() => context.DistrictId)" @bind-Value="context.DistrictId" AnchorOrigin="Origin.BottomCenter" />
+            <ProvinceAutocomplete For="@(() => ProvinceId)" @bind-Value="ProvinceId" FatherId="StateId"
+                                  AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
         </MudItem>
         <MudItem xs="12" md="3">
-            <DistrictAutocomplete For="@(() => context.DistrictId)" @bind-Value="context.DistrictId" AnchorOrigin="Origin.BottomCenter" />
+            <DistrictAutocomplete For="@(() => context.DistrictId)" @bind-Value="context.DistrictId" FatherId="ProvinceId"
+                AnchorOrigin="Origin.BottomCenter" />
         </MudItem>
         <MudItem xs="12" md="3">
-            <DistrictAutocomplete For="@(() => context.DistrictId)" @bind-Value="context.DistrictId" AnchorOrigin="Origin.BottomCenter" />
-        </MudItem>
-        <MudItem xs="12" md="3">
-            <DistrictAutocomplete For="@(() => context.DistrictId)" @bind-Value="context.DistrictId" AnchorOrigin="Origin.BottomCenter" />
-        </MudItem>
 
-
-        <MudItem xs="12" md="9">
-            <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
         </MudItem>
         <MudItem xs="12" md="3">
             <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+        </MudItem>
+
+        <MudItem xs="12" md="12">
+            <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
         </MudItem>
 
     </EditFormContent>

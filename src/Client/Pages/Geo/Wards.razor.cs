@@ -1,5 +1,6 @@
 ﻿using FSH.BlazorWebAssembly.Client.Components.EntityTable;
 using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient;
+using FSH.BlazorWebAssembly.Client.Pages.Organization;
 using FSH.WebApi.Shared.Authorization;
 using Mapster;
 
@@ -7,6 +8,50 @@ namespace FSH.BlazorWebAssembly.Client.Pages.Geo;
 
 public partial class Wards
 {
+    private Guid _countryId;
+    public Guid CountryId
+    {
+        get => _countryId;
+        set
+        {
+            if (value == Guid.Empty)
+            {
+                StateId = Guid.NewGuid();
+                ProvinceId = Guid.NewGuid();
+            }
+
+            _countryId = value;
+            Context.AddEditModal.ForceRender();
+        }
+    }
+
+    private Guid _stateId;
+    public Guid StateId
+    {
+        get => _stateId;
+        set
+        {
+            if (value == Guid.Empty)
+            {
+                 ProvinceId = Guid.NewGuid();
+            }
+
+            _stateId = value;
+            Context.AddEditModal.ForceRender();
+        }
+    }
+
+    private Guid _provinceId;
+    public Guid ProvinceId
+    {
+        get => _provinceId;
+        set
+        {
+            _provinceId = value;
+            Context.AddEditModal.ForceRender();
+        }
+    }
+
     protected EntityServerTableContext<WardDto, Guid, UpdateWardRequest> Context { get; set; } = default!;
 
     protected override void OnInitialized() =>
@@ -16,20 +61,19 @@ public partial class Wards
             entityResource: FSHResource.Wards,
             fields: new()
             {
-                // new(Ward => Ward.Code, L["Code"], "Code"),
-
                 new(Ward => Ward.Order, L["Order"], "Order"),
                 new(Ward => Ward.NumericCode, L["Numeric"], "NumericCode"),
                 new(Ward => Ward.Code, L["Code"], "Code"),
                 new(Ward => Ward.Name, L["Name"], "Name"),
-                new(Ward => Ward.FullName, L["Formal Name"], "FullName"),
-                new(Ward => Ward.NativeName, L["Navtive Name"], "NativeName"),
+                new(Ward => Ward.TypeName, L["Type"], "Type" ),
+
+                // new(Ward => Ward.FullName, L["Formal Name"], "FullName"),
+                // new(Ward => Ward.NativeName, L["Navtive Name"], "NativeName"),
+
                 new(Ward => Ward.FullNativeName, L["Full Native"], "FullNativeName"),
                 new(Ward => Ward.DistrictName, L["District"], "District"),
 
-                new(Ward => Ward.TypeName, L["Type"], "Type" ),
-                new(Ward => Ward.Description, L["Description"], "Description"),
-
+                // new(Ward => Ward.Description, L["Description"], "Description"),
             },
             idFunc: Ward => Ward.Id,
             searchFunc: async filter => (await WardsClient

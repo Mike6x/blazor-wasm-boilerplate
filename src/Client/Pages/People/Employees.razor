@@ -46,7 +46,7 @@
                         <MudTextField Label="@L["LastName"]" For="@(() => context.LastName)" @bind-Value="context.LastName" T="string" />
                     </MudItem>
                     <MudItem xs="12" md="3">
-                        <MudSelect Label="Gender" @bind-Value="context.Gender" OffsetY="true" Variant="Variant.Filled">
+                        <MudSelect Label="Gender" @bind-Value="context.Gender" Variant="Variant.Filled">
                             @foreach (Gender item in Enum.GetValues(typeof(Gender)))
                             {
                                 <MudSelectItem Value="@item">@item</MudSelectItem>
@@ -61,10 +61,12 @@
                         <MudTextField Label="@L["Email"]" For="@(() => context.Email)" @bind-Value="context.Email" T="string" />
                     </MudItem>
                     <MudItem xs="12" md="3">
-                        <TitleAutocomplete For="@(() => context.TitleId)" @bind-Value="context.TitleId" OffsetY="true" />
+                        <TitleAutocomplete For="@(() => context.TitleId)" @bind-Value="context.TitleId"
+                                           AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
                     </MudItem>
                     <MudItem xs="12" md="3">
-                        <SuperiorAutocomplete For="@(() => context.SuperiorId)" @bind-Value="context.SuperiorId" OffsetY="true" />
+                        <EmployeeAutocomplete For="@(() => context.SuperiorId)" @bind-Value="context.SuperiorId" TitleId="context.TitleId" Label="Superior"
+                                              AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
                     </MudItem>
 
                 </MudGrid>
@@ -72,16 +74,20 @@
             <MudTabPanel Text="More Info">
                 <MudGrid>
                     <MudItem xs="12" md="3">
-                        <BusinessUnitAutocomplete For="@(() => context.BusinessUnitId)" @bind-Value="context.BusinessUnitId" OffsetY="true" />
+                        <BusinessUnitAutocomplete For="@(() => context.BusinessUnitId)" @bind-Value="context.BusinessUnitId"
+                                                  AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
                     </MudItem>
                     <MudItem xs="12" md="3">
-                        <DepartmentAutocomplete For="@(() => context.DepartmentId)" @bind-Value="context.DepartmentId" OffsetY="true" />
+                        <DepartmentAutocomplete For="@(() => context.DepartmentId)" @bind-Value="context.DepartmentId" FatherId="context.BusinessUnitId"
+                                                AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
                     </MudItem>
                     <MudItem xs="12" md="3">
-                        <SubDepartmentAutocomplete For="@(() => context.SubDepartmentId)" @bind-Value="context.SubDepartmentId" OffsetY="true" />
+                        <SubDepartmentAutocomplete For="@(() => context.SubDepartmentId)" @bind-Value="context.SubDepartmentId" FatherId="context.DepartmentId"
+                                                   AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
                     </MudItem>
                     <MudItem xs="12" md="3">
-                        <TeamAutocomplete For="@(() => context.TeamId)" @bind-Value="context.TeamId" OffsetY="true" />
+                        <TeamAutocomplete For="@(() => context.TeamId)" @bind-Value="context.TeamId" FatherId="context.SubDepartmentId"
+                                          AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
                     </MudItem>
 
                     <MudItem xs="12" md="3">

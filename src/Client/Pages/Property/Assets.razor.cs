@@ -5,15 +5,77 @@ using FSH.BlazorWebAssembly.Client.Infrastructure.Common;
 using FSH.WebApi.Shared.Authorization;
 using Mapster;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.JSInterop;
 using MudBlazor;
 
 namespace FSH.BlazorWebAssembly.Client.Pages.Property;
 
 public partial class Assets
 {
+    private Guid _businessUnitId;
+    public Guid BusinessUnitId
+    {
+        get => _businessUnitId;
+        set
+        {
+            if(value == Guid.Empty)
+            {
+                DepartmentId = Guid.NewGuid();
+                SubDepartmentId = Guid.NewGuid();
+                TeamId = Guid.NewGuid();
+            }
+
+            _businessUnitId = value;
+            Context.AddEditModal.ForceRender();
+        }
+    }
+
+    private Guid _departmentId;
+    public Guid DepartmentId
+    {
+        get => _departmentId;
+        set
+        {
+            if (value == Guid.Empty)
+            {
+                SubDepartmentId = Guid.NewGuid();
+                TeamId = Guid.NewGuid();
+            }
+
+            _departmentId = value;
+            Context.AddEditModal.ForceRender();
+        }
+    }
+
+    private Guid _subDepartmentId;
+    public Guid SubDepartmentId
+    {
+        get => _subDepartmentId;
+        set
+        {
+            if (value == Guid.Empty)
+            {
+                TeamId = Guid.NewGuid();
+            }
+
+            _subDepartmentId = value;
+            Context.AddEditModal.ForceRender();
+        }
+    }
+
+    private Guid _teamId;
+    public Guid TeamId
+    {
+        get => _teamId;
+        set
+        {
+            _teamId = value;
+            Context.AddEditModal.ForceRender();
+        }
+    }
+
     public IBrowserFile? File2Upload { get; set; }
     protected EntityServerTableContext<AssetDto, Guid, AssetViewModel> Context { get; set; } = default!;
-
     protected override void OnInitialized() =>
         Context = new(
             entityName: L["Asset"],
@@ -141,6 +203,28 @@ public partial class Assets
         Context.AddEditModal.ForceRender();
     }
 
+    private async Task ExportAssetDeliveryForm(Guid? id)
+    {
+        if (id == null || id == Guid.Empty)
+        {
+            Snackbar.Add("Asset have no owner.", Severity.Error);
+        }
+        else
+        {
+            var exportFilter = new ExportAssetsDeliveryRequest()
+            {
+                EmployeeId = (Guid)id
+            };
+
+            var result = await AssetsClient.ExportFormAsync(exportFilter);
+            if (result != null)
+            {
+                using var streamRef = new DotNetStreamReference(result.Stream);
+
+                await Js.InvokeVoidAsync("downloadFileFromStream", $"{Context.EntityNamePlural}DeliveryForm.xlsx", streamRef);
+            }
+        }
+    }
 }
 
 public class AssetViewModel : UpdateAssetRequest

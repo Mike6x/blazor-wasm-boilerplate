@@ -67,7 +67,6 @@ public partial class Employees
                 }
 
                 await EmployeesClient.UpdateAsync(id, Employee);
-
             },
             deleteFunc: async id => await EmployeesClient.DeleteAsync(id),
             exportFunc: async filter =>
@@ -90,7 +89,7 @@ public partial class Employees
 
     private async Task<string> DeleteUserRelationAsync(EmployeeViewModel employeeViewModel)
     {
-        var user = new UserDetailsDto();
+        UserDetailsDto? user;
 
         try
         {
@@ -108,7 +107,7 @@ public partial class Employees
 
     private async Task<string> CreateUserRelationAsync(EmployeeViewModel employeeViewModel)
     {
-        var user = new UserDetailsDto();
+        UserDetailsDto? user;
 
         try
         {
@@ -154,6 +153,10 @@ public partial class Employees
         Context.AddEditModal.ForceRender();
     }
 
+    private void FormRender()
+    {
+        Context.AddEditModal.ForceRender();
+    }
 }
 
 public class EmployeeViewModel : UpdateEmployeeRequest
@@ -173,5 +176,4 @@ public class EmployeeViewModel : UpdateEmployeeRequest
     public string? ImagePath { get; set; }
     public string? ImageInBytes { get; set; }
     public string? ImageExtension { get; set; }
-
 }

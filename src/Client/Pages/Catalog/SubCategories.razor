@@ -16,13 +16,21 @@
         }
 
         <MudItem xs="12" md="3">
-            <MudTextField Label="@L["Code"]" For="@(() => context.Code)" @bind-Value="context.Code" T="string" />
+            <MudTextField Label="@L["Order"]" For="@(() => context.Order)" @bind-Value="context.Order" />
         </MudItem>
         <MudItem xs="12" md="3">
-            <MudTextField Label="@L["Name"]" For="@(() => context.Name)" @bind-Value="context.Name" T="string" />
+            <MudTextField T="string" For="@(() => context.Code)" @bind-Value="context.Code" Label="@L["Code"]" />
         </MudItem>
         <MudItem xs="12" md="3">
-            <CategorieAutocomplete For="@(() => context.CategorieId)" @bind-Value="context.CategorieId" OffsetY="true" />
+            <MudTextField T="string" For="@(() => context.Name)" @bind-Value="context.Name" Label="@L["Name"]" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <CategorieAutocomplete For="@(() => context.CategorieId)" @bind-Value="context.CategorieId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+        </MudItem>
+        <MudItem xs="12" md="6">
         </MudItem>
         <MudItem xs="12" md="3">
             <MudSelect Label="Type" @bind-Value="context.Type" OffsetY="true" Variant="Variant.Filled">
@@ -32,11 +40,8 @@
                 }
             </MudSelect>
         </MudItem>
-        <MudItem xs="12" md="9">
+        <MudItem xs="12" md="12">
             <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
-        </MudItem>
-        <MudItem xs="12" md="3">
-            <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
         </MudItem>
     </EditFormContent>
 </EntityTable>

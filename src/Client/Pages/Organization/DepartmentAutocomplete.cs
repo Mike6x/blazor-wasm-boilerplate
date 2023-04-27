@@ -18,6 +18,8 @@ public class DepartmentAutocomplete : MudAutocomplete<Guid>
     private List<DepartmentDto> _entityList = new();
 
     // supply default parameters, but leave the possibility to override them
+    [Parameter]
+    public Guid FatherId { get; set; }
     public override Task SetParametersAsync(ParameterView parameters)
     {
         Label = L["Department"];
@@ -55,6 +57,7 @@ public class DepartmentAutocomplete : MudAutocomplete<Guid>
     {
         var filter = new SearchDepartmentsRequest
         {
+            BusinessUnitId = FatherId == Guid.Empty ? null : FatherId,
             PageSize = 10,
             AdvancedSearch = new() { Fields = new[] { "name" }, Keyword = value }
         };

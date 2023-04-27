@@ -54,16 +54,16 @@
             <MudTextField Label="@L["Longitude"]" For="@(() => context.Longitude)" @bind-Value="context.Longitude" />
         </MudItem>
         <MudItem xs="12" md="3">
-            <ProvinceAutocomplete For="@(() => context.ProvinceId)" @bind-Value="context.ProvinceId"
-                                  AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+            <CountryAutocomplete For="@(() => CountryId)" @bind-Value="CountryId"
+                AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
         </MudItem>
         <MudItem xs="12" md="3">
-            <ProvinceAutocomplete For="@(() => context.ProvinceId)" @bind-Value="context.ProvinceId"
-                                  AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+            <StateAutocomplete For="@(() => StateId)" @bind-Value="StateId" FatherId="CountryId"
+                AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
         </MudItem>
         <MudItem xs="12" md="3">
-            <ProvinceAutocomplete For="@(() => context.ProvinceId)" @bind-Value="context.ProvinceId"
-                                  AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+            <ProvinceAutocomplete For="@(() => context.ProvinceId)" @bind-Value="context.ProvinceId" FatherId="StateId"
+                AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
         </MudItem>
 
         <MudItem xs="12" md="3">

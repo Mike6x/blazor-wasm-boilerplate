@@ -36,7 +36,7 @@ public partial class NavMenu
     private bool _canViewProvinces;
     private bool _canViewDistricts;
     private bool _canViewWards;
-    private bool CanViewGeographyGroup => _canViewGeoAdminUnits|| _canViewCountries || _canViewStates || _canViewRegions || _canViewProvinces || _canViewDistricts || _canViewWards;
+    private bool CanViewGeographyGroup => _canViewGeoAdminUnits || _canViewCountries || _canViewStates || _canViewRegions || _canViewProvinces || _canViewDistricts || _canViewWards;
 
     private bool _canViewBusinessUnits;
     private bool _canViewDepartments;

@@ -51,7 +51,7 @@
             </MudSelect>
         </MudItem>
         <MudItem xs="12" md="3">
-            <QuizAutocomplete For="@(() => context.QuizId)" @bind-Value="context.QuizId" OffsetY="true" />
+            <QuizAutocomplete For="@(() => context.QuizId)" @bind-Value="context.QuizId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
         </MudItem>
     </EditFormContent>
 </EntityTable>

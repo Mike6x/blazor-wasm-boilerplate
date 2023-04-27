@@ -17,6 +17,7 @@ public partial class SubCategories
             fields: new()
             {
                 // new(SubCategorie => SubCategorie.Id, L["Id"], "Id"),
+                new(SubCategorie => SubCategorie.Order, L["Order"], "Order"),
                 new(SubCategorie => SubCategorie.Code, L["Code"], "Code"),
                 new(SubCategorie => SubCategorie.Name, L["Name"], "Name"),
                 new(SubCategorie => SubCategorie.Description, L["Description"], "Description"),

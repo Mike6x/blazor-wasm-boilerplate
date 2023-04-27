@@ -21,12 +21,12 @@ public partial class GeoAdminUnits
                 // new(GeoAdminUnit => GeoAdminUnit.Code, L["Code"], "Code"),
                 new(GeoAdminUnit => GeoAdminUnit.Name, L["Name"], "Name"),
                 new(GeoAdminUnit => GeoAdminUnit.FullName, L["Formal Name"], "FullName"),
+                new(GeoAdminUnit => GeoAdminUnit.Type, L["Type"], "Type" ),
+
                 new(GeoAdminUnit => GeoAdminUnit.NativeName, L["Navtive Name"], "NativeName"),
                 new(GeoAdminUnit => GeoAdminUnit.FullNativeName, L["Full Native"], "FullNativeName"),
 
-                new(GeoAdminUnit => GeoAdminUnit.Type, L["Type"], "Type" ),
                 new(GeoAdminUnit => GeoAdminUnit.Description, L["Description"], "Description"),
-
             },
             idFunc: GeoAdminUnit => GeoAdminUnit.Id,
             searchFunc: async filter => (await GeoAdminUnitsClient

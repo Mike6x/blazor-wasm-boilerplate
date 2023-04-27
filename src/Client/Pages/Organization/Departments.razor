@@ -14,7 +14,9 @@
                 <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"Department Id"]" />
             </MudItem>
         }
-
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Order"]" For="@(() => context.Order)" @bind-Value="context.Order" />
+        </MudItem>
         <MudItem xs="12" md="3">
             <MudTextField Label="@L["Code"]" For="@(() => context.Code)" @bind-Value="context.Code" />
         </MudItem>
@@ -22,10 +24,14 @@
             <MudTextField Label="@L["Name"]" For="@(() => context.Name)" @bind-Value="context.Name" T="string" />
         </MudItem>
         <MudItem xs="12" md="3">
-            <BusinessUnitAutocomplete For="@(() => context.BusinessUnitId)" @bind-Value="context.BusinessUnitId" OffsetY="true" />
-        </MudItem>
-        <MudItem xs="12" md="3">
             <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <BusinessUnitAutocomplete For="@(() => context.BusinessUnitId)" @bind-Value="context.BusinessUnitId"
+                                      AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+        </MudItem>
+        <MudItem xs="12" md="9">
         </MudItem>
         <MudItem xs="12" md="12">
             <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />

@@ -17,6 +17,7 @@ public partial class BusinessLines
             fields: new()
             {
                 // new(BusinessLine => BusinessLine.Id, L["Id"], "Id"),
+                new(BusinessLine => BusinessLine.Order, L["Order"], "Order"),
                 new(BusinessLine => BusinessLine.Code, L["Code"], "Code"),
                 new(BusinessLine => BusinessLine.Name, L["Name"], "Name"),
                 new(BusinessLine => BusinessLine.Description, L["Description"], "Description"),

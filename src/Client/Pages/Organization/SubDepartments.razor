@@ -16,16 +16,23 @@
         }
 
         <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Order"]" For="@(() => context.Order)" @bind-Value="context.Order" />
+        </MudItem>
+        <MudItem xs="12" md="3">
             <MudTextField Label="@L["Code"]" For="@(() => context.Code)" @bind-Value="context.Code" />
         </MudItem>
         <MudItem xs="12" md="3">
             <MudTextField Label="@L["Name"]" For="@(() => context.Name)" @bind-Value="context.Name" T="string" />
         </MudItem>
         <MudItem xs="12" md="3">
-            <DepartmentAutocomplete For="@(() => context.DepartmentId)" @bind-Value="context.DepartmentId" OffsetY="true" />
-        </MudItem>
-        <MudItem xs="12" md="3">
             <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <DepartmentAutocomplete For="@(() => context.DepartmentId)" @bind-Value="context.DepartmentId"
+                                    AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+        </MudItem>
+        <MudItem xs="12" md="9">
         </MudItem>
         <MudItem xs="12" md="12">
             <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />

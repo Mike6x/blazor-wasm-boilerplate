@@ -28,8 +28,7 @@
         </MudItem>
 
         <MudItem xs="12" md="3">
-            <CountryAutocomplete For="@(() => context.CountryId)" @bind-Value="context.CountryId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
-        </MudItem>
+       </MudItem>
         <MudItem xs="12" md="3">
             <MudTextField Label="@L["Numeric Code"]" For="@(() => context.NumericCode)" @bind-Value="context.NumericCode" />
         </MudItem>
@@ -55,11 +54,35 @@
             <MudTextField Label="@L["Longitude"]" For="@(() => context.Longitude)" @bind-Value="context.Longitude" />
         </MudItem>
 
-        <MudItem xs="12" md="9">
-            <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
+        <MudItem xs="12" md="3">
+            <GeoAdminUnitAutocomplete For="@(() => ContinentId)" @bind-Value="ContinentId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter"
+                                      Label="@L["Continent"]" UnitType="GeoAdminUnitType.Continent" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <GeoAdminUnitAutocomplete For="@(() => SubContinentId)" @bind-Value="SubContinentId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter"
+                                      Label="@L["SubContinent"]" UnitType="GeoAdminUnitType.SubContinent" />
+        </MudItem>
+        
+        <MudItem xs="12" md="3">
+            <CountryAutocomplete For="@(() => context.CountryId)" @bind-Value="context.CountryId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter"
+                                 ContinentIdStr="@ContinentId" SubContinentIdStr="SubContinentId" />
         </MudItem>
         <MudItem xs="12" md="3">
             <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
         </MudItem>
+
+        <MudItem xs="12" md="12">
+            <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
+        </MudItem>
+
+@*         <MudItem xs="12" md="8">
+            <MudText Class="mb-n3" Typo="Typo.body2">
+                <MudChip>@(ContinentId)</MudChip>
+            </MudText>
+        </MudItem>
+        <MudItem xs="12" md="4">
+        <MudTextField Label="@L[$"SubContinent Id"]" For="@(() => SubContinentId)" @bind-Value="SubContinentId" />
+        </MudItem>*@
+
     </EditFormContent>
 </EntityTable>

@@ -18,7 +18,8 @@ public class StateAutocomplete : MudAutocomplete<Guid>
     private List<StateDto> _entityList = new();
 
     // supply default parameters, but leave the possibility to override them
-
+    [Parameter]
+    public Guid FatherId { get; set; }
     public override Task SetParametersAsync(ParameterView parameters)
     {
         Label = L["State"];
@@ -57,7 +58,8 @@ public class StateAutocomplete : MudAutocomplete<Guid>
         var filter = new SearchStatesRequest
         {
             PageSize = 10,
-            AdvancedSearch = new() { Fields = new[] { "name" }, Keyword = value }
+            AdvancedSearch = new() { Fields = new[] { "name" }, Keyword = value },
+            CountryId = FatherId == Guid.Empty ? null : FatherId,
         };
 
         if (await ApiHelper.ExecuteCallGuardedAsync(

@@ -15,7 +15,7 @@
             </MudItem>
         }
         <MudItem xs="12" md="6">
-            <MudTextField T="int" For="@(() => context.Code)" @bind-Value="context.Code" Label="@L["Code"]" />
+            <MudTextField T="string" For="@(() => context.Code)" @bind-Value="context.Code" Label="@L["Code"]" />
         </MudItem>
         <MudItem xs="12" md="6">
             <MudTextField T="int" For="@(() => context.Parent)" @bind-Value="context.Parent" Label="@L["Parrent"]" />

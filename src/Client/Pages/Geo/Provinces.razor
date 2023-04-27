@@ -70,11 +70,10 @@
         </MudItem>
 
         <MudItem xs="12" md="3">
-            <StateAutocomplete For="@(() => context.StateId)" @bind-Value="context.StateId"
-                               AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+            <CountryAutocomplete For="@(() => CountryId)" @bind-Value="CountryId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
         </MudItem>
         <MudItem xs="12" md="3">
-            <StateAutocomplete For="@(() => context.StateId)" @bind-Value="context.StateId"
+            <StateAutocomplete For="@(() => context.StateId)" @bind-Value="context.StateId" FatherId = "CountryId"
                                AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
         </MudItem>
         <MudItem xs="12" md="3">

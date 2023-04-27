@@ -14,7 +14,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.5" PrivateAssets="all" />
         <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-        <PackageReference Include="MudBlazor" Version="6.2.2" />
+        <PackageReference Include="MudBlazor" Version="6.2.5" />
         <PackageReference Include="QRCoder" Version="1.4.3" />
     </ItemGroup>
 
@@ -43,5 +43,14 @@
 
     <ItemGroup>
       <Folder Include="Pages\Price\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="wwwroot\AMS.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Update="wwwroot\logo.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 </Project>

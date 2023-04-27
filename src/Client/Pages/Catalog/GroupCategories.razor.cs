@@ -17,6 +17,7 @@ public partial class GroupCategories
             fields: new()
             {
                 // new(GroupCategorie => GroupCategorie.Id, L["Id"], "Id"),
+                new(GroupCategorie => GroupCategorie.Order, L["Order"], "Order"),
                 new(GroupCategorie => GroupCategorie.Code, L["Code"], "Code"),
                 new(GroupCategorie => GroupCategorie.Name, L["Name"], "Name"),
                 new(GroupCategorie => GroupCategorie.Description, L["Description"], "Description"),

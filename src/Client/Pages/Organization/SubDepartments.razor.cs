@@ -17,6 +17,7 @@ public partial class SubDepartments
             fields: new()
             {
                 // new(SubDepartment => SubDepartment.Id, L["Id"], "Id"),
+                new(SubDepartment => SubDepartment.Order, L["Order"], "Order"),
                 new(SubDepartment => SubDepartment.Code, L["Code"], "Code"),
                 new(SubDepartment => SubDepartment.Name, L["Name"], "Name"),
                 new(SubDepartment => SubDepartment.Description, L["Description"], "Description"),

@@ -15,13 +15,16 @@
             </MudItem>
         }
 
-        <MudItem xs="12" md="4">
-            <MudTextField Label="@L["Code"]" For="@(() => context.Code)" @bind-Value="context.Code" T="string" />
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Order"]" For="@(() => context.Order)" @bind-Value="context.Order" />
         </MudItem>
-        <MudItem xs="12" md="4">
-            <MudTextField Label="@L["Name"]" For="@(() => context.Name)" @bind-Value="context.Name" T="string" />
+        <MudItem xs="12" md="3">
+            <MudTextField T="string" For="@(() => context.Code)" @bind-Value="context.Code" Label="@L["Code"]" />
         </MudItem>
-        <MudItem xs="12" md="4">
+        <MudItem xs="12" md="3">
+            <MudTextField T="string" For="@(() => context.Name)" @bind-Value="context.Name" Label="@L["Name"]" />
+        </MudItem>
+        <MudItem xs="12" md="3">
             <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
         </MudItem>
         <MudItem xs="12" md="12">

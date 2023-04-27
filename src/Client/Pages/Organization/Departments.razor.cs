@@ -17,6 +17,7 @@ public partial class Departments
             fields: new()
             {
                 // new(Department => Department.Id, L["Id"], "Id"),
+                new(Department => Department.Order, L["Order"], "Order"),
                 new(Department => Department.Code, L["Code"], "Code"),
                 new(Department => Department.Name, L["Name"], "Name"),
                 new(Department => Department.Description, L["Description"], "Description"),

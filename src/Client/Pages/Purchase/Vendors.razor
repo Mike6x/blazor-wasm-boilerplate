@@ -18,10 +18,8 @@
         <MudItem xs="12" md="3">
             <MudTextField Label="@L["Code"]" For="@(() => context.Code)" @bind-Value="context.Code" />
         </MudItem>
-        <MudItem xs="12" md="3">
+        <MudItem xs="12" md="6">
             <MudTextField Label="@L["Name"]" For="@(() => context.Name)" @bind-Value="context.Name" T="string" />
-        </MudItem>
-        <MudItem xs="12" md="3">
         </MudItem>
         <MudItem xs="12" md="3">
             <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>

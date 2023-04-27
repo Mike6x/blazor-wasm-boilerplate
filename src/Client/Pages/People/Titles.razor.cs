@@ -17,6 +17,7 @@ public partial class Titles
             fields: new()
             {
                 // new(Title => Title.Id, L["Id"], "Id"),
+                new(Title => Title.Order, L["Order"], "Order"),
                 new(Title => Title.Code, L["Code"], "Code"),
                 new(Title => Title.Name, L["Name"], "Name"),
                 new(Title => Title.Grade, L["Grade"], "Grade"),

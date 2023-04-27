@@ -19,6 +19,12 @@
     </ExtraActions>
 
     <EditFormContent>
+@*        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="12">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"User Id"]" />
+            </MudItem>
+        }*@
 
         <MudItem xs="12" md="4">
             <MudTextField For="@(() => context.UserName)" @bind-Value="context.UserName" Label="@L["User Name"]" />

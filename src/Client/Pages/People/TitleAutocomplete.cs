@@ -56,7 +56,7 @@ public class TitleAutocomplete : MudAutocomplete<Guid>
         var filter = new SearchTitlesRequest
         {
             PageSize = 10,
-            AdvancedSearch = new() { Fields = new[] { "name" }, Keyword = value }
+            AdvancedSearch = new() { Fields = new[] { "code", "name"}, Keyword = value }
         };
 
         if (await ApiHelper.ExecuteCallGuardedAsync(

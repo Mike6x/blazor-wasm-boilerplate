@@ -21,6 +21,7 @@ public partial class BusinessUnits
             fields: new()
             {
                 // new(BusinessUnit => BusinessUnit.Id, L["Id"], "Id"),
+                new(BusinessUnit => BusinessUnit.Order, L["Order"], "Order"),
                 new(BusinessUnit => BusinessUnit.Code, L["Code"], "Code"),
                 new(BusinessUnit => BusinessUnit.Name, L["Name"], "Name"),
                 new(BusinessUnit => BusinessUnit.Description, L["Description"], "Description"),

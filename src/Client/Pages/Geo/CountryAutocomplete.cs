@@ -18,6 +18,10 @@ public class CountryAutocomplete : MudAutocomplete<Guid>
     private List<CountryDto> _entityList = new();
 
     // supply default parameters, but leave the possibility to override them
+    [Parameter]
+    public Guid ContinentIdStr { get; set; }
+    [Parameter]
+    public Guid SubContinentIdStr { get; set; }
 
     public override Task SetParametersAsync(ParameterView parameters)
     {
@@ -56,6 +60,9 @@ public class CountryAutocomplete : MudAutocomplete<Guid>
     {
         var filter = new SearchCountriesRequest
         {
+            ContinentId = ContinentIdStr == Guid.Empty ? null : ContinentIdStr,
+            SubContinentId = SubContinentIdStr == Guid.Empty ? null : SubContinentIdStr,
+
             PageSize = 10,
             AdvancedSearch = new() { Fields = new[] { "name" }, Keyword = value }
         };

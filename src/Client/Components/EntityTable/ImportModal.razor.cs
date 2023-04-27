@@ -39,8 +39,8 @@ public partial class ImportModal
 
     private async Task SaveAsync()
     {
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
+        // Stopwatch stopwatch = new Stopwatch();
+        // stopwatch.Start();
         _uploading = true;
 
         // if (await ApiHelper.ExecuteCallGuardedAsync(
@@ -58,9 +58,10 @@ public partial class ImportModal
         }
 
         _uploading = false;
-        stopwatch.Stop();
-        TimeSpan ts = stopwatch.Elapsed;
-        Snackbar.Add(string.Format("Processing time is about {0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10));
+
+        // stopwatch.Stop();
+        // TimeSpan ts = stopwatch.Elapsed;
+        // Snackbar.Add(string.Format("Processing time is about {0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10));
     }
 
     private async Task UploadFiles(InputFileChangeEventArgs e)

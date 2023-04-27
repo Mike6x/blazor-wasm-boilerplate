@@ -100,6 +100,10 @@ public partial class UserProfile
     {
         Navigation.NavigateTo("/users");
     }
+    private void BackToEmplyees()
+    {
+        Navigation.NavigateTo("People/Employees");
+    }
 
     private async Task ToggleUserStatusAsync()
     {

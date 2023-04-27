@@ -21,7 +21,7 @@
         }
 
         <MudItem xs="12" md="3">
-            <AssetAutocomplete For="@(() => context.AssetId)" @bind-Value="context.AssetId" OffsetY="true" />
+            <AssetAutocomplete For="@(() => context.AssetId)" @bind-Value="context.AssetId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
         </MudItem>
         <MudItem xs="12" md="3"></MudItem>
         <MudItem xs="12" md="3">
@@ -34,7 +34,7 @@
         </MudItem>
 
         <MudItem xs="12" md="3">
-            <EmployeeAutocomplete For="@(() => context.EmployeeId)" @bind-Value="context.EmployeeId" OffsetY="true" />
+            <EmployeeAutocomplete For="@(() => context.EmployeeId)" @bind-Value="context.EmployeeId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
         </MudItem>
 
         <MudItem xs="12" md="3"></MudItem>

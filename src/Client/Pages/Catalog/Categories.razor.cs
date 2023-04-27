@@ -17,6 +17,7 @@ public partial class Categories
             fields: new()
             {
                 // new(Categorie => Categorie.Id, L["Id"], "Id"),
+                new(Categorie => Categorie.Order, L["Order"], "Order"),
                 new(Categorie => Categorie.Code, L["Code"], "Code"),
                 new(Categorie => Categorie.Name, L["Name"], "Name"),
                 new(Categorie => Categorie.Description, L["Description"], "Description"),

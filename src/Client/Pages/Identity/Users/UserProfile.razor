@@ -19,7 +19,9 @@ else
                             <div class="d-flex justify-center mb-4">
                                 @if (!string.IsNullOrEmpty(@_imageUrl))
                                     {
-                                        <MudAvatar Image="@_imageUrl" Style="height:250px; width:250px;"> </MudAvatar>
+                                        <MudAvatar Square="true" Style="height:250px; width:250px;" Elevation="5" Class="rounded-lg">
+                                            <MudImage Src="@_imageUrl"></MudImage>
+                                        </MudAvatar>
                                     }
                                     else
                                     {
@@ -39,7 +41,7 @@ else
                             @if(!string.IsNullOrEmpty(_imageUrl))
                             {
                                 <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" Target="_blank"
-                                    StartIcon="@Icons.Material.Filled.RemoveRedEye" Link="@_imageUrl" Style="margin-left: 5px;" >
+                                    StartIcon="@Icons.Material.Filled.RemoveRedEye" Href="@_imageUrl" Style="margin-left: 5px;" >
                                     @_localizer["View"]
                                 </MudButton>
 
@@ -122,13 +124,20 @@ else
                             </MudGrid>
                         </MudCardContent>
                         <MudCardActions Class="pb-4 pl-4">
-                            <MudButton OnClick="BackToUsers" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.List" Style="margin-right: 5px;">@_localizer["Users"]</MudButton>
+                            <MudButton OnClick="BackToUsers" Variant="Variant.Filled"
+                                StartIcon="@Icons.Material.Filled.ArrowBack" Style="margin-right: 5px;">@_localizer["Users"]</MudButton>
+                            <MudButton OnClick="BackToEmplyees" Variant="Variant.Filled"
+                                StartIcon="@Icons.Material.Filled.List" Style="margin-right: 5px;">@_localizer["Employees"]</MudButton>
                             <MudButton OnClick="ToggleUserStatusAsync" Variant="Variant.Filled" Color="Color.Warning"
                                 StartIcon="@Icons.Material.Filled.ToggleOn" Style="margin-right: 5px;">@_localizer["Act/Dis"]</MudButton>
-                            <MudButton OnClick="SendVerificationEmailAsync" Variant="Variant.Filled" Color="Color.Info" Style="margin-right: 5px;">@_localizer["Verify Email"]</MudButton>
-                            <MudButton OnClick="SendRecoveryPasswordEmailAsync" Variant="Variant.Filled" Color="Color.Success" Style="margin-right: 5px;">@_localizer["Recovery Pass"]</MudButton>
-                            <MudButton OnClick="UnlockUserAsync" Disabled="@(!IsLocked)" Variant="Variant.Filled" Color="Color.Tertiary" Style="margin-right: 5px;">@_localizer["Unlock"]</MudButton>
-                            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Secondary" Style="margin-right: 5px;">@_localizer["Update"]</MudButton>
+                            <MudButton OnClick="SendVerificationEmailAsync" Variant="Variant.Filled" Color="Color.Info"
+                                StartIcon="@Icons.Material.Filled.MarkEmailUnread" Style="margin-right: 5px;">@_localizer["Verify Email"]</MudButton>
+                            <MudButton OnClick="SendRecoveryPasswordEmailAsync" Variant="Variant.Filled" Color="Color.Success"
+                                StartIcon="@Icons.Material.Filled.MarkEmailUnread" Style="margin-right: 5px;">@_localizer["Recovery Pass"]</MudButton>
+                            <MudButton OnClick="UnlockUserAsync" Disabled="@(!IsLocked)" Variant="Variant.Filled" Color="Color.Tertiary"
+                                StartIcon="@Icons.Material.Filled.LockReset" Style="margin-right: 5px;">@_localizer["Unlock"]</MudButton>
+                            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Secondary"
+                                StartIcon="@Icons.Material.Filled.SystemUpdateAlt" Style="margin-right: 5px;">@_localizer["Update"]</MudButton>
                         </MudCardActions>
 
                     </MudCard>

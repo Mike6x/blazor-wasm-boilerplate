@@ -17,6 +17,7 @@ public partial class Brands
             fields: new()
             {
                // new(brand => brand.Id, L["Id"], "Id"),
+                new(brand => brand.Order, L["Order"], "Order"),
                 new(brand => brand.Code, L["Code"], "Code"),
                 new(brand => brand.Name, L["Name"], "Name"),
                 new(brand => brand.Description, L["Description"], "Description"),
