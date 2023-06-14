@@ -8,12 +8,20 @@
             }
             else
             {
-                <MudAvatar Image="@ImageUri" />
+                <MudAvatar>
+                    <MudImage Src="@ImageUri"></MudImage>
+                </MudAvatar>
             }
         </CardHeaderAvatar>
         <CardHeaderContent>
-            <MudText Typo="Typo.body1">@FullName</MudText>
-            <MudText Typo="Typo.caption">@Email</MudText>
+            <div>
+                <a Href="/account">
+                    <MudText Typo="Typo.body1">@FullName</MudText>
+                    <MudText Typo="Typo.caption">@Email</MudText>
+                </a>
+            </div>
+@*            <MudText Typo="Typo.body1">@FullName</MudText>
+            <MudText Typo="Typo.caption">@Email</MudText>*@
         </CardHeaderContent>
     </MudCardHeader>
 </MudCard>

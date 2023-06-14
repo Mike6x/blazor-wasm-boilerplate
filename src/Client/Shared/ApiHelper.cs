@@ -17,8 +17,8 @@ public static class ApiHelper
         customValidation?.ClearErrors();
         try
         {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
+            // Stopwatch stopwatch = new Stopwatch();
+            // stopwatch.Start();
 
             var result = await call();
 
@@ -27,10 +27,10 @@ public static class ApiHelper
                 snackbar.Add(successMessage, Severity.Info);
             }
 
-            stopwatch.Stop();
-            TimeSpan ts = stopwatch.Elapsed;
-            snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
-            snackbar.Add(string.Format("Processing time is about {0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10), Severity.Info);
+            // stopwatch.Stop();
+            // TimeSpan ts = stopwatch.Elapsed;
+            // snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
+            // snackbar.Add(string.Format("Processing time is about {0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10), Severity.Info);
 
             return result;
         }

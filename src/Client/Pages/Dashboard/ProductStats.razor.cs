@@ -5,21 +5,25 @@ using FSH.WebApi.Shared.Notifications;
 using MediatR.Courier;
 using Microsoft.AspNetCore.Components;
 
-namespace FSH.BlazorWebAssembly.Client.Pages.Personal;
+namespace FSH.BlazorWebAssembly.Client.Pages.Dashboard;
 
-public partial class Dashboard
+public partial class ProductStats
 {
-    [Parameter]
-    public int ProductCount { get; set; }
     [Parameter]
     public int BrandCount { get; set; }
     [Parameter]
-    public int UserCount { get; set; }
+    public int BusinessLineCount { get; set; }
     [Parameter]
-    public int RoleCount { get; set; }
+    public int GroupCategorieCount { get; set; }
+    [Parameter]
+    public int CategorieCount { get; set; }
+    [Parameter]
+    public int SubCategorieCount { get; set; }
+    [Parameter]
+    public int ProductCount { get; set; }
 
     [Inject]
-    private IDashboardClient DashboardClient { get; set; } = default!;
+    private IProductStatsClient ProductStatsClient { get; set; } = default!;
     [Inject]
     private ICourier Courier { get; set; } = default!;
 
@@ -43,14 +47,17 @@ public partial class Dashboard
     private async Task LoadDataAsync()
     {
         if (await ApiHelper.ExecuteCallGuardedAsync(
-                () => DashboardClient.GetAsync(),
+                () => ProductStatsClient.GetAsync(),
                 Snackbar)
-            is StatsDto statsDto)
+            is ProductStatsDto statsDto)
         {
             ProductCount = statsDto.ProductCount;
             BrandCount = statsDto.BrandCount;
-            UserCount = statsDto.UserCount;
-            RoleCount = statsDto.RoleCount;
+            BusinessLineCount = statsDto.BusinessLineCount;
+            GroupCategorieCount = statsDto.GroupCategorieCount;
+            CategorieCount = statsDto.CategorieCount;
+            SubCategorieCount = statsDto.SubCategorieCount;
+
             foreach (var item in statsDto.DataEnterBarChart)
             {
                 _dataEnterBarChartSeries

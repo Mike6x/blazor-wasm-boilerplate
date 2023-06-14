@@ -32,13 +32,14 @@ public partial class Employees
                 // new(Employee => Employee.Description, L["Description"], "Description"),
 
                 new(Employee => Employee.IsActive, L["Active"], Type: typeof(bool)),
-                new(Employee => Employee.TitleName, L["Title"], "Title"),
-                new(Employee => Employee.SuperiorFirstName, L["Superior"], "Superior"),
+                new(Employee => Employee.TitleName, L["Title"], "Title.Name"),
 
-                new(Employee => Employee.BusinessUnitName, L["BU."], "BU."),
-                new(Employee => Employee.DepartmentName, L["Dep."], "Dep."),
-                new(Employee => Employee.SubDepartmentName, L["Section"], "Section"),
-                new(Employee => Employee.TeamName, L["Team"], "Team"),
+                new(Employee => Employee.SuperiorFirstName, L["Superior F.Name "], "Superior.FirstName"),
+                new(Employee => Employee.SuperiorLastName, L["Superior L.Name"], "Superior.LastName"),
+                new(Employee => Employee.BusinessUnitName, L["BU."], "BusinessUnit.Name"),
+                new(Employee => Employee.DepartmentName, L["Department"], "Department.Name"),
+                new(Employee => Employee.SubDepartmentName, L["Section"], "SubDepartment.Name"),
+                new(Employee => Employee.TeamName, L["Team"], "Team.Name"),
             },
             idFunc: Employee => Employee.Id,
             searchFunc: async filter => (await EmployeesClient

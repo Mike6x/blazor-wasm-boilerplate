@@ -1,6 +1,5 @@
 ﻿using FSH.BlazorWebAssembly.Client.Components.EntityTable;
 using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient;
-using FSH.BlazorWebAssembly.Client.Pages.Organization;
 using FSH.WebApi.Shared.Authorization;
 using Mapster;
 
@@ -65,14 +64,15 @@ public partial class Wards
                 new(Ward => Ward.NumericCode, L["Numeric"], "NumericCode"),
                 new(Ward => Ward.Code, L["Code"], "Code"),
                 new(Ward => Ward.Name, L["Name"], "Name"),
-                new(Ward => Ward.TypeName, L["Type"], "Type" ),
+                new(Ward => Ward.TypeName, L["Type"], "Type.Name" ),
+                new(Ward => Ward.DistrictName, L["District"], "District.Name"),
+
+                new(Ward => Ward.NativeName, L["Navtive Name"], "NativeName"),
+                new(Ward => Ward.TypeNativeName, L["Native Type"], "Type.NativeName" ),
+                new(Ward => Ward.DistrictNativeName, L["Native District"], "District.NativeName"),
 
                 // new(Ward => Ward.FullName, L["Formal Name"], "FullName"),
-                // new(Ward => Ward.NativeName, L["Navtive Name"], "NativeName"),
-
-                new(Ward => Ward.FullNativeName, L["Full Native"], "FullNativeName"),
-                new(Ward => Ward.DistrictName, L["District"], "District"),
-
+                // new(Ward => Ward.FullNativeName, L["Full Native"], "FullNativeName"),
                 // new(Ward => Ward.Description, L["Description"], "Description"),
             },
             idFunc: Ward => Ward.Id,

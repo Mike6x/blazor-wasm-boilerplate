@@ -22,9 +22,7 @@ public partial class GroupCategories
                 new(GroupCategorie => GroupCategorie.Name, L["Name"], "Name"),
                 new(GroupCategorie => GroupCategorie.Description, L["Description"], "Description"),
 
-                new(GroupCategorie => GroupCategorie.BusinessLineName, L["BusinessLineName"], "BusinessLineName"),
-                new(GroupCategorie => GroupCategorie.BusinessLineId, L["BusinessLineId"], "BusinessLineId"),
-
+                new(GroupCategorie => GroupCategorie.BusinessLineName, L["BusinessLine"], "BusinessLine.Name"),
                 new(GroupCategorie => GroupCategorie.Type, L["Type"], "Type" ),
                 new(GroupCategorie => GroupCategorie.IsActive, L["Active"], Type: typeof(bool)),
             },

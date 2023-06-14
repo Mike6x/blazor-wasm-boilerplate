@@ -88,10 +88,10 @@ public partial class Assets
                 new(asset => asset.Name, L["Name"], "Name"),
                 new(asset => asset.Serial, L["Serial"], "Serial"),
                 new(asset => asset.Description, L["Description"], "Description"),
-                new(asset => asset.QualityStatusName, L["Quality"], "Quality"),
-                new(asset => asset.UsingStatusName, L["Status"], "Status"),
-                new(asset => asset.EmployeeFirstName, L["FirstName"], "FirstName"),
-                new(asset => asset.EmployeeLastName, L["LastName"], "LastName"),
+                new(asset => asset.QualityStatusName, L["Quality"], "QualityStatus.Name"),
+                new(asset => asset.UsingStatusName, L["Status"], "UsingStatus.Name"),
+                new(asset => asset.EmployeeFirstName, L["FirstName"], "Employee.FirstName"),
+                new(asset => asset.EmployeeLastName, L["LastName"], "Employee.LastName"),
             },
             idFunc: asset => asset.Id,
             searchFunc: async filter => (await AssetsClient
@@ -211,6 +211,7 @@ public partial class Assets
         }
         else
         {
+            Snackbar.Add("Processing start!", Severity.Info);
             var exportFilter = new ExportAssetsDeliveryRequest()
             {
                 EmployeeId = (Guid)id

@@ -22,9 +22,7 @@ public partial class Departments
                 new(Department => Department.Name, L["Name"], "Name"),
                 new(Department => Department.Description, L["Description"], "Description"),
 
-                new(Department => Department.BusinessUnitName, L["BusinessUnit Name"], "BusinessUnit Name"),
-                new(Department => Department.BusinessUnitId, L["BusinessUnitId"], "BusinessUnitId"),
-
+                new(Department => Department.BusinessUnitName, L["BusinessUnit"], "BusinessUnit.Name"),
                 new(Department => Department.IsActive, L["Active"], Type: typeof(bool)),
 
             },

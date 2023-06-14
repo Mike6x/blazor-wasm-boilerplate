@@ -28,11 +28,16 @@ public partial class Products
             entityResource: FSHResource.Products,
             fields: new()
             {
-                new(prod => prod.Id, L["Id"], "Id"),
+                // new(prod => prod.Id, L["Id"], "Id"),
+                // new(prod => prod.Order, L["Order"], "Order"),
+                new(prod => prod.Code, L["Code"], "Code"),
                 new(prod => prod.Name, L["Name"], "Name"),
-                new(prod => prod.BrandName, L["Brand"], "Brand.Name"),
                 new(prod => prod.Description, L["Description"], "Description"),
-                new(prod => prod.Rate, L["Rate"], "Rate")
+                new(prod => prod.ListPrice, L["ListPrice"], "ListPrice"),
+                new(prod => prod.BrandName, L["Brand"], "Brand.Name"),
+                new(prod => prod.CategorieName, L["Categorie"], "Categorie.Name"),
+                new(prod => prod.SubCategorieName, L["SubCategorie"], "SubCategorie.Name"),
+                new(prod => prod.IsActive,  L["Active"], Type: typeof(bool)),
             },
             enableAdvancedSearch: true,
             idFunc: prod => prod.Id,
@@ -78,7 +83,13 @@ public partial class Products
                 exportFilter.MaximumRate = SearchMaximumRate;
 
                 return await ProductsClient.ExportAsync(exportFilter);
-            });
+            },
+            importFunc: async FileUploadRequest =>
+            {
+                var request = new ImportProductsRequest() { ExcelFile = FileUploadRequest };
+                await ProductsClient.ImportAsync(request);
+            }
+            );
 
     // Advanced Search
 
@@ -100,18 +111,18 @@ public partial class Products
         set
         {
             _searchMinimumRate = value;
-            _ = _table.ReloadDataAsync();
+            _ = _table?.ReloadDataAsync();
         }
     }
 
-    private decimal _searchMaximumRate = 9999;
+    private decimal _searchMaximumRate = 999999999;
     private decimal SearchMaximumRate
     {
         get => _searchMaximumRate;
         set
         {
             _searchMaximumRate = value;
-            _ = _table.ReloadDataAsync();
+            _ = _table?.ReloadDataAsync();
         }
     }
 

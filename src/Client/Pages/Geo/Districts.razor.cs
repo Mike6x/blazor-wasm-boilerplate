@@ -48,15 +48,12 @@ public partial class Districts
                 new(District => District.Code, L["Code"], "Code"),
                 new(District => District.Name, L["Name"], "Name"),
 
-                // new(District => District.FullName, L["Formal Name"], "FullName"),
-                new(District => District.TypeName, L["Type"], "Type" ),
-                new(District => District.ProvinceName, L["City"], "City"),
+                new(District => District.TypeName, L["Type"], "Type.Name" ),
+                new(District => District.ProvinceName, L["City"], "Province.Name"),
 
-                // new(District => District.NativeName, L["Navtive Name"], "NativeName"),
-
-                new(District => District.FullNativeName, L["Full Native"], "FullNativeName"),
-
-                // new(District => District.Description, L["Description"], "Description"),
+                new(District => District.NativeName, L["Native Name"], "NativeName"),
+                new(District => District.TypeNativeName, L["Native Type"], "Type.NativeName" ),
+                new(District => District.ProvinceNativeName, L["City"], "Province.NativeName"),
             },
             idFunc: District => District.Id,
             searchFunc: async filter => (await DistrictsClient

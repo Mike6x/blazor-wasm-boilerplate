@@ -1,0 +1,97 @@
+﻿@page "/Dashboard/ProductStats"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.ProductStats)]
+
+@inject IStringLocalizer<ProductStats> L
+
+<FshTitle Title="@L["Product Statistics"]" Description="@L["Product and Catalog Statistics"]" />
+
+@if (!_loaded)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    <MudGrid>
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                <MudIcon Icon="@Icons.Material.Filled.PanoramaPhotosphereSelect" Color="Color.Secondary" Class="mx-4"
+                         Style="width:54px; height:54px;"></MudIcon>
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">@L["Brands"]</MudText>
+                    <MudText @bind-Value="@BrandCount" Typo="Typo.h5">@BrandCount</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="6">
+            <MudPaper Elevation="25" Class="pa-4" Style="height:500px;">
+                <MudChart ChartType="ChartType.Bar" ChartSeries="@_dataEnterBarChartSeries"
+                XAxisLabels="@_dataEnterBarChartXAxisLabels.Select(a => L[a].Value).ToArray()" Width="100%"
+                Height="400px"></MudChart>
+            </MudPaper>
+        </MudItem>
+
+@*        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                <MudIcon Icon="@Icons.Material.Filled.PanoramaPhotosphereSelect" Color="Color.Secondary" Class="mx-4"
+                         Style="width:54px; height:54px;"></MudIcon>
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">@L["Brands"]</MudText>
+                    <MudText @bind-Value="@BrandCount" Typo="Typo.h5">@BrandCount</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="6">
+        </MudItem>*@
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                <MudIcon Icon="@Icons.Material.Filled.ViewCarousel" Color="Color.Primary" Class="mx-4"
+                         Style="width:54px; height:54px;"></MudIcon>
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">@L["Products"]</MudText>
+                    <MudText Typo="Typo.h5">@ProductCount</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                <MudIcon Icon="@Icons.Material.Filled.AccountTree" Color="Color.Secondary" Class="mx-4"
+                         Style="width:54px; height:54px;"></MudIcon>
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">@L["BusinessLines"]</MudText>
+                    <MudText @bind-Value="@BusinessLineCount" Typo="Typo.h5">@BusinessLineCount</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                <MudIcon Icon="@Icons.Material.Filled.SpeakerGroup" Color="Color.Secondary" Class="mx-4"
+                         Style="width:54px; height:54px;"></MudIcon>
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">@L["GroupCategories"]</MudText>
+                    <MudText @bind-Value="@GroupCategorieCount" Typo="Typo.h5">@GroupCategorieCount</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                <MudIcon Icon="@Icons.Material.Filled.Widgets" Color="Color.Secondary" Class="mx-4"
+                         Style="width:54px; height:54px;"></MudIcon>
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">@L["Categories"]</MudText>
+                    <MudText @bind-Value="@CategorieCount" Typo="Typo.h5">@CategorieCount</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                <MudIcon Icon="@Icons.Material.Filled.ViewAgenda" Color="Color.Secondary" Class="mx-4"
+                         Style="width:54px; height:54px;"></MudIcon>
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">@L["SubCategories"]</MudText>
+                    <MudText @bind-Value="@SubCategorieCount" Typo="Typo.h5">@SubCategorieCount</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+}

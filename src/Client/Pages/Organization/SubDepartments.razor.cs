@@ -22,9 +22,7 @@ public partial class SubDepartments
                 new(SubDepartment => SubDepartment.Name, L["Name"], "Name"),
                 new(SubDepartment => SubDepartment.Description, L["Description"], "Description"),
 
-                new(SubDepartment => SubDepartment.DepartmentName, L["Department Name"], "DepartmentName"),
-                new(SubDepartment => SubDepartment.DepartmentId, L["Department Id"], "DepartmentId"),
-
+                new(SubDepartment => SubDepartment.DepartmentName, L["Department"], "Department.Name"),
                 new(SubDepartment => SubDepartment.IsActive, L["Active"], Type: typeof(bool)),
             },
             idFunc: SubDepartment => SubDepartment.Id,

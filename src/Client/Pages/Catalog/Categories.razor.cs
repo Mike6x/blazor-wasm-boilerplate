@@ -22,8 +22,7 @@ public partial class Categories
                 new(Categorie => Categorie.Name, L["Name"], "Name"),
                 new(Categorie => Categorie.Description, L["Description"], "Description"),
 
-                new(Categorie => Categorie.GroupCategorieName, L["GroupCategorieName"], "GroupCategorieName"),
-                new(Categorie => Categorie.GroupCategorieId, L["GroupCategorieId"], "GroupCategorieId"),
+                new(Categorie => Categorie.GroupCategorieName, L["GroupCategorie"], "GroupCategorie.Name"),
 
                 new(Categorie => Categorie.Type, L["Type"], "Type" ),
                 new(Categorie => Categorie.IsActive, L["Active"], Type: typeof(bool)),

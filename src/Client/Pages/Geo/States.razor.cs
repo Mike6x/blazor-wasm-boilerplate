@@ -46,7 +46,7 @@ public partial class States
                 new(State => State.NativeName, L["Navtive Name"], "NativeName"),
 
                 // new(State => State.FullNativeName, L["Full Native"], "FullNativeName"),
-                new(State => State.CountryName, L["Country"], "Country"),
+                new(State => State.CountryName, L["Country"], "Country.Name"),
                 new(State => State.Metropolis, L["Metropolis"], "Metropolis"),
 
                // new(State => State.TypeName, L["Type"], "Type" ),

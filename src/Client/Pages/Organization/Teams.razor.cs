@@ -22,8 +22,7 @@ public partial class Teams
                 new(Team => Team.Name, L["Name"], "Name"),
                 new(Team => Team.Description, L["Description"], "Description"),
 
-                new(Team => Team.SubDepartmentName, L["SubDepartment"], "SubDepartment"),
-                new(Team => Team.SubDepartmentId, L["SubDepartment Id"], "SubDepartmentId"),
+                new(Team => Team.SubDepartmentName, L["SubDepartment"], "SubDepartment.Name"),
                 new(Team => Team.IsActive, L["Active"], Type: typeof(bool)),
 
             },

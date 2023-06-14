@@ -22,9 +22,7 @@ public partial class SubCategories
                 new(SubCategorie => SubCategorie.Name, L["Name"], "Name"),
                 new(SubCategorie => SubCategorie.Description, L["Description"], "Description"),
 
-                new(SubCategorie => SubCategorie.CategorieName, L["CategorieName"], "CategorieName"),
-                new(SubCategorie => SubCategorie.CategorieId, L["CategorieId"], "CategorieId"),
-
+                new(SubCategorie => SubCategorie.CategorieName, L["Categorie"], "Categorie.Name"),
                 new(SubCategorie => SubCategorie.Type, L["Type"], "Type" ),
                 new(SubCategorie => SubCategorie.IsActive, L["Active"], Type: typeof(bool)),
             },

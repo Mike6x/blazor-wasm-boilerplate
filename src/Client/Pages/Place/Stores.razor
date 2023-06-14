@@ -1,0 +1,116 @@
+﻿@page "/Place/Stores"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.Stores)]
+
+@inject IStringLocalizer<Stores> L
+@inject IStoresClient StoresClient
+
+@using FSH.BlazorWebAssembly.Client.Pages.Place
+@using FSH.BlazorWebAssembly.Client.Pages.Price
+@using FSH.BlazorWebAssembly.Client.Pages.Geo
+
+
+<FshTitle Title="@L["Stores"]" Description="@L["Manage Stores."]" />
+
+<EntityTable TEntity="StoreDto" TId="Guid" TRequest="UpdateStoreRequest" Context="@Context">
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="12">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"Store Id"]" />
+            </MudItem>
+        }
+        <MudTabs Elevation="2" Rounded="true" Color="@Color.Transparent" PanelClass="mt-6">
+            <MudTabPanel Text="Basic Info">
+                <MudGrid>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Order"]" For="@(() => context.Order)" @bind-Value="context.Order" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Code"]" For="@(() => context.Code)" @bind-Value="context.Code" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Name"]" For="@(() => context.Name)" @bind-Value="context.Name" T="string" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+                    </MudItem>
+
+                    <MudItem xs="12" md="3">
+                        <RetailerAutocomplete For="@(() => context.RetailerId)" @bind-Value="context.RetailerId"
+                                              AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["TaxCode"]" For="@(() => context.TaxCode)" @bind-Value="context.TaxCode" />
+                    </MudItem>
+                    <MudItem xs="12" md="12">
+                        <MudTextField Label="@L["FullName"]" For="@(() => context.FullName)" @bind-Value="context.FullName" T="string" />
+                    </MudItem>
+
+                </MudGrid>
+            </MudTabPanel>
+
+            <MudTabPanel Text="Other Info">
+                <MudGrid>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Latitude"]" For="@(() => context.Latitude)" @bind-Value="context.Latitude" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Longitude"]" For="@(() => context.Longitude)" @bind-Value="context.Longitude" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Email"]" For="@(() => context.Email)" @bind-Value="context.Email" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Phone"]" For="@(() => context.Phone)" @bind-Value="context.Phone" />
+                    </MudItem>
+
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Fax"]" For="@(() => context.Fax)" @bind-Value="context.Fax" />
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Grade"]" For="@(() => context.Grade)" @bind-Value="context.Grade" />
+                    </MudItem>
+                    <MudItem xs="12" md="12">
+                        <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
+                    </MudItem>
+                </MudGrid>
+            </MudTabPanel>
+
+            <MudTabPanel Text="Address">
+                <MudGrid>
+                    <MudItem xs="12" md="3">
+                        <CountryAutocomplete For="@(() => CountryId)" @bind-Value="CountryId"
+                                             AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <StateAutocomplete For="@(() => StateId)" @bind-Value="StateId" FatherId="CountryId"
+                                           AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+                    </MudItem>
+
+                    <MudItem xs="12" md="3">
+                        <ProvinceAutocomplete For="@(() => ProvinceId)" @bind-Value="ProvinceId" FatherId="StateId"
+                                              AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <DistrictAutocomplete For="@(() => DistrictId)" @bind-Value="DistrictId" FatherId="ProvinceId"
+                                              AnchorOrigin="Origin.BottomCenter" />
+                    </MudItem>
+                    <MudItem xs="12" md="9">
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <WardAutocomplete For="@(() => WardId)" @bind-Value="WardId" FatherId="DistrictId"
+                                          AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+                    </MudItem>
+
+                    <MudItem xs="12" md="12">
+                        <MudTextField Label="@L["Address"]" For="@(() => context.Address)" @bind-Value="context.Address" />
+                    </MudItem>
+                </MudGrid>
+            </MudTabPanel>
+        </MudTabs>
+    </EditFormContent>
+</EntityTable>

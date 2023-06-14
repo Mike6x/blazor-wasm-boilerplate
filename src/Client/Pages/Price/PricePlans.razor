@@ -1,0 +1,103 @@
+﻿@page "/Price/PricePlans"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.PricePlans)]
+
+@inject IStringLocalizer<PricePlans> L
+@inject IPricePlansClient PricePlansClient
+
+@using FSH.BlazorWebAssembly.Client.Pages.Production
+
+<FshTitle Title="@L["PricePlans"]" Description="@L["Manage PricePlans."]" />
+
+<EntityTable TEntity="PricePlanDto" TId="Guid" TRequest="UpdatePricePlanRequest" Context="@Context">
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="12">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"PricePlan Id"]" />
+            </MudItem>
+        }
+        <MudTabs Elevation="2" Rounded="true" Color="@Color.Transparent" PanelClass="mt-6">           
+            <MudTabPanel Text="Basic Info">
+                <MudGrid>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Order"]" For="@(() => context.Order)" @bind-Value="context.Order" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Code"]" For="@(() => context.Code)" @bind-Value="context.Code" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Name"]" For="@(() => context.Name)" @bind-Value="context.Name" T="string" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+                    </MudItem>
+
+                    <MudItem xs="12" md="3">
+                        <MudDatePicker Label="@L["Effective Date"]" Editable="true" @bind-Date="context.EffectiveDate" DisableToolbar="true" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudDatePicker Label="@L["Expired Date"]" Editable="true" @bind-Date="context.ExpiredDate" DisableToolbar="true" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Priority"]" For="@(() => context.Priority)" @bind-Value="context.Priority" />
+                    </MudItem>
+                    <MudItem xs="12" md="12">
+                        <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
+                    </MudItem>
+                </MudGrid>
+            </MudTabPanel>
+            <MudTabPanel Text="Price Details">
+                <MudGrid>
+                    <MudItem xs="12" md="3">
+                        <PriceGroupAutocomplete For="@(() => context.PriceGroupId)" @bind-Value="context.PriceGroupId"
+                                                AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <ProductAutocomplete For="@(() => context.ProductId)" @bind-Value="context.ProductId"
+                                             AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["PackOfMea"]" For="@(() => context.PackOfMea)" @bind-Value="context.PackOfMea" T="string" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["PackQty"]" For="@(() => context.PackQty)" @bind-Value="context.PackQty" />
+                    </MudItem>
+
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Price"]" For="@(() => context.UnitPrice)" @bind-Value="context.UnitPrice" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["PriceVAT"]" For="@(() => context.PriceVAT)" @bind-Value="context.PriceVAT" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["ListPrice"]" For="@(() => context.ListPrice)" @bind-Value="context.ListPrice" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudTextField Label="@L["Color"]" For="@(() => context.Color)" @bind-Value="context.Color" />
+                    </MudItem>
+                </MudGrid>
+            </MudTabPanel>
+            <MudTabPanel Text="Product Life Cycle">
+                <MudGrid>
+                    <MudItem xs="12" md="3">
+                        <MudDatePicker Label="@L["Listing Date"]" Editable="true" @bind-Date="context.ListingDate" DisableToolbar="true" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudDatePicker Label="@L["New Date"]" Editable="true" @bind-Date="context.NewDate" DisableToolbar="true" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudDatePicker Label="@L["Active Date"]" Editable="true" @bind-Date="context.ActiveDate" DisableToolbar="true" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudDatePicker Label="@L["EOF Date"]" Editable="true" @bind-Date="context.EolDate" DisableToolbar="true" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudDatePicker Label="@L["Diable Date"]" Editable="true" @bind-Date="context.DisableDate" DisableToolbar="true" Variant="Variant.Outlined" />
+                    </MudItem>
+                </MudGrid>
+            </MudTabPanel>
+        </MudTabs>
+    </EditFormContent>
+</EntityTable>

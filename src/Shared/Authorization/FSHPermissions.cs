@@ -21,7 +21,12 @@ public static class FSHResource
 {
     public const string Menus = nameof(Menus);
 
-    public const string Dashboard = nameof(Dashboard);
+    public const string UserStats = nameof(UserStats);
+    public const string ProductStats = nameof(ProductStats);
+    public const string AssetStats = nameof(AssetStats);
+    public const string EmployeeStats = nameof(EmployeeStats);
+    public const string DistributionStats = nameof(DistributionStats);
+
     public const string Hangfire = nameof(Hangfire);
 
     public const string Tenants = nameof(Tenants);
@@ -75,7 +80,7 @@ public static class FSHPermissions
 {
     private static readonly FSHPermission[] _all = new FSHPermission[]
     {
-        #region General UI
+        #region Menu
         new("View Menus", FSHAction.View, FSHResource.Menus),
         new("Search Menus", FSHAction.Search, FSHResource.Menus),
         new("Create Menus", FSHAction.Create, FSHResource.Menus),
@@ -84,8 +89,19 @@ public static class FSHPermissions
         new("Export Menus", FSHAction.Export, FSHResource.Menus),
         new("Import Menus", FSHAction.Import, FSHResource.Menus),
 
-        new("View Dashboard", FSHAction.View, FSHResource.Dashboard),
+        #endregion
+
+        #region Systems job
         new("View Hangfire", FSHAction.View, FSHResource.Hangfire),
+
+        #endregion
+
+        #region Statistics Dashboard
+        new("View User Statistics", FSHAction.View, FSHResource.UserStats),
+        new("View Pruduct Statistics", FSHAction.View, FSHResource.ProductStats),
+        new("View Asset Statistics", FSHAction.View, FSHResource.AssetStats),
+        new("View Employee Statistics", FSHAction.View, FSHResource.EmployeeStats),
+        new("View Distribution Statistics", FSHAction.View, FSHResource.DistributionStats),
 
         #endregion
 

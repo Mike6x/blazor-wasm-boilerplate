@@ -42,10 +42,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Pages\Price\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Content Update="wwwroot\AMS.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>

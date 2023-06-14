@@ -22,7 +22,7 @@ public partial class Countries
                 new(Country => Country.Name, L["Name"], "Name"),
                 new(Country => Country.FullName, L["Formal Name"], "FullName"),
                 new(Country => Country.NativeName, L["Navtive Name"], "NativeName"),
-                new(Country => Country.ContinentName, L["Continent"], "Continent"),
+                new(Country => Country.ContinentName, L["Continent"], "Continent.Name"),
 
                 // new(Country => Country.FullNativeName, L["Full Native"], "FullNativeName"),
                 // (Country => Country.Description, L["Description"], "Description"),
