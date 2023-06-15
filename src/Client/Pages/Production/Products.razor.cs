@@ -100,7 +100,7 @@ public partial class Products
         set
         {
             _searchBrandId = value;
-            _ = _table.ReloadDataAsync();
+            _ = _table?.ReloadDataAsync();
         }
     }
 
