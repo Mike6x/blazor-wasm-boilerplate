@@ -29,6 +29,9 @@ public static class FSHResource
 
     public const string Hangfire = nameof(Hangfire);
 
+    public const string Chats = nameof(Chats);
+    public const string ChatMessages = nameof(ChatMessages);
+
     public const string Tenants = nameof(Tenants);
     public const string Users = nameof(Users);
     public const string UserRoles = nameof(UserRoles);
@@ -102,6 +105,20 @@ public static class FSHPermissions
         new("View Asset Statistics", FSHAction.View, FSHResource.AssetStats),
         new("View Employee Statistics", FSHAction.View, FSHResource.EmployeeStats),
         new("View Distribution Statistics", FSHAction.View, FSHResource.DistributionStats),
+
+        #endregion
+
+        #region Chat
+        new("View Messages", FSHAction.View, FSHResource.Chats),
+        new("Create Messages", FSHAction.Create, FSHResource.Chats),
+
+        new("View ChatMessages", FSHAction.View, FSHResource.ChatMessages),
+        new("Search ChatMessages", FSHAction.Search, FSHResource.ChatMessages),
+        new("Create ChatMessages", FSHAction.Create, FSHResource.ChatMessages),
+        new("Update ChatMessages", FSHAction.Update, FSHResource.ChatMessages),
+        new("Delete ChatMessages", FSHAction.Delete, FSHResource.ChatMessages),
+        new("Export ChatMessages", FSHAction.Export, FSHResource.ChatMessages),
+        new("Import ChatMessages", FSHAction.Import, FSHResource.ChatMessages),
 
         #endregion
 

@@ -19,19 +19,22 @@ public partial class NavMenu
     private bool _canViewHangfire;
     private bool _canViewSwagger;
     private bool _canViewAuditTrails;
+    private bool _canViewMenus;
+    private bool CanViewSystemGroup => _canViewHangfire || _canViewSwagger || _canViewAuditTrails || _canViewMenus;
+
+    private bool _canViewChatMessages;
+
+    private bool _canViewRoles;
+    private bool _canViewUsers;
+    private bool _canViewTenants;
+    private bool CanViewUserGroup => _canViewUsers || _canViewRoles || _canViewTenants || _canViewMenus || _canViewChatMessages;
+
 
     private bool _canViewUserStats;
     private bool _canViewProductStats;
     private bool _canViewAssetStats;
     private bool _canViewEmployeeStats;
     private bool _canViewDistributionStats;
-
-    private bool _canViewMenus;
-
-    private bool _canViewRoles;
-    private bool _canViewUsers;
-    private bool _canViewTenants;
-    private bool CanViewAdministrationGroup => _canViewUsers || _canViewRoles || _canViewTenants || _canViewMenus;
 
     private bool _canViewGeoAdminUnits;
     private bool _canViewCountries;
@@ -101,6 +104,8 @@ public partial class NavMenu
         _canViewTenants = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Tenants);
         _canViewRoles = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Roles);
         _canViewUsers = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Users);
+
+        _canViewChatMessages = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.ChatMessages);
 
         _canViewGeoAdminUnits = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.GeoAdminUnits);
         _canViewCountries = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Countries);

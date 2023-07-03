@@ -1,4 +1,8 @@
-﻿@inject IStringLocalizer<MainLayout> L
+﻿@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.SignalR.Client;
+<audio id="notification" src="/media/notification.mp3" />
+
+@inject IStringLocalizer<MainLayout> L
 
 <MudAppBar Elevation="0">
     <MudTooltip Text="Toggle Drawer">

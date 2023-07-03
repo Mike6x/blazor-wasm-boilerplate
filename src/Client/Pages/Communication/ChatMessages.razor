@@ -1,0 +1,38 @@
+﻿@page "/Communication/ChatMessages"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.ChatMessages)]
+
+@inject IStringLocalizer<ChatMessages> L
+@inject IChatMessagesClient ChatMessagesClient
+
+@using FSH.BlazorWebAssembly.Client.Pages.Identity.Users
+
+<FshTitle Title="@L["ChatMessage"]" Description="@L["ChatMessage Administration."]" />
+
+<EntityTable TEntity="ChatMessageDto" TId="Guid" TRequest="UpdateChatMessageRequest" Context="@Context">
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="12">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"ChatMessage Id"]" />
+            </MudItem>
+        }
+        <MudItem xs="12" md="3">
+            <UserAutocomplete For="@(() => context.FromUserId)" @bind-Value="context.FromUserId" Label="FromUser"
+                AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <UserAutocomplete For="@(() => context.ToUserId)" @bind-Value="context.ToUserId" Label="ToUser"
+                            AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="@L["CreatedDate"]" Editable="true" @bind-Date="context.CreatedDate" DisableToolbar="true" Variant="Variant.Outlined" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudCheckBox @bind-Checked="context.IsRead" For="@(() => context.IsRead)" Label="@L["Read"]"></MudCheckBox>
+        </MudItem>
+        <MudItem xs="12" md="12">
+            <MudTextField Label="@L["Message"]" For="@(() => context.Message)" @bind-Value="context.Message" />
+        </MudItem>
+
+    </EditFormContent>
+</EntityTable>

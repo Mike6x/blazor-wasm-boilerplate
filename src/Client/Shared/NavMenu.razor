@@ -4,17 +4,13 @@
 <PersonCard
     Style="background-color: var(--mud-palette-drawer-background);color: var(--mud-palette-drawer-text); margin-bottom:0px!important" />
 <MudNavMenu>
-@*    <MudDivider Class="my-2" />
-    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">@L["Home"]</MudNavLink>*@
-
-@*    <MudDivider Class="my-2" />
-    <MudNavGroup Title="@L["Personal"]" Icon="@Icons.Material.Outlined.Person" Class="mt-2 mb-n2" Expanded="false">
-        @if (_canViewDashboard)
-        {
-            <MudNavLink Href="/dashboard" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">@L["Dashboard"]</MudNavLink>
-        }
-        <MudNavLink Href="/account" Icon="@Icons.Material.Filled.ManageAccounts">@L["Account"]</MudNavLink>
-    </MudNavGroup>*@
+    <MudDivider Class="my-2" />
+@*    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">@L["Home"]</MudNavLink>
+*@
+    @if (_canViewChatMessages)
+    {
+        <MudNavLink Href="/Communication/chat" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Message">@L["Chat"]</MudNavLink>
+    }
 
     @if (CanViewGeographyGroup       
         || CanViewOrganizationGroup
@@ -236,44 +232,56 @@
     }
 
     <MudDivider Class="my-2" />
-    @if (CanViewAdministrationGroup)
+    @if (CanViewUserGroup || CanViewSystemGroup)
     {
         <MudText Typo="Typo.subtitle2" Color="Color.Primary" Class="ml-4 my-3">@L["Administration"]</MudText>
-        <MudNavGroup Title="@L["User Management"]" Icon="@Icons.Material.Filled.Security" Class="mt-2 mb-n2" Expanded="false">
-            @if (_canViewUserStats)
-            {
-                <MudNavLink Href="/Dashboard/UserStats" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard" Class="fsh-nav-child">@L["Dashboard"]</MudNavLink>
-            }
-            @if (_canViewUsers)
-            {
-                <MudNavLink Match="NavLinkMatch.Prefix" Href="/users" Icon="@Icons.Material.Filled.PeopleAlt" Class="fsh-nav-child">@L["Users"]</MudNavLink>
-            }
-            @if (_canViewRoles)
-            {
-                <MudNavLink Href="/roles" Icon="@Icons.Material.Filled.EmojiPeople" Class="fsh-nav-child">@L["Roles"]</MudNavLink>
-            }
-            @if(_canViewTenants)
-            {
-                <MudNavLink Href="/tenants" Icon="@Icons.Material.Filled.GroupWork" Disabled="!_canViewTenants" Class="fsh-nav-child">@L["Tenants"]</MudNavLink>
-            }
-        </MudNavGroup>
 
-        <MudNavGroup Title="@L["System"]" Icon="@Icons.Material.Outlined.Settings" Class="mt-2 mb-n2" Expanded="false">
-            @if (_canViewMenus)
-            {
-                <MudNavLink Href="/settings/menus" Match="NavLinkMatch.All" Target="_blank" Icon="@Icons.Material.Filled.SettingsApplications"
-                    Class="fsh-nav-child">@L["Menu Settings"]
-                </MudNavLink>
-            }
-            @if (_canViewHangfire)
-            {
-                <MudNavLink Href="@_hangfireUrl" Match="NavLinkMatch.All" Target="_blank" Icon="@Icons.Material.Filled.WorkOutline"
-                            Class="fsh-nav-child">@L["Hangfire"]</MudNavLink>
-            }
-            <MudNavLink Href="/audit-logs" Icon="@Icons.Material.Filled.SecurityUpdateGood" Class="fsh-nav-child">@L["Logs"]</MudNavLink>
-            <MudNavLink Href="https://localhost:5001/swagger/index.html" Icon="@Icons.Material.Filled.Api" Class="fsh-nav-child">@L["Swagger API"]</MudNavLink>
+        @if (CanViewUserGroup)
+        {
+            <MudNavGroup Title="@L["User Management"]" Icon="@Icons.Material.Filled.Security" Class="mt-2 mb-n2" Expanded="false">
+                @if (_canViewUserStats)
+                {
+                    <MudNavLink Href="/Dashboard/UserStats" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard" Class="fsh-nav-child">@L["Dashboard"]</MudNavLink>
+                }
+                @if (_canViewUsers)
+                {
+                    <MudNavLink Match="NavLinkMatch.Prefix" Href="/users" Icon="@Icons.Material.Filled.PeopleAlt" Class="fsh-nav-child">@L["Users"]</MudNavLink>
+                }
+                @if (_canViewRoles)
+                {
+                    <MudNavLink Href="/roles" Icon="@Icons.Material.Filled.EmojiPeople" Class="fsh-nav-child">@L["Roles"]</MudNavLink>
+                }
+                @if (_canViewTenants)
+                {
+                    <MudNavLink Href="/tenants" Icon="@Icons.Material.Filled.GroupWork" Disabled="!_canViewTenants" Class="fsh-nav-child">@L["Tenants"]</MudNavLink>
+                }
+                @if (_canViewChatMessages)
+                {
+                    <MudNavLink Href="/communication/chatmessages" Icon="@Icons.Material.Filled.Message" Disabled="!_canViewChatMessages" Class="fsh-nav-child">@L["ChatMessages"]</MudNavLink>
+                }
+            </MudNavGroup>
+        }
 
-        </MudNavGroup>
+        @if (CanViewSystemGroup)
+        {
+            <MudNavGroup Title="@L["System"]" Icon="@Icons.Material.Outlined.Settings" Class="mt-2 mb-n2" Expanded="false">
+                @if (_canViewMenus)
+                {
+                    <MudNavLink Href="/settings/menus" Match="NavLinkMatch.All" Target="_blank" Icon="@Icons.Material.Filled.SettingsApplications"
+                                Class="fsh-nav-child">
+                        @L["Menu Settings"]
+                    </MudNavLink>
+                }
+                @if (_canViewHangfire)
+                {
+                    <MudNavLink Href="@_hangfireUrl" Match="NavLinkMatch.All" Target="_blank" Icon="@Icons.Material.Filled.WorkOutline"
+                                Class="fsh-nav-child">@L["Hangfire"]</MudNavLink>
+                }
+                <MudNavLink Href="/audit-logs" Icon="@Icons.Material.Filled.SecurityUpdateGood" Class="fsh-nav-child">@L["Logs"]</MudNavLink>
+                <MudNavLink Href="https://localhost:5001/swagger/index.html" Icon="@Icons.Material.Filled.Api" Class="fsh-nav-child">@L["Swagger API"]</MudNavLink>
+
+            </MudNavGroup>
+        }     
     }
 
 </MudNavMenu>
