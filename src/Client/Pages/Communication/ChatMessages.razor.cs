@@ -20,9 +20,10 @@ public partial class ChatMessages
 
                 // new(ChatMessage => ChatMessage.FromUserId, L["FromUserId"], "FromUserId"),
                 // new(ChatMessage => ChatMessage.ToUserId, L["ToUserId"], "ToUserId"),
-                new(ChatMessage => ChatMessage.FromUserUserName, L["FromUser"], "FromUser.UserName"),
-                new(ChatMessage => ChatMessage.ToUserUserName, L["ToUser"], "ToUser.UserName"),
-
+                // new(ChatMessage => ChatMessage.FromUserUserName, L["FromUser"], "FromUser.UserName"),
+                // new(ChatMessage => ChatMessage.ToUserUserName, L["ToUser"], "ToUser.UserName"),
+                new(ChatMessage => ChatMessage.FromUserEmail, L["FromUser"], "FromUser.Email"),
+                new(ChatMessage => ChatMessage.ToUserEmail, L["ToUser"], "ToUser.Email"),
                 new(ChatMessage => ChatMessage.Message, L["Message"], "Message"),
                 new(ChatMessage => ChatMessage.CreatedDate, L["CreatedDate"], "CreatedDate"),
 
