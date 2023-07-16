@@ -1,10 +1,8 @@
 ﻿using FSH.BlazorWebAssembly.Client.Components.Common;
 using FSH.BlazorWebAssembly.Client.Components.Dialogs;
 using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient;
-using FSH.BlazorWebAssembly.Client.Infrastructure.Auth;
 using FSH.BlazorWebAssembly.Client.Infrastructure.Common;
 using FSH.BlazorWebAssembly.Client.Shared;
-using FSH.WebApi.Shared.Authorization;
 using FSH.WebApi.Shared.Multitenancy;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
@@ -39,6 +37,7 @@ public partial class UserProfile
 
     private char _firstLetterOfName;
     private string? _imageUrl;
+
     private bool _isActive;
 
     private bool IsLocked { get; set; }
@@ -65,6 +64,8 @@ public partial class UserProfile
                                         : user.ImageUrl;
 
             _profileModel.IsActive = _isActive = user.IsActive;
+
+            _profileModel.IsLive = user.IsLive;
             _profileModel.EmailConfirmed = user.EmailConfirmed;
 
             _profileModel.CreatedBy = user.CreatedBy ?? string.Empty;
@@ -100,6 +101,7 @@ public partial class UserProfile
     {
         Navigation.NavigateTo("/users");
     }
+
     private void BackToEmplyees()
     {
         Navigation.NavigateTo("People/Employees");

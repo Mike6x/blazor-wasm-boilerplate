@@ -44,6 +44,7 @@ public partial class EntityTable<TEntity, TId, TRequest>
     [Inject]
     protected IAuthorizationService AuthService { get; set; } = default!;
 
+    private bool _advancedSearchExpanded;
     private bool _canSearch;
     private bool _canCreate;
     private bool _canUpdate;
@@ -51,7 +52,6 @@ public partial class EntityTable<TEntity, TId, TRequest>
     private bool _canExport;
     private bool _canImport;
 
-    private bool _advancedSearchExpanded;
     private bool _buttonStatus;
 
     private MudTable<TEntity> _table = default!;
@@ -59,6 +59,11 @@ public partial class EntityTable<TEntity, TId, TRequest>
     private int _totalItems;
 
     private HashSet<TEntity> _selectedItems = new();
+
+    public Task ReloadDataAsync() =>
+    Context.IsClientContext
+        ? LocalLoadDataAsync()
+        : ServerLoadDataAsync();
 
     protected override async Task OnInitializedAsync()
     {
@@ -72,11 +77,6 @@ public partial class EntityTable<TEntity, TId, TRequest>
 
         await LocalLoadDataAsync();
     }
-
-    public Task ReloadDataAsync() =>
-        Context.IsClientContext
-            ? LocalLoadDataAsync()
-            : ServerLoadDataAsync();
 
     private async Task<bool> CanDoActionAsync(string? action, AuthenticationState state) =>
         !string.IsNullOrWhiteSpace(action) &&
@@ -114,8 +114,8 @@ public partial class EntityTable<TEntity, TId, TRequest>
     }
 
     // Server Side paging/filtering
-
-    private async Task OnSearchStringChanged(string? text = null)
+    // private async Task OnSearchStringChanged(string? text = null)
+    private async Task OnSearchStringChanged()
     {
         await SearchStringChanged.InvokeAsync(SearchString);
 
@@ -164,7 +164,8 @@ public partial class EntityTable<TEntity, TId, TRequest>
 
         var filter = GetBaseFilter();
 
-        if (Context.ServerContext is not null && Context.ServerContext.ExportFunc is not null)
+        // if (Context.ServerContext is not null && Context.ServerContext.ExportFunc is not null)
+        if (Context.ServerContext?.ExportFunc is not null)
         {
             if (await ApiHelper.ExecuteCallGuardedAsync(
                     () => Context.ServerContext.ExportFunc(filter), Snackbar)
@@ -175,7 +176,9 @@ public partial class EntityTable<TEntity, TId, TRequest>
             }
         }
         else
-        if(Context.ClientContext is not null && Context.ClientContext.ExportFunc is not null)
+
+        // (Context.ClientContext is not null && Context.ClientContext.ExportFunc is not null)
+        if (Context.ClientContext?.ExportFunc is not null)
         {
             if (await ApiHelper.ExecuteCallGuardedAsync(
                     () => Context.ClientContext.ExportFunc(filter), Snackbar)
@@ -315,13 +318,13 @@ public partial class EntityTable<TEntity, TId, TRequest>
     // developing
     private async Task ImportAsync(FileUploadRequest request)
     {
+        if (Context.ServerContext == null || Context.ServerContext.ImportFunc == null) return;
         Loading = true;
 
         if (await ApiHelper.ExecuteCallGuardedAsync(
                 () => Context.ServerContext.ImportFunc(request), Snackbar)
             is { } result)
         {
-
         }
 
         Loading = false;
@@ -490,5 +493,11 @@ public partial class EntityTable<TEntity, TId, TRequest>
 
             await ReloadDataAsync();
         }
+    }
+
+    private bool _openAdvancedSearch;
+    private void AdvanceSearchDrawer()
+    {
+        _openAdvancedSearch = !_openAdvancedSearch;
     }
 }

@@ -8,31 +8,105 @@
 
 <FshTitle Title="@L["ChatMessage"]" Description="@L["ChatMessage Administration."]" />
 
-<EntityTable TEntity="ChatMessageDto" TId="Guid" TRequest="UpdateChatMessageRequest" Context="@Context">
+<EntityTable TEntity="ChatMessageDto" TId="Guid" TRequest="ChatMessageViewModel" Context="@Context">
     <EditFormContent>
-        @if (!Context.AddEditModal.IsCreate)
-        {
-            <MudItem xs="12" md="12">
-                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"ChatMessage Id"]" />
-            </MudItem>
-        }
-        <MudItem xs="12" md="3">
-            <UserAutocomplete For="@(() => context.FromUserId)" @bind-Value="context.FromUserId" Label="FromUser"
-                AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
-        </MudItem>
-        <MudItem xs="12" md="3">
-            <UserAutocomplete For="@(() => context.ToUserId)" @bind-Value="context.ToUserId" Label="ToUser"
-                            AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
-        </MudItem>
-        <MudItem xs="12" md="3">
-            <MudDatePicker Label="@L["CreatedDate"]" Editable="true" @bind-Date="context.CreatedDate" DisableToolbar="true" Variant="Variant.Outlined" />
-        </MudItem>
-        <MudItem xs="12" md="3">
-            <MudCheckBox @bind-Checked="context.IsRead" For="@(() => context.IsRead)" Label="@L["Read"]"></MudCheckBox>
-        </MudItem>
-        <MudItem xs="12" md="12">
-            <MudTextField Label="@L["Message"]" For="@(() => context.Message)" @bind-Value="context.Message" />
-        </MudItem>
+        <MudGrid>
+            @if (!Context.AddEditModal.IsCreate)
+            {
+                <MudItem xs="12" md="12">
+                    <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"ChatMessage Id"]" />
+                </MudItem>
+            }
+            <MudItem xs="12" sm="12" md="4">
+                <MudCard Elevation="25">
+                    <MudCardContent Style="padding:0px!important">
+                        <div class="d-flex justify-center mb-4">
+                            @if (!string.IsNullOrEmpty(context.ImageInBytes))
+                            {
+                                <MudAvatar Square="true" Style="height:250px; width:250px;" Elevation="5" Class="rounded-lg">
+                                    <MudImage Src="@context.ImageInBytes"></MudImage>
+                                </MudAvatar>
+                            }
+                            else if (!string.IsNullOrEmpty(@context.ImagePath))
+                            {
+                                <MudAvatar Square="true" Style="height: 250px; width: 250px;" Elevation="5" Class="rounded-lg">
+                                    <MudImage Src="@(Config[ConfigNames.ApiBaseUrl] + @context.ImagePath)"></MudImage>
+                                </MudAvatar>
+                            }
+                            else
+                            {
+                                <MudAvatar Color="Color.Secondary" Style="height:250px; width:250px;">I</MudAvatar>
+                            }
+                        </div>
+                    </MudCardContent>
+                    <MudCardActions Class="d-flex justify-center">
+                        <div>
+                            <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small"
+                                       StartIcon="@Icons.Material.Filled.CloudUpload" for="fileInput">
+                                @L["Upload"]
+                            </MudButton>
+                            @if (!Context.AddEditModal.IsCreate && !string.IsNullOrEmpty(context.ImagePath) && string.IsNullOrEmpty(context.ImageInBytes))
+                            {
+                                <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" Target="_blank"
+                                           StartIcon="@Icons.Material.Filled.RemoveRedEye" Href="@(Config[ConfigNames.ApiBaseUrl] + @context.ImagePath)" Style="margin-left: 5px;">
+                                    @L["View"]
+                                </MudButton>
 
+                                <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Error" Size="Size.Small"
+                                           StartIcon="@Icons.Material.Filled.Delete" OnClick="SetDeleteCurrentImageFlag" Style="margin-left: 5px;">
+                                    @L["Delete"]
+                                </MudButton>
+                            }
+                            @if (!string.IsNullOrEmpty(context.ImageInBytes))
+                            {
+                                <MudButton HtmlTag="label" DisableElevation OnClick="ClearImageInBytes" Variant="Variant.Filled" Color="Color.Warning" Size="Size.Small" Target="_blank"
+                                           StartIcon="@Icons.Material.Filled.Clear" Style="margin-left: 5px;">
+                                    @L["Clear"]
+                                </MudButton>
+                            }
+                        </div>
+                        <InputFile id="fileInput" hidden OnChange="UploadFiles" />
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+            <MudItem xs="12" sm="12" md="8">
+                <MudCard Elevation="25">
+                    <MudCardContent Style="padding:20px!important">
+                        <MudGrid>
+                            <MudItem xs="12" md="6">
+                                <UserAutocomplete For="@(() => context.FromUserId)" @bind-Value="context.FromUserId" Label="FromUser"
+                                                  AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+                            </MudItem>
+                            <MudItem xs="12" md="6">
+                                <UserAutocomplete For="@(() => context.ToUserId)" @bind-Value="context.ToUserId" Label="ToUser"
+                                                  AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+                            </MudItem>
+                            <MudItem xs="12" md="6">
+                                <MudDatePicker Label="@L["CreatedDate"]" Editable="true" @bind-Date="context.CreatedDate" DisableToolbar="true" Variant="Variant.Outlined" />
+                            </MudItem>
+                            <MudItem xs="12" md="6">
+                            </MudItem>
+
+                            <MudItem xs="12" md="12">
+                                <MudTextField Label="@L["Message"]" For="@(() => context.Message)" @bind-Value="context.Message" />
+                            </MudItem>
+                            <MudItem xs="12" md="12">
+                                <MudTextField Label="@L["ImagePath"]" For="@(() => context.ImagePath)" @bind-Value="context.ImagePath" />
+                            </MudItem>
+
+                            <MudItem xs="12" md="6">
+                                <MudCheckBox @bind-Checked="context.IsRead" For="@(() => context.IsRead)" Label="@L["Read"]"></MudCheckBox>
+                            </MudItem>
+                            <MudItem xs="12" md="6">
+                                <MudCheckBox @bind-Checked="context.IsImageMesage" For="@(() => context.IsImageMesage)" Label="@L["ImageMesage"]"></MudCheckBox>
+                            </MudItem>
+                        </MudGrid>
+                    </MudCardContent>
+                    <MudCardActions Class="d-flex justify-center">
+                    </MudCardActions>
+                </MudCard>
+
+            </MudItem>
+            </MudGrid>
     </EditFormContent>
 </EntityTable>

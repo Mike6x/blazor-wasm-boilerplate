@@ -4,105 +4,129 @@ using FSH.BlazorWebAssembly.Client.Infrastructure.Common;
 using FSH.WebApi.Shared.Authorization;
 using Mapster;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
+using System.Security.Claims;
 
 namespace FSH.BlazorWebAssembly.Client.Pages.Elearning;
 
 public partial class Quizs
 {
+    [CascadingParameter]
+    protected Task<AuthenticationState> AuthState { get; set; } = default!;
+
     [Inject]
     protected IQuizsClient QuizsClient { get; set; } = default!;
 
     protected EntityServerTableContext<QuizDto, Guid, QuizViewModel> Context { get; set; } = default!;
+    private IBrowserFile? UploadFile { get; set; }
 
     private EntityTable<QuizDto, Guid, QuizViewModel>? _table;
 
-    public IBrowserFile? UploadFile { get; set; } = null;
+    protected override async Task OnInitializedAsync()
+    {
+        if ((await AuthState).User is { } user)
+        {
+            _currentUserId = user.GetUserId() ?? string.Empty;
+        }
 
-    protected override void OnInitialized() =>
         Context = new(
-            entityName: L["Quiz"],
-            entityNamePlural: L["Quizs"],
-            entityResource: FSHResource.Quizs,
-            fields: new()
+        entityName: L["Quiz"],
+        entityNamePlural: L["Quizs"],
+        entityResource: FSHResource.Quizs,
+        fields: new()
             {
-                new(Quiz => Quiz.Id, L["Id"], "Id"),
+                // new(Quiz => Quiz.Id, L["Id"], "Id"),
                 new(Quiz => Quiz.Code, L["Code"], "Code"),
                 new(Quiz => Quiz.Name, L["Name"], "Name"),
                 new(Quiz => Quiz.Description, L["Description"], "Description"),
 
-                new(Quiz => Quiz.StartTime, L["StartTime"], "StartTime"),
-                new(Quiz => Quiz.EndTime, L["EndTime"], "EndTime"),
-                new(Quiz => Quiz.IsActive, L["IsActive"], "IsActive"),
+                new(Quiz => Quiz.StartTime.ToLocalTime(), L["StartTime"], "StartTime", Type: typeof(DateTime)),
+                new(Quiz => Quiz.EndTime.ToLocalTime(), L["EndTime"], "EndTime"),
 
+                new(Quiz => Quiz.QuizTopic, L["Topic"], "QuizTopic"),
+                new(Quiz => Quiz.QuizType, L["Type"], "QuizType"),
                 new(Quiz => Quiz.QuizPath, L["QuizPath"], "QuizPath"),
-                new(Quiz => Quiz.QuizType, L["QuizType"], "QuizType"),
-                new(Quiz => Quiz.QuizTopic, L["QuizTopic"], "QuizTopic"),
+
+                new(Quiz => Quiz.IsActive, L["Active"], Type: typeof(bool)),
             },
-            enableAdvancedSearch: true,
-            idFunc: Quiz => Quiz.Id,
-            searchFunc: async filter =>
+        enableAdvancedSearch: true,
+        idFunc: Quiz => Quiz.Id,
+        searchFunc: async filter =>
+        {
+            var quizFilter = filter.Adapt<SearchQuizsRequest>();
+
+            quizFilter.QuizType = SearchQuizTypeId == QuizType.All ? null : SearchQuizTypeId;
+            quizFilter.QuizTopic = SearchQuizTopicId == QuizTopic.All ? null : SearchQuizTopicId;
+
+            var result = await QuizsClient.SearchAsync(quizFilter);
+            return result.Adapt<PaginationResponse<QuizDto>>();
+        },
+
+        createFunc: async quiz =>
+        {
+            if (!string.IsNullOrEmpty(quiz.QuizInBytes))
             {
-                var quizFilter = filter.Adapt<SearchQuizsRequest>();
-
-                // quizFilter.QuizType = SearchQuizTypeId == default ? null : SearchQuizTypeId;
-                // quizFilter.QuizTopic = SearchQuizTopic == default ? null : SearchQuizTopic;
-                // quizFilter.QuizType = SearchQuizTypeId;
-                // quizFilter.QuizTopic = SearchQuizTopic;
-
-                var result = await QuizsClient.SearchAsync(quizFilter);
-                return result.Adapt<PaginationResponse<QuizDto>>();
-            },
-
-            createFunc: async Quiz =>
-            {
-                if (!string.IsNullOrEmpty(Quiz.QuizInBytes))
+                quiz.QuizMedia = new FileUploadRequest()
                 {
-                    Quiz.QuizMedia = new FileUploadRequest()
-                    {
-                        Data = Quiz.QuizInBytes,
-                        Extension = Quiz.QuizExtension ?? string.Empty,
-                        Name = $"{Quiz.Name}_{Guid.NewGuid():N}"
-                    };
-                }
+                    Data = quiz.QuizInBytes,
+                    Extension = quiz.QuizExtension ?? string.Empty,
+                    Name = $"{quiz.Code}"
 
-                await QuizsClient.CreateAsync(Quiz.Adapt<CreateQuizRequest>());
-                Quiz.QuizInBytes = string.Empty;
-            },
+                    // Name = $"{Quiz.Name}_{Guid.NewGuid():N}"
+                };
+            }
 
-            updateFunc: async (id, quiz) =>
+            GetStartTime();
+            GetEndTime();
+            await QuizsClient.CreateAsync(quiz.Adapt<CreateQuizRequest>());
+            quiz.QuizInBytes = string.Empty;
+        },
+
+        updateFunc: async (id, quiz) =>
+        {
+            if (!string.IsNullOrEmpty(quiz.QuizInBytes))
             {
-                if (!string.IsNullOrEmpty(quiz.QuizInBytes))
+                quiz.DeleteCurrentQuiz = true;
+                quiz.QuizMedia = new FileUploadRequest()
                 {
-                    quiz.DeleteCurrentQuiz = true;
-                    quiz.QuizMedia = new FileUploadRequest()
-                    {
-                        Data = quiz.QuizInBytes,
-                        Extension = quiz.QuizExtension ?? string.Empty,
-                        Name = $"{quiz.Name}_{Guid.NewGuid():N}"
-                    };
-                }
+                    Data = quiz.QuizInBytes,
+                    Extension = quiz.QuizExtension ?? string.Empty,
+                    Name = $"{quiz.Code}"
 
-                await QuizsClient.UpdateAsync(id, quiz.Adapt<UpdateQuizRequest>());
-                quiz.QuizInBytes = string.Empty;
-            },
+                    // Name = $"{quiz.Name}_{Guid.NewGuid():N}"
+                };
+            }
 
-            deleteFunc: async id => await QuizsClient.DeleteAsync(id),
+            GetStartTime();
+            GetEndTime();
+            await QuizsClient.UpdateAsync(id, quiz.Adapt<UpdateQuizRequest>());
+            quiz.QuizInBytes = string.Empty;
+        },
 
-            exportFunc: async filter =>
-             {
-                 var exportFilter = filter.Adapt<ExportQuizsRequest>();
+        deleteFunc: async id => await QuizsClient.DeleteAsync(id),
 
-                 // exportFilter.BrandId = SearchBrandId == default ? null : SearchBrandId;
-                 // exportFilter.MinimumRate = SearchMinimumRate;
-                 // exportFilter.MaximumRate = SearchMaximumRate;
+        exportFunc: async filter =>
+        {
+            var exportFilter = filter.Adapt<ExportQuizsRequest>();
 
-                 return await QuizsClient.ExportAsync(exportFilter);
-             });
+            // exportFilter.BrandId = SearchBrandId == default ? null : SearchBrandId;
+            // exportFilter.MinimumRate = SearchMinimumRate;
+            // exportFilter.MaximumRate = SearchMaximumRate;
+
+            return await QuizsClient.ExportAsync(exportFilter);
+        },
+        importFunc: async FileUploadRequest =>
+        {
+            var request = new ImportQuizsRequest() { ExcelFile = FileUploadRequest };
+            await QuizsClient.ImportAsync(request);
+        }
+        );
+    }
 
     // Advanced Search
-    private QuizType _searchQuizTypeId;
+    private QuizType _searchQuizTypeId = QuizType.All;
     private QuizType SearchQuizTypeId
     {
         get => _searchQuizTypeId;
@@ -113,16 +137,23 @@ public partial class Quizs
         }
     }
 
-    private QuizTopic _searchQuizTopic;
-    private QuizTopic SearchQuizTopic
+    private QuizTopic _searchQuizTopicId = QuizTopic.All;
+    private QuizTopic SearchQuizTopicId
     {
-        get => _searchQuizTopic;
+        get => _searchQuizTopicId;
         set
         {
-            _searchQuizTopic = value;
+            _searchQuizTopicId = value;
             _ = _table?.ReloadDataAsync();
         }
     }
+
+    // Take a Quiz
+
+    private string _currentUserId = string.Empty;
+    private string QuizUrl => Config[ConfigNames.ApiBaseUrl] + Context.AddEditModal.RequestModel.QuizPath
+                                    + "/index.html?QuizId=" + Context.AddEditModal.RequestModel.Id
+                                    + "&SId=" + _currentUserId;
 
     // TODO : Make this as a shared service or something? Since it's used by Profile Component also for now, and literally any other component that will have image upload.
     // The new service should ideally return $"data:{ApplicationConstants.StandardImageFormat};base64,{Convert.ToBase64String(buffer)}"
@@ -164,6 +195,23 @@ public partial class Quizs
         }
     }
 
+    private void GetStartTime()
+    {
+        Context.AddEditModal.RequestModel.StartTime ??= DateTime.Now.ToLocalTime().Date;
+        Context.AddEditModal.RequestModel.StartTimeSpan ??= TimeSpan.Zero;
+
+        var timeSpan = (TimeSpan)(Context.AddEditModal.RequestModel.StartTime + Context.AddEditModal.RequestModel.StartTimeSpan - DateTime.UtcNow);
+        Context.AddEditModal.RequestModel.StartTime = DateTime.UtcNow.Add(timeSpan);
+    }
+
+    private void GetEndTime()
+    {
+        Context.AddEditModal.RequestModel.EndTime ??= DateTime.Now.ToLocalTime().Date;
+        Context.AddEditModal.RequestModel.EndTimeSpan ??= TimeSpan.Zero;
+
+        var timeSpan = (TimeSpan)(Context.AddEditModal.RequestModel.EndTime + Context.AddEditModal.RequestModel.EndTimeSpan - DateTime.UtcNow);
+        Context.AddEditModal.RequestModel.EndTime = DateTime.UtcNow.Add(timeSpan);
+    }
 }
 
 public class QuizViewModel : UpdateQuizRequest
@@ -171,4 +219,27 @@ public class QuizViewModel : UpdateQuizRequest
     public string? QuizPath { get; set; }
     public string? QuizInBytes { get; set; }
     public string? QuizExtension { get; set; }
+
+    public DateTime? StartDate { get; set; } = DateTime.Today;
+    public DateTime? EndDate { get; set; } = DateTime.Today;
+
+    public TimeSpan? StartTimeSpan { get; set; } = TimeSpan.Zero;
+    public TimeSpan? EndTimeSpan { get; set; } = TimeSpan.Zero;
+
+    // public QuizViewModel()
+    // {
+    //    StartDate = StartTime == null
+    //       ? DateTime.Today
+    //       : StartTime.Value.ToLocalTime().Date;
+    //    EndDate = EndTime == null
+    //        ? DateTime.Today
+    //        : EndTime.Value.ToLocalTime().Date;
+
+    // StartTimeSpan = StartTime == null
+    //        ? DateTime.Now.ToLocalTime().TimeOfDay
+    //        : StartTime.Value.ToLocalTime().TimeOfDay;
+    //    EndTimeSpan = EndTime == null
+    //        ? DateTime.Now.ToLocalTime().TimeOfDay
+    //        : EndTime.Value.ToLocalTime().TimeOfDay;
+    // }
 }

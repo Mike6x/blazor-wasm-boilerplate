@@ -16,6 +16,8 @@ public partial class UserStats
     [Parameter]
     public int UserCount { get; set; }
     [Parameter]
+    public int UserOnlineCount { get; set; }
+    [Parameter]
     public int RoleCount { get; set; }
 
     [Inject]
@@ -51,6 +53,7 @@ public partial class UserStats
             BrandCount = statsDto.BrandCount;
             UserCount = statsDto.UserCount;
             RoleCount = statsDto.RoleCount;
+            UserOnlineCount = statsDto.UserOnlineCount;
             foreach (var item in statsDto.DataEnterBarChart)
             {
                 _dataEnterBarChartSeries

@@ -8,22 +8,37 @@
 <EntityTable @ref="_table" TEntity="QuizDto" TId="Guid" TRequest="QuizViewModel" Context="@Context">
     <AdvancedSearchContent>
 
-        <MudItem xs="6" md="3">
-            <MudSelect Label="Select Quiz Type" @bind-Value="SearchQuizTypeId" OffsetY="true" Variant="Variant.Filled">
+        <MudSelect Label="Select Quiz Type" @bind-Value="SearchQuizTypeId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Filled">
+            @foreach (QuizType item in Enum.GetValues(typeof(QuizType)))
+            {
+                <MudSelectItem Value="@item">@item</MudSelectItem>
+            }
+        </MudSelect>
+
+        <MudSelect Label="Select Quiz Topic" @bind-Value="SearchQuizTopicId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Filled">
+            @foreach (QuizTopic item in Enum.GetValues(typeof(QuizTopic)))
+            {
+                <MudSelectItem Value="@item">@item</MudSelectItem>
+            }
+        </MudSelect>
+
+
+@*        <MudItem>
+            <MudSelect Label="Select Quiz Type" @bind-Value="SearchQuizTypeId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Filled">
                 @foreach (QuizType item in Enum.GetValues(typeof(QuizType)))
                     {
                         <MudSelectItem Value="@item">@item</MudSelectItem>
                     }
             </MudSelect>
         </MudItem>
-        <MudItem xs="6" md="3">
-            <MudSelect Label="Select Quiz Topic" @bind-Value="SearchQuizTopic" OffsetY="true" Variant="Variant.Filled">
+        <MudItem>
+            <MudSelect Label="Select Quiz Topic" @bind-Value="SearchQuizTopicId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Filled">
                 @foreach (QuizTopic item in Enum.GetValues(typeof(QuizTopic)))
                 {
                     <MudSelectItem Value="@item">@item</MudSelectItem>
                 }
             </MudSelect>
-        </MudItem>
+        </MudItem>*@
 
     </AdvancedSearchContent>
 
@@ -44,20 +59,30 @@
         <MudItem xs="12" md="6">
             <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description"/>
         </MudItem>
-
         <MudItem xs="12" md="3">
-            <MudDatePicker Label="@L["Start Time"]" Editable="true" @bind-Date="context.StartTime" DisableToolbar="true" />
+            <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
         </MudItem>
         <MudItem xs="12" md="3">
-            <MudDatePicker Label="@L["End Time"]" Editable="true" @bind-Date="context.EndTime" DisableToolbar="true"/>
         </MudItem>
         <MudItem xs="12" md="6">
-            <MudTextField Label="@L["QuizPath"]" For="@(() => context.QuizPath)" @bind-Value="context.QuizPath" Disabled/>
+            <MudTextField Label="@L["QuizPath"]" For="@(() => context.QuizPath)" @bind-Value="context.QuizPath" Disabled />
         </MudItem>
 
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="@L["Start Date"]" Editable="true" @bind-Date="context.StartTime" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTimePicker Label="@L["Start Time"]" Editable="true" @bind-Time="context.StartTimeSpan" DisableToolbar="true" Variant="Variant.Outlined" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="@L["End Date"]" Editable="true" @bind-Date="context.EndTime" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTimePicker Label="@L["End Time"]" Editable="true" @bind-Time="context.EndTimeSpan" DisableToolbar="true" Variant="Variant.Outlined" />
+        </MudItem>
 
         <MudItem xs="12" md="3">
-            <MudSelect Label="Select Quiz Type" @bind-Value="context.QuizType" OffsetY="true" Variant="Variant.Filled">
+            <MudSelect Label="Select Quiz Type" @bind-Value="context.QuizType" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Filled">
                 @foreach (QuizType item in Enum.GetValues(typeof(QuizType)))
                 {
                     <MudSelectItem Value="@item">@item</MudSelectItem>
@@ -65,15 +90,23 @@
             </MudSelect>
         </MudItem>
         <MudItem xs="12" md="3">
-            <MudSelect Label="Select Quiz Topic" @bind-Value="context.QuizTopic" OffsetY="true" Variant="Variant.Filled">
+            <MudSelect Label="Select Quiz Topic" @bind-Value="context.QuizTopic" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Filled">
                 @foreach (QuizTopic item in Enum.GetValues(typeof(QuizTopic)))
                 {
                     <MudSelectItem Value="@item">@item</MudSelectItem>
                 }
             </MudSelect>
         </MudItem>
+
         <MudItem xs="12" md="6">
-            <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+            <InputFile id="fileInput" hidden OnChange="UploadFiles" />
+            @if (UploadFile != null && !string.IsNullOrEmpty(context.QuizInBytes))
+            {
+                <MudText>
+                    <MudIcon Icon="@Icons.Material.Filled.AttachFile" Class="mr-3 mb-n1" />
+                    @UploadFile.Name   (<code>@UploadFile.Size bytes)</code>
+                </MudText>
+            }
         </MudItem>
 
         <MudItem xs="12" md="6">
@@ -85,33 +118,32 @@
                 @if (!Context.AddEditModal.IsCreate && !string.IsNullOrEmpty(context.QuizPath) && string.IsNullOrEmpty(context.QuizInBytes))
                 {
 @*                    <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" Target="_blank"
-                           StartIcon="@Icons.Filled.RemoveRedEye" Link="@(Config[ConfigNames.ApiBaseUrl] + @context.ImagePath)" Style="margin-left: 5px;">
+                           StartIcon="@Icons.Material.Filled.RemoveRedEye"
+                               Href="@(Config[ConfigNames.ApiBaseUrl] + @context.QuizPath + @"/index.html")" Style="margin-left: 5px;">
                         @L["View"]
                     </MudButton>*@
+                    <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Target="_blank"
+                               StartIcon="@Icons.Material.Filled.RemoveRedEye" Style="margin-left: 5px;"
+                               Href=@QuizUrl>
+                        @L["Take a Quiz"]
+                    </MudButton>
 
                     <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Error" Size="Size.Small"
-                           StartIcon="@Icons.Material.Filled.Delete" OnClick="SetDeleteCurrentQuizFlag" Style="margin-left: 5px;">
+                               StartIcon="@Icons.Material.Filled.Delete" Style="margin-left: 5px;"
+                               OnClick="SetDeleteCurrentQuizFlag">
                         @L["Delete Media"]
                     </MudButton>
                 }
                 @if (!string.IsNullOrEmpty(context.QuizInBytes))
                 {
-                    <MudButton HtmlTag="label" DisableElevation OnClick="ClearQuizInBytes" Variant="Variant.Filled" Color="Color.Warning" Size="Size.Small" Target="_blank"
-                           StartIcon="@Icons.Material.Filled.Clear" Style="margin-left: 5px;">
+                    <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Warning" Size="Size.Small" Target="_blank"
+                               StartIcon="@Icons.Material.Filled.Clear" Style="margin-left: 5px;"
+                               OnClick="ClearQuizInBytes">
                         @L["Clear Media"]
                     </MudButton>
                 }
             </div>
         </MudItem>
-        <MudItem xs="12" md="6">
-            <InputFile id="fileInput" hidden OnChange="UploadFiles" />
-            @if (UploadFile != null && !string.IsNullOrEmpty(context.QuizInBytes))
-            {
-                <MudText>
-                    <MudIcon Icon="@Icons.Material.Filled.AttachFile" Class="mr-3 mb-n1" />
-                    @UploadFile.Name   (<code>@UploadFile.Size bytes)</code>
-                </MudText>
-            }
-        </MudItem>
+
     </EditFormContent>
 </EntityTable>

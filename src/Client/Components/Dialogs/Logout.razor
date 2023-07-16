@@ -28,8 +28,14 @@
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
 
+    [Inject]
+    protected IPersonalClient PersonalClient { get; set; } = default!;
+
     async Task Submit()
     {
+        // Clear online status
+        await PersonalClient.LogoutAsync();
+
         await AuthService.LogoutAsync();
         Snackbar.Add(@L["Logged out"], Severity.Info);
         MudDialog.Close(DialogResult.Ok(true));

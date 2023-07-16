@@ -55,7 +55,8 @@ public partial class Users
                 new(user => user.Email, L["Email"]),
                 new(user => user.PhoneNumber, L["PhoneNumber"]),
                 new(user => user.EmailConfirmed, L["Email Confirmation"], Type: typeof(bool)),
-                new(user => user.IsActive, L["Active"], Type: typeof(bool))
+                new(user => user.IsActive, L["Active"], Type: typeof(bool)),
+                new(user => user.IsLive, L["Online"], Type: typeof(bool))
             },
             idFunc: user => user.Id,
             loadDataFunc: async () => (await UsersClient.GetListAsync()).ToList(),

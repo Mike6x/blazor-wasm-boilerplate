@@ -72,10 +72,11 @@ public class JwtAuthenticationService : AuthenticationStateProvider, IAuthentica
 
     public async Task LogoutAsync()
     {
+        // Clear online status
+        // await _personalClient.LogoutAsync();
+
         await ClearCacheAsync();
-
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
-
         _navigation.NavigateTo("/login");
     }
 

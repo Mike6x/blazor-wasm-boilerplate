@@ -46,6 +46,10 @@ public partial class Products
                 var productFilter = filter.Adapt<SearchProductsRequest>();
 
                 productFilter.BrandId = SearchBrandId == default ? null : SearchBrandId;
+                productFilter.CategorieId = SearchCategorieId == default ? null : SearchCategorieId;
+                productFilter.SubCategorieId = SearchSubCategorieId == default ? null : SearchSubCategorieId;
+                productFilter.VendorId = SearchVendorId == default ? null : SearchVendorId;
+
                 productFilter.MinimumRate = SearchMinimumRate;
                 productFilter.MaximumRate = SearchMaximumRate;
 
@@ -104,6 +108,39 @@ public partial class Products
         }
     }
 
+    private Guid _searchCategorieId;
+    private Guid SearchCategorieId
+    {
+        get => _searchCategorieId;
+        set
+        {
+            _searchCategorieId = value;
+            _ = _table?.ReloadDataAsync();
+        }
+    }
+
+    private Guid _searchSubCategorieId;
+    private Guid SearchSubCategorieId
+    {
+        get => _searchSubCategorieId;
+        set
+        {
+            _searchSubCategorieId = value;
+            _ = _table?.ReloadDataAsync();
+        }
+    }
+
+    private Guid _searchVendorId;
+    private Guid SearchVendorId
+    {
+        get => _searchVendorId;
+        set
+        {
+            _searchVendorId = value;
+            _ = _table?.ReloadDataAsync();
+        }
+    }
+
     private decimal _searchMinimumRate;
     private decimal SearchMinimumRate
     {
@@ -115,7 +152,7 @@ public partial class Products
         }
     }
 
-    private decimal _searchMaximumRate = 999999999;
+    private decimal _searchMaximumRate = 99999999;
     private decimal SearchMaximumRate
     {
         get => _searchMaximumRate;

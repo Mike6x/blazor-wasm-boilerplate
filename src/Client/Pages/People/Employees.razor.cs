@@ -23,15 +23,13 @@ public partial class Employees
             {
                 // new(Employee => Employee.Id, L["Id"], "Id"),
                 new(Employee => Employee.Code, L["Code"], "Code"),
-                new(Employee => Employee.FirstName, L["FirstName"], "FirstName"),
-                new(Employee => Employee.LastName, L["LastName"], "LastName"),
+                new(Employee => Employee.FirstName, L["F.Name"], "FirstName"),
+                new(Employee => Employee.LastName, L["L.Name"], "LastName"),
                 new(Employee => Employee.PhoneNumber, L["Phone"], "Phone"),
 
                 // new(Employee => Employee.Email, L["Email"], "Email"),
                 // new(Employee => Employee.Address, L["Address"], "Address"),
                 // new(Employee => Employee.Description, L["Description"], "Description"),
-
-                new(Employee => Employee.IsActive, L["Active"], Type: typeof(bool)),
                 new(Employee => Employee.TitleName, L["Title"], "Title.Name"),
 
                 new(Employee => Employee.SuperiorFirstName, L["Superior F.Name "], "Superior.FirstName"),
@@ -40,6 +38,7 @@ public partial class Employees
                 new(Employee => Employee.DepartmentName, L["Department"], "Department.Name"),
                 new(Employee => Employee.SubDepartmentName, L["Section"], "SubDepartment.Name"),
                 new(Employee => Employee.TeamName, L["Team"], "Team.Name"),
+                new(Employee => Employee.IsActive, L["Active"], Type: typeof(bool)),
             },
             idFunc: Employee => Employee.Id,
             searchFunc: async filter => (await EmployeesClient

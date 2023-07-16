@@ -24,19 +24,24 @@ public partial class QuizResults
         entityResource: FSHResource.QuizResults,
         fields: new()
         {
-                new(QuizResult => QuizResult.Id, L["Id"], "Id"),
+                // new(QuizResult => QuizResult.Id, L["Id"], "Id"),
+                new(QuizResult => QuizResult.QuizCode, L["Quiz Code"], "Quiz.Code"),
+                new(QuizResult => QuizResult.QuizName, L["Quiz Name"], "Quiz.Name"),
 
-                new(QuizResult => QuizResult.QuizName, L["Quiz Name"], "Quiz Name"),
-                new(QuizResult => QuizResult.T, L["QuizType"], "Quiz Type"),
+                // new(QuizResult => QuizResult.T, L["Quiz Type"], "T"),
 
-                new(QuizResult => QuizResult.Sp, L["Student Point"], "Student Point"),
-                new(QuizResult => QuizResult.Ut, L["Used Time"], "Used Time"),
+                new(QuizResult => QuizResult.SId, L["Student Id"], "SId"),
+                new(QuizResult => QuizResult.Sp, L["Student Point"], "Sp"),
 
-                new(QuizResult => QuizResult.Tp, L["Total Score"], "Total Score"),
-                new(QuizResult => QuizResult.Ps, L["Passing Score"], "Passing Score"),
-                new(QuizResult => QuizResult.Psp, L["%"], "%"),
-                new(QuizResult => QuizResult.Tl, L["Time Limit"], "Time Limit"),
+                new(QuizResult => QuizResult.StartTime, L["StartTime"], "StartTime"),
+                new(QuizResult => QuizResult.EndTime, L["EndTime"], "EndTime"),
+                new(QuizResult => QuizResult.Ut, L["Used Time in Seconds"], "Ut"),
 
+                new(QuizResult => QuizResult.Tp, L["Total Score"], "Tp"),
+
+                new(QuizResult => QuizResult.Ps, L["Passing Score"], "Ps"),
+                new(QuizResult => QuizResult.Psp, L["Require Score in %"], "Psp"),
+                new(QuizResult => QuizResult.Tl, L["Time Limit"], "Tl"),
         },
         enableAdvancedSearch: true,
         idFunc: QuizResult => QuizResult.Id,
@@ -81,6 +86,13 @@ public partial class QuizResults
             _searchQuizId = value;
             _ = _table?.ReloadDataAsync();
         }
+    }
+
+    // View Student info
+    private void ViewProfile(string userId)
+    {
+        // if (!string.IsNullOrEmpty(userId))
+        Navigation.NavigateTo($"/users/{userId}/profile");
     }
 }
 

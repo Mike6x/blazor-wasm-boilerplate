@@ -12,8 +12,12 @@
 
     <AdvancedSearchContent>
         <BrandAutocomplete @bind-Value="SearchBrandId" />
-        <MudSlider T="decimal" @bind-value="SearchMinimumRate" Min="0" Max="999999999" Step="1000">@L["Minimum Rate"]: @_searchMinimumRate.ToString()</MudSlider>
-        <MudSlider T="decimal" @bind-value="SearchMaximumRate" Min="0" Max="999999999" Step="1000">@L["Maximum Rate"]: @_searchMaximumRate.ToString()</MudSlider>
+        <CategorieAutocomplete @bind-Value="SearchCategorieId" />
+        <SubCategorieAutocomplete @bind-Value="SearchSubCategorieId" />
+        <VendorAutocomplete @bind-Value="SearchVendorId" />
+
+        <MudSlider T="decimal" @bind-value="SearchMinimumRate" Min="0" Max="9999999" Step="1000">@L["Minimum Rate"]: @_searchMinimumRate.ToString()</MudSlider>
+        <MudSlider T="decimal" @bind-value="SearchMaximumRate" Min="0" Max="9999999" Step="1000">@L["Maximum Rate"]: @_searchMaximumRate.ToString()</MudSlider>
     </AdvancedSearchContent>
 
     <EditFormContent>

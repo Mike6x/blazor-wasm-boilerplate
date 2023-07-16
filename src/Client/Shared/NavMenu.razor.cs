@@ -29,7 +29,6 @@ public partial class NavMenu
     private bool _canViewTenants;
     private bool CanViewUserGroup => _canViewUsers || _canViewRoles || _canViewTenants || _canViewMenus || _canViewChatMessages;
 
-
     private bool _canViewUserStats;
     private bool _canViewProductStats;
     private bool _canViewAssetStats;

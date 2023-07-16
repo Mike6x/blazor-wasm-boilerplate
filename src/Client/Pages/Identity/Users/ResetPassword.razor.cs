@@ -39,9 +39,14 @@ public partial class ResetPassword
     {
         BusySubmitting = true;
         string? sucessMessage = await ApiHelper.ExecuteCallGuardedAsync(
-           () => UsersClient.ResetPasswordAsync(Tenant, _resetPasswordRequest),
+           () => UsersClient.ResetPasswordAsync(_resetPasswordRequest),
            Snackbar,
            _customValidation);
+
+        // string? sucessMessage = await ApiHelper.ExecuteCallGuardedAsync(
+        //   () => UsersClient.ResetPasswordAsync(Tenant, _resetPasswordRequest),
+        //   Snackbar,
+        //   _customValidation);
 
         if (sucessMessage != null)
         {

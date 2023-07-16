@@ -1,6 +1,13 @@
-﻿using FSH.BlazorWebAssembly.Client.Infrastructure.Preferences;
+﻿using FSH.BlazorWebAssembly.Client.Infrastructure.Notifications;
+using FSH.BlazorWebAssembly.Client.Infrastructure.Preferences;
+using FSH.WebApi.Shared.Notifications;
+using MediatR.Courier;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.JSInterop;
 using MudBlazor;
+using System.Security.Claims;
 
 namespace FSH.BlazorWebAssembly.Client.Shared;
 
@@ -16,12 +23,54 @@ public partial class MainLayout
     private bool _drawerOpen;
     private bool _rightToLeft;
 
+    // Chat Section
+    [CascadingParameter]
+    protected Task<AuthenticationState> AuthState { get; set; } = default!;
+
+    [Inject]
+    private ICourier Courier { get; set; } = default!;
+    private string CurrentUserId { get; set; } = string.Empty;
+
     protected override async Task OnInitializedAsync()
     {
         if (await ClientPreferences.GetPreference() is ClientPreference preference)
         {
             _rightToLeft = preference.IsRTL;
             _drawerOpen = preference.IsDrawerOpen;
+        }
+
+        Courier.SubscribeWeak<NotificationWrapper<ReceiveChatNotification>>(async wrapper =>
+        {
+            await LoadDataAsync(
+                wrapper.Notification.Message,
+                wrapper.Notification.ReceiverUserId,
+                wrapper.Notification.SenderUserId);
+        });
+    }
+
+    private async Task LoadDataAsync(string message, string receiverUserId, string senderUserId)
+    {
+        if ((await AuthState).User is { } user)
+        {
+            CurrentUserId = user.GetUserId()!;
+        }
+
+        if (CurrentUserId == receiverUserId)
+        {
+            _ = _jsRuntime.InvokeAsync<string>("PlayAudio", "notification");
+            Snackbar.Add(message, Severity.Info, config =>
+            {
+                config.VisibleStateDuration = 10000;
+                config.HideTransitionDuration = 500;
+                config.ShowTransitionDuration = 500;
+                config.Action = "Chat?";
+                config.ActionColor = Color.Info;
+                config.Onclick = snackbar =>
+                {
+                    Navigation.NavigateTo($"Communication/chat/{senderUserId}");
+                    return Task.CompletedTask;
+                };
+            });
         }
     }
 
