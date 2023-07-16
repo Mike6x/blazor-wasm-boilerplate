@@ -12,12 +12,6 @@ using System.Security.Claims;
 namespace FSH.BlazorWebAssembly.Client.Pages.Communication;
 public partial class Chat
 {
-    [CascadingParameter]
-    protected Task<AuthenticationState> AuthState { get; set; } = default!;
-
-    [CascadingParameter]
-    public required HubConnection hubConnection { get; set; }
-
     [Parameter]
     public required string CurrentMessage { get; set; }
     [Parameter]
@@ -31,6 +25,9 @@ public partial class Chat
 
     public List<UserDetailsDto> ChatUsers = new();
 
+    [CascadingParameter]
+    protected Task<AuthenticationState> AuthState { get; set; } = default!;
+
     [Inject]
     private ICourier Courier { get; set; } = default!;
 
@@ -43,16 +40,16 @@ public partial class Chat
     private bool ContactSelected { get; set; }
     private List<ChatMessageDto> _messages = new();
 
-    //protected override async Task OnAfterRenderAsync(bool firstRender)
-    //{
-    //    await _jsRuntime.InvokeAsync<string>("ScrollToBottom", "chatContainer");
-    //}
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await _jsRuntime.InvokeAsync<string>("ScrollToBottom", "chatContainer");
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        Courier.SubscribeWeak<NotificationWrapper<StatsChangedNotification>>(async _ =>
+        Courier.SubscribeWeak<NotificationWrapper<ReceiveChatNotification>>(async _ =>
         {
-            await LoadDataAsync();
+            await ReLoadDataAsync();
             StateHasChanged();
         });
 
@@ -65,15 +62,33 @@ public partial class Chat
     {
         if ((await AuthState).User is { } user)
         {
-            CurrentUserId = user.GetUserId() ?? string.Empty;
-            CurrentUserEmail = user.GetEmail() ?? string.Empty;
+            CurrentUserId = user.GetUserId();
+            CurrentUserEmail = user.GetEmail();
         }
 
         if (await ApiHelper.ExecuteCallGuardedAsync(() => UsersClient.GetChatUsersAsync(CurrentUserId), Snackbar)
             is List<UserDetailsDto> chatUsers)
         {
             ChatUsers = chatUsers;
-            var state = await AuthState;
+        }
+
+        if (!string.IsNullOrEmpty(ContactId))
+        {
+            await LoadUserChat(ContactId);
+        }
+    }
+
+    private async Task ReLoadDataAsync()
+    {
+        if (await ApiHelper.ExecuteCallGuardedAsync(() => UsersClient.GetChatUsersAsync(CurrentUserId), Snackbar)
+            is List<UserDetailsDto> chatUsers)
+        {
+            ChatUsers = chatUsers;
+        }
+
+        if (!string.IsNullOrEmpty(ContactId))
+        {
+            await LoadUserChat(ContactId);
         }
     }
 
@@ -82,11 +97,13 @@ public partial class Chat
         ContactSelected = true;
 
         var contact = await UsersClient.GetChatUserAsync(userId);
-        ContactId = contact.Id.ToString();
-        ContactEmail = contact.Email ?? contact.UserName ?? contact.Id.ToString();
-        Navigation.NavigateTo($"Communication/chat/{ContactId}");
-        _messages = new List<ChatMessageDto>();
-        _messages = (List<ChatMessageDto>)await ChatMessagesClient.GetConversationAsync(ContactId);
+        if (contact != null)
+        {
+            ContactId = contact.Id.ToString();
+            ContactEmail = contact.Email ?? contact.UserName ?? contact.Id.ToString();
+            Navigation.NavigateTo($"Communication/chat/{ContactId}");
+            _messages = (List<ChatMessageDto>)await ChatMessagesClient.GetConversationAsync(CurrentUserId, ContactId);
+        }
     }
 
     private async Task SubmitAsync()
@@ -104,11 +121,8 @@ public partial class Chat
             };
             await ChatMessagesClient.CreateAsync(chatHistory);
 
-            chatHistory.FromUserId = CurrentUserId;
-
-            // await hubConnection.SendAsync("SendMessageAsync", chatHistory, CurrentUserEmail);
-            StateHasChanged();
             CurrentMessage = string.Empty;
+            await LoadUserChat(ContactId);
         }
     }
 }
