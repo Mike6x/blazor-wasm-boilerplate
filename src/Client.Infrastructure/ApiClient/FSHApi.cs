@@ -19787,6 +19787,19 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
         /// Logout of currently logged in user.
         /// </summary>
         /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<FileResponse> LogoffAsync();
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>
+        /// Logout of currently logged in user.
+        /// </summary>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<FileResponse> LogoffAsync(System.Threading.CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Logout of currently logged in user.
+        /// </summary>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<FileResponse> LogoutAsync();
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -20304,6 +20317,82 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
         /// Logout of currently logged in user.
         /// </summary>
         /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual System.Threading.Tasks.Task<FileResponse> LogoffAsync()
+        {
+            return LogoffAsync(System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>
+        /// Logout of currently logged in user.
+        /// </summary>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<FileResponse> LogoffAsync(System.Threading.CancellationToken cancellationToken)
+        {
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append("api/personal/logout");
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/octet-stream"));
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200 || status_ == 206)
+                        {
+                            var responseStream_ = response_.Content == null ? System.IO.Stream.Null : await response_.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                            var fileResponse_ = new FileResponse(status_, headers_, responseStream_, null, response_);
+                            disposeClient_ = false; disposeResponse_ = false; // response and client are disposed by FileResponse
+                            return fileResponse_;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Logout of currently logged in user.
+        /// </summary>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<FileResponse> LogoutAsync()
         {
             return LogoutAsync(System.Threading.CancellationToken.None);
@@ -20325,7 +20414,8 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/octet-stream");
+                    request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/octet-stream"));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -25959,14 +26049,14 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
         /// Anonymous user creates a new QuizResult.
         /// </summary>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Guid> MobileCreateAsync(System.Guid? quizId, string? sId, decimal? sp, decimal? ut, string? fut, string? qt, decimal? tp, decimal? ps, decimal? psp, decimal? tl, string? v, string? t);
+        System.Threading.Tasks.Task<System.Guid> MobileCreateAsync(System.Guid? quizId, string? sId, decimal? sp, decimal? ut, string? fut, string? qt, decimal? tp, decimal? ps, decimal? psp, decimal? tl, string? v, string? t, decimal? rating);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
         /// Anonymous user creates a new QuizResult.
         /// </summary>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Guid> MobileCreateAsync(System.Guid? quizId, string? sId, decimal? sp, decimal? ut, string? fut, string? qt, decimal? tp, decimal? ps, decimal? psp, decimal? tl, string? v, string? t, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<System.Guid> MobileCreateAsync(System.Guid? quizId, string? sId, decimal? sp, decimal? ut, string? fut, string? qt, decimal? tp, decimal? ps, decimal? psp, decimal? tl, string? v, string? t, decimal? rating, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>
         /// Create a new QuizResult.
@@ -26533,9 +26623,9 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
         /// Anonymous user creates a new QuizResult.
         /// </summary>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Guid> MobileCreateAsync(System.Guid? quizId, string? sId, decimal? sp, decimal? ut, string? fut, string? qt, decimal? tp, decimal? ps, decimal? psp, decimal? tl, string? v, string? t)
+        public virtual System.Threading.Tasks.Task<System.Guid> MobileCreateAsync(System.Guid? quizId, string? sId, decimal? sp, decimal? ut, string? fut, string? qt, decimal? tp, decimal? ps, decimal? psp, decimal? tl, string? v, string? t, decimal? rating)
         {
-            return MobileCreateAsync(quizId, sId, sp, ut, fut, qt, tp, ps, psp, tl, v, t, System.Threading.CancellationToken.None);
+            return MobileCreateAsync(quizId, sId, sp, ut, fut, qt, tp, ps, psp, tl, v, t, rating, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -26543,7 +26633,7 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
         /// Anonymous user creates a new QuizResult.
         /// </summary>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Guid> MobileCreateAsync(System.Guid? quizId, string? sId, decimal? sp, decimal? ut, string? fut, string? qt, decimal? tp, decimal? ps, decimal? psp, decimal? tl, string? v, string? t, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Guid> MobileCreateAsync(System.Guid? quizId, string? sId, decimal? sp, decimal? ut, string? fut, string? qt, decimal? tp, decimal? ps, decimal? psp, decimal? tl, string? v, string? t, decimal? rating, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("api/v1/quizresults/mobile-create");
@@ -26631,6 +26721,11 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
                     if (t != null)
                     {
                         content_.Add(new System.Net.Http.StringContent(ConvertToString(t, System.Globalization.CultureInfo.InvariantCulture)), "T");
+                    }
+
+                    if (rating != null)
+                    {
+                        content_.Add(new System.Net.Http.StringContent(ConvertToString(rating, System.Globalization.CultureInfo.InvariantCulture)), "Rating");
                     }
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
@@ -40800,6 +40895,12 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
         [Newtonsoft.Json.JsonProperty("quizCode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string QuizCode { get; set; } = default!;
 
+        [Newtonsoft.Json.JsonProperty("rating", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public decimal Rating { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("isPass", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool IsPass { get; set; } = default!;
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.19.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -40892,6 +40993,12 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
         [Newtonsoft.Json.JsonProperty("t", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string T { get; set; } = default!;
 
+        [Newtonsoft.Json.JsonProperty("rating", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public decimal Rating { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("isPass", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool IsPass { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("quiz", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public QuizDto Quiz { get; set; } = default!;
 
@@ -40930,6 +41037,21 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
         [Newtonsoft.Json.JsonProperty("quizTopic", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public QuizTopic QuizTopic { get; set; } = default!;
 
+        [Newtonsoft.Json.JsonProperty("quizMode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public QuizMode QuizMode { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("price", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public decimal? Price { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("sale", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? Sale { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("rating", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public decimal? Rating { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("ratingCount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? RatingCount { get; set; } = default!;
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.19.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -40957,6 +41079,20 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
         Orientation = 2,
 
         SalesSkill = 3,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.19.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum QuizMode
+    {
+
+        All = 0,
+
+        Practice = 1,
+
+        Pretest = 2,
+
+        Exam = 3,
 
     }
 
@@ -41019,6 +41155,9 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
         [Newtonsoft.Json.JsonProperty("t", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string T { get; set; } = default!;
 
+        [Newtonsoft.Json.JsonProperty("rating", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public decimal? Rating { get; set; } = default!;
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.19.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -41075,6 +41214,9 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
         [Newtonsoft.Json.JsonProperty("t", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? T { get; set; } = default!;
 
+        [Newtonsoft.Json.JsonProperty("rating", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public decimal? Rating { get; set; } = default!;
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.19.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -41128,6 +41270,9 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
         [Newtonsoft.Json.JsonProperty("quizTopic", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public QuizTopic? QuizTopic { get; set; } = default!;
 
+        [Newtonsoft.Json.JsonProperty("quizMode", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public QuizMode? QuizMode { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("isActive", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? IsActive { get; set; } = default!;
 
@@ -41166,6 +41311,21 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
         [Newtonsoft.Json.JsonProperty("quizTopic", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public QuizTopic QuizTopic { get; set; } = default!;
 
+        [Newtonsoft.Json.JsonProperty("quizMode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public QuizMode QuizMode { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("price", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public decimal? Price { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("sale", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? Sale { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("rating", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public decimal? Rating { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("ratingCount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? RatingCount { get; set; } = default!;
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.19.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -41198,6 +41358,12 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
 
         [Newtonsoft.Json.JsonProperty("quizTopic", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public QuizTopic QuizTopic { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("quizMode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public QuizMode QuizMode { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("price", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public decimal Price { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("quizMedia", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public FileUploadRequest? QuizMedia { get; set; } = default!;
@@ -41238,8 +41404,23 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
         [Newtonsoft.Json.JsonProperty("quizTopic", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public QuizTopic QuizTopic { get; set; } = default!;
 
+        [Newtonsoft.Json.JsonProperty("quizMode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public QuizMode QuizMode { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("deleteCurrentQuiz", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool DeleteCurrentQuiz { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("sale", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? Sale { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("price", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public decimal? Price { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("ratingCount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? RatingCount { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("rating", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public decimal? Rating { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("quizMedia", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public FileUploadRequest? QuizMedia { get; set; } = default!;
@@ -41254,6 +41435,12 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
 
         [Newtonsoft.Json.JsonProperty("quizTopic", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public QuizTopic? QuizTopic { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("isActive", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool? IsActive { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("quizMode", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public QuizMode? QuizMode { get; set; } = default!;
 
     }
 

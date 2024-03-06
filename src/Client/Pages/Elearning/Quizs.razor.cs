@@ -43,11 +43,17 @@ public partial class Quizs
                 new(Quiz => Quiz.Description, L["Description"], "Description"),
 
                 new(Quiz => Quiz.StartTime.ToLocalTime(), L["StartTime"], "StartTime", Type: typeof(DateTime)),
-                new(Quiz => Quiz.EndTime.ToLocalTime(), L["EndTime"], "EndTime"),
+                new(Quiz => Quiz.EndTime.ToLocalTime(), L["EndTime"], "EndTime", Type: typeof(DateTime)),
 
                 new(Quiz => Quiz.QuizTopic, L["Topic"], "QuizTopic"),
+                new(Quiz => Quiz.QuizMode, L["Mode"], "QuizMode"),
                 new(Quiz => Quiz.QuizType, L["Type"], "QuizType"),
-                new(Quiz => Quiz.QuizPath, L["QuizPath"], "QuizPath"),
+
+                // new(Quiz => Quiz.QuizPath, L["QuizPath"], "QuizPath"),
+                new(Quiz => Quiz.Price, L["Price"], "Price"),
+                new(Quiz => Quiz.Sale, L["Sale"], "Sale"),
+                new(Quiz => Quiz.Rating, L["Rating"], "Rating"),
+                new(Quiz => Quiz.RatingCount, L["RatingCount"], "Reviewers"),
 
                 new(Quiz => Quiz.IsActive, L["Active"], Type: typeof(bool)),
             },
@@ -59,6 +65,7 @@ public partial class Quizs
 
             quizFilter.QuizType = SearchQuizTypeId == QuizType.All ? null : SearchQuizTypeId;
             quizFilter.QuizTopic = SearchQuizTopicId == QuizTopic.All ? null : SearchQuizTopicId;
+            quizFilter.QuizMode = SearchQuizModeId == QuizMode.All ? null : SearchQuizModeId;
 
             var result = await QuizsClient.SearchAsync(quizFilter);
             return result.Adapt<PaginationResponse<QuizDto>>();
@@ -148,6 +155,17 @@ public partial class Quizs
         }
     }
 
+    private QuizMode _searchQuizModeId = QuizMode.All;
+    private QuizMode SearchQuizModeId
+    {
+        get => _searchQuizModeId;
+        set
+        {
+            _searchQuizModeId = value;
+            _ = _table?.ReloadDataAsync();
+        }
+    }
+
     // Take a Quiz
 
     private string _currentUserId = string.Empty;
@@ -195,22 +213,59 @@ public partial class Quizs
         }
     }
 
+    private TimeSpan? _startTimeSpan;
+    public TimeSpan? StartTimeSpan
+    {
+        get
+        {
+            if (_startTimeSpan == null && Context.AddEditModal.RequestModel.StartTime != null)
+                _startTimeSpan = Context.AddEditModal.RequestModel.StartTime.Value.ToLocalTime().TimeOfDay;
+            return _startTimeSpan;
+        }
+        set
+        {
+            _startTimeSpan = value;
+        }
+    }
+
+    private TimeSpan? _endTimeSpan;
+    public TimeSpan? EndTimeSpan
+    {
+        get
+        {
+            if (_endTimeSpan == null && Context.AddEditModal.RequestModel.EndTime != null)
+                _endTimeSpan = Context.AddEditModal.RequestModel.EndTime.Value.ToLocalTime().TimeOfDay;
+            return _endTimeSpan;
+        }
+        set
+        {
+            _endTimeSpan = value;
+        }
+    }
+
     private void GetStartTime()
     {
-        Context.AddEditModal.RequestModel.StartTime ??= DateTime.Now.ToLocalTime().Date;
-        Context.AddEditModal.RequestModel.StartTimeSpan ??= TimeSpan.Zero;
 
-        var timeSpan = (TimeSpan)(Context.AddEditModal.RequestModel.StartTime + Context.AddEditModal.RequestModel.StartTimeSpan - DateTime.UtcNow);
-        Context.AddEditModal.RequestModel.StartTime = DateTime.UtcNow.Add(timeSpan);
+        if (Context.AddEditModal.RequestModel.StartTime == null)
+        {
+            Context.AddEditModal.RequestModel.StartTime = DateTime.Now.ToLocalTime().Date;
+            StartTimeSpan = DateTime.Now.ToLocalTime().TimeOfDay;
+        }
+
+        DateTime localTime = Context.AddEditModal.RequestModel.StartTime.Value.Date.Add(StartTimeSpan ?? TimeSpan.Zero);
+        Context.AddEditModal.RequestModel.StartTime = TimeZoneInfo.ConvertTimeToUtc(localTime);
     }
 
     private void GetEndTime()
     {
-        Context.AddEditModal.RequestModel.EndTime ??= DateTime.Now.ToLocalTime().Date;
-        Context.AddEditModal.RequestModel.EndTimeSpan ??= TimeSpan.Zero;
+        if (Context.AddEditModal.RequestModel.EndTime == null)
+        {
+            Context.AddEditModal.RequestModel.EndTime = DateTime.Now.ToLocalTime().Date;
+            EndTimeSpan = DateTime.Now.ToLocalTime().TimeOfDay;
+        }
 
-        var timeSpan = (TimeSpan)(Context.AddEditModal.RequestModel.EndTime + Context.AddEditModal.RequestModel.EndTimeSpan - DateTime.UtcNow);
-        Context.AddEditModal.RequestModel.EndTime = DateTime.UtcNow.Add(timeSpan);
+        DateTime localTime = Context.AddEditModal.RequestModel.EndTime.Value.Date.Add(EndTimeSpan ?? TimeSpan.Zero);
+        Context.AddEditModal.RequestModel.EndTime = TimeZoneInfo.ConvertTimeToUtc(localTime);
     }
 }
 
@@ -219,27 +274,4 @@ public class QuizViewModel : UpdateQuizRequest
     public string? QuizPath { get; set; }
     public string? QuizInBytes { get; set; }
     public string? QuizExtension { get; set; }
-
-    public DateTime? StartDate { get; set; } = DateTime.Today;
-    public DateTime? EndDate { get; set; } = DateTime.Today;
-
-    public TimeSpan? StartTimeSpan { get; set; } = TimeSpan.Zero;
-    public TimeSpan? EndTimeSpan { get; set; } = TimeSpan.Zero;
-
-    // public QuizViewModel()
-    // {
-    //    StartDate = StartTime == null
-    //       ? DateTime.Today
-    //       : StartTime.Value.ToLocalTime().Date;
-    //    EndDate = EndTime == null
-    //        ? DateTime.Today
-    //        : EndTime.Value.ToLocalTime().Date;
-
-    // StartTimeSpan = StartTime == null
-    //        ? DateTime.Now.ToLocalTime().TimeOfDay
-    //        : StartTime.Value.ToLocalTime().TimeOfDay;
-    //    EndTimeSpan = EndTime == null
-    //        ? DateTime.Now.ToLocalTime().TimeOfDay
-    //        : EndTime.Value.ToLocalTime().TimeOfDay;
-    // }
 }

@@ -44,7 +44,7 @@ public partial class EntityTable<TEntity, TId, TRequest>
     [Inject]
     protected IAuthorizationService AuthService { get; set; } = default!;
 
-    private bool _advancedSearchExpanded;
+    private readonly bool _advancedSearchExpanded;
     private bool _canSearch;
     private bool _canCreate;
     private bool _canUpdate;

@@ -66,11 +66,11 @@ public partial class Chat
     {
         if ((await AuthState).User is { } user)
         {
-            CurrentUserId = user.GetUserId();
-            CurrentUserEmail = user.GetEmail();
+            CurrentUserId = user?.GetUserId()!;
+            CurrentUserEmail = user?.GetEmail()!;
         }
 
-        if (await ApiHelper.ExecuteCallGuardedAsync(() => UsersClient.GetChatUsersAsync(CurrentUserId), Snackbar)
+        if (await ApiHelper.ExecuteCallGuardedAsync(() => UsersClient.GetChatUsersAsync(CurrentUserId!), Snackbar)
             is List<UserDetailsDto> chatUsers)
         {
             ChatUsers = chatUsers;
@@ -133,8 +133,8 @@ public partial class Chat
     private void OnSearchStringChanged()
     {
         FilteredUsers = ChatUsers.Where(x =>
-            x.FirstName.Contains(SearchString) ||
-            x.LastName.Contains(SearchString) ||
-            x.UserName.Contains(SearchString)).ToList();
+            x.FirstName!.Contains(SearchString) ||
+            x.LastName!.Contains(SearchString) ||
+            x.UserName!.Contains(SearchString)).ToList();
     }
 }

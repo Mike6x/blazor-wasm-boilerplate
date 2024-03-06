@@ -37,7 +37,7 @@ public partial class UserRoles
         _canSearchRoles = await AuthService.HasPermissionAsync(state.User, FSHAction.View, FSHResource.UserRoles);
 
         if (await ApiHelper.ExecuteCallGuardedAsync(
-                () => UsersClient.GetByIdAsync(Id), Snackbar)
+                () => UsersClient.GetByIdAsync(Id!), Snackbar)
             is UserDetailsDto user)
         {
             _title = $"{user.FirstName} {user.LastName}";
@@ -62,7 +62,7 @@ public partial class UserRoles
         };
 
         if (await ApiHelper.ExecuteCallGuardedAsync(
-                () => UsersClient.AssignRolesAsync(Id, request),
+                () => UsersClient.AssignRolesAsync(Id!, request),
                 Snackbar,
                 successMessage: L["Updated User Roles."])
             is not null)

@@ -33,8 +33,8 @@ public partial class QuizResults
                 new(QuizResult => QuizResult.SId, L["Student Id"], "SId"),
                 new(QuizResult => QuizResult.Sp, L["Student Point"], "Sp"),
 
-                new(QuizResult => QuizResult.StartTime, L["StartTime"], "StartTime"),
-                new(QuizResult => QuizResult.EndTime, L["EndTime"], "EndTime"),
+                new(QuizResult => QuizResult.StartTime.ToLocalTime(), L["StartTime"], "StartTime"),
+                new(QuizResult => QuizResult.EndTime.ToLocalTime(), L["EndTime"], "EndTime"),
                 new(QuizResult => QuizResult.Ut, L["Used Time in Seconds"], "Ut"),
 
                 new(QuizResult => QuizResult.Tp, L["Total Score"], "Tp"),
@@ -42,6 +42,9 @@ public partial class QuizResults
                 new(QuizResult => QuizResult.Ps, L["Passing Score"], "Ps"),
                 new(QuizResult => QuizResult.Psp, L["Require Score in %"], "Psp"),
                 new(QuizResult => QuizResult.Tl, L["Time Limit"], "Tl"),
+
+                new(QuizResult => QuizResult.Rating, L["Rating"], "Rating"),
+                new(QuizResult => QuizResult.IsPass, L["Passed"], Type: typeof(bool)),
         },
         enableAdvancedSearch: true,
         idFunc: QuizResult => QuizResult.Id,

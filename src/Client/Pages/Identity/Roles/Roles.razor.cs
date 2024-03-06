@@ -45,17 +45,18 @@ public partial class Roles
                     || role.Description?.Contains(searchString, StringComparison.OrdinalIgnoreCase) == true,
             createFunc: async role => await RolesClient.RegisterRoleAsync(role),
             updateFunc: async (_, role) => await RolesClient.RegisterRoleAsync(role),
-            deleteFunc: async id => await RolesClient.DeleteAsync(id),
+            deleteFunc: async id => await RolesClient.DeleteAsync(id!),
 
-            // exportFunc: async filter =>
-            // {
-            //    var exportFilter = filter.Adapt<ExportRolesRequest>();
-            //    return await RolesClient.ExportAsync(exportFilter);
-            // },
+             // exportFunc: async filter =>
+             // {
+             //    var exportFilter = filter.Adapt<ExportRolesRequest>();
+             //    return await RolesClient.ExportAsync(exportFilter);
+             // },
 
             hasExtraActionsFunc: () => _canViewRoleClaims,
             canUpdateEntityFunc: e => !FSHRoles.IsDefault(e.Name),
-            canDeleteEntityFunc: e => !FSHRoles.IsDefault(e.Name));
+            canDeleteEntityFunc: e => !FSHRoles.IsDefault(e.Name),
+            exportAction: string.Empty);
     }
 
     private void ManagePermissions(string? roleId)

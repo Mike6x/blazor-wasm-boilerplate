@@ -86,11 +86,11 @@ else
                                         <MudBadge Class="my-2" Color= "Color.Secondary">
                                             @if (user.Id.ToString() == ContactId)
                                             {
-                                                <MudAvatar Color="Color.Secondary" Style="height:50px; width:50px;">@user?.Email.ToUpper().FirstOrDefault()</MudAvatar>
+                                                <MudAvatar Color="Color.Secondary" Style="height:50px; width:50px;">@user?.Email!.ToUpper().FirstOrDefault()</MudAvatar>
                                             }
                                             else
                                             {
-                                                <MudAvatar Color="Color.Dark" Style="height:50px; width:50px;">@user.Email.ToUpper().FirstOrDefault()</MudAvatar>
+                                                <MudAvatar Color="Color.Dark" Style="height:50px; width:50px;">@user?.Email!.ToUpper().FirstOrDefault()</MudAvatar>
                                             }
                                         </MudBadge>
                                     }
@@ -99,11 +99,11 @@ else
                                         <MudBadge Class="my-2" Color="Color.Dark">
                                             @if (user.Id.ToString() == ContactId)
                                             {
-                                                <MudAvatar Color="Color.Tertiary" Style="height:50px; width:50px;">@user.Email.ToUpper().FirstOrDefault()</MudAvatar>
+                                                <MudAvatar Color="Color.Tertiary" Style="height:50px; width:50px;">@user?.Email!.ToUpper().FirstOrDefault()</MudAvatar>
                                             }
                                             else
                                             {
-                                                <MudAvatar Color="Color.Dark" Style="height:50px; width:50px;">@user.Email.ToUpper().FirstOrDefault()</MudAvatar>
+                                                <MudAvatar Color="Color.Dark" Style="height:50px; width:50px;">@user?.Email!.ToUpper().FirstOrDefault()</MudAvatar>
                                             }
                                         </MudBadge>
                                     

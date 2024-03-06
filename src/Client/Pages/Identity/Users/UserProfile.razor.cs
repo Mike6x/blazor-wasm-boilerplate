@@ -14,20 +14,19 @@ namespace FSH.BlazorWebAssembly.Client.Pages.Identity.Users;
 
 public partial class UserProfile
 {
+    [Parameter]
+    public string? Id { get; set; }
+    [Parameter]
+    public string? Title { get; set; }
+    [Parameter]
+    public string? Description { get; set; }
+
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
     [Inject]
     protected IAuthorizationService AuthService { get; set; } = default!;
     [Inject]
     protected IUsersClient UsersClient { get; set; } = default!;
-
-    [Parameter]
-    public string? Id { get; set; }
-    [Parameter]
-    public string? Title { get; set; }
-    [Parameter]
-
-    public string? Description { get; set; }
 
     private string Tenant { get; set; } = MultitenancyConstants.Root.Id;
 
@@ -49,7 +48,7 @@ public partial class UserProfile
     protected override async Task OnInitializedAsync()
     {
         if (await ApiHelper.ExecuteCallGuardedAsync(
-            () => UsersClient.GetByIdAsync(Id), Snackbar)
+            () => UsersClient.GetByIdAsync(Id!), Snackbar)
                 is UserDetailsDto user)
         {
             _profileModel.Id = user.Id.ToString();
@@ -110,7 +109,7 @@ public partial class UserProfile
     private async Task ToggleUserStatusAsync()
     {
         var request = new ToggleUserStatusRequest { ActivateUser = !_isActive, UserId = Id };
-        if (await ApiHelper.ExecuteCallGuardedAsync(() => UsersClient.ToggleStatusAsync(Id, request), Snackbar))
+        if (await ApiHelper.ExecuteCallGuardedAsync(() => UsersClient.ToggleStatusAsync(Id!, request), Snackbar))
         {
             string message = _isActive ? "The Account have disabled" : "The Account have activated";
             Snackbar.Add(_localizer[message], Severity.Success);

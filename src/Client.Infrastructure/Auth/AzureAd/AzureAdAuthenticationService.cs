@@ -7,6 +7,7 @@ namespace FSH.BlazorWebAssembly.Client.Infrastructure.Auth.AzureAd;
 internal class AzureAdAuthenticationService : IAuthenticationService
 {
     private readonly SignOutSessionStateManager _signOut;
+
     private readonly NavigationManager _navigation;
 
     public AzureAdAuthenticationService(SignOutSessionStateManager signOut, NavigationManager navigation) =>
@@ -24,6 +25,8 @@ internal class AzureAdAuthenticationService : IAuthenticationService
     {
         await _signOut.SetSignOutState();
         _navigation.NavigateTo("authentication/logout");
+
+        // _navigation.NavigateToLogout("authentication/logout");
     }
 
     public Task ReLoginAsync(string returnUrl)

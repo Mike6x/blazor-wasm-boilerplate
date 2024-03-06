@@ -22,19 +22,25 @@
             <MudTextField Label="@L["Student Id"]" For="@(() => context.SId)" @bind-Value="context.SId" />
         </MudItem>
         <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Quiz Title"]" For="@(() => context.Qt)" @bind-Value="context.Qt" />
+        </MudItem>
+        <MudItem xs="12" md="3">
             <MudTextField Label="@L["Student Point"]" For="@(() => context.Sp)" @bind-Value="context.Sp" />
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="@L["Start Time"]" Editable="true" @bind-Date="context.StartTime" DateFormat="dd.MM.yyyy" DisableToolbar="true" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="@L["End Time"]" Editable="true" @bind-Date="context.EndTime" DateFormat="dd.MM.yyyy" DisableToolbar="true" />
         </MudItem>
         <MudItem xs="12" md="3">
             <MudTextField Label="@L["Used Time"]" For="@(() => context.Ut)" @bind-Value="context.Ut" />
         </MudItem>
-
         <MudItem xs="12" md="3">
             <MudTextField Label="@L["Time Spent"]" For="@(() => context.Fut)" @bind-Value="context.Fut" />
         </MudItem>
 
-        <MudItem xs="12" md="3">
-            <MudTextField Label="@L["Quiz Title"]" For="@(() => context.Qt)" @bind-Value="context.Qt" />
-        </MudItem>
         <MudItem xs="12" md="3">
             <MudTextField Label="@L["Total score"]" For="@(() => context.Tp)" @bind-Value="context.Tp" />
         </MudItem>
@@ -49,13 +55,7 @@
         </MudItem>
 
         <MudItem xs="12" md="3">
-            <MudTextField Label="@L["Quiz Version"]" For="@(() => context.V)" @bind-Value="context.V" />
-        </MudItem>
-        <MudItem xs="12" md="3">
-            <MudDatePicker Label="@L["Start Time"]" Editable="true" @bind-Date="context.StartTime" DateFormat="dd.MM.yyyy" DisableToolbar="true" />
-        </MudItem>
-        <MudItem xs="12" md="3">
-            <MudDatePicker Label="@L["End Time"]" Editable="true" @bind-Date="context.EndTime" DateFormat="dd.MM.yyyy" DisableToolbar="true" />
+            <QuizAutocomplete For="@(() => context.QuizId)" @bind-Value="context.QuizId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
         </MudItem>
         <MudItem xs="12" md="3">
             <MudSelect Label="Select Quiz Type" @bind-Value="context.T" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Filled">
@@ -66,7 +66,10 @@
             </MudSelect>
         </MudItem>
         <MudItem xs="12" md="3">
-            <QuizAutocomplete For="@(() => context.QuizId)" @bind-Value="context.QuizId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+            <MudTextField Label="@L["Quiz Version"]" For="@(() => context.V)" @bind-Value="context.V" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Rating"]" For="@(() => context.Rating)" @bind-Value="context.Rating" />
         </MudItem>
     </EditFormContent>
 </EntityTable>
