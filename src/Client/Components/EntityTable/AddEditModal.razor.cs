@@ -31,6 +31,8 @@ public partial class AddEditModal<TRequest> : IAddEditModal<TRequest>
 
     private CustomValidation? _customValidation;
 
+    private bool _buttonStatus;
+
     public void ForceRender() => StateHasChanged();
 
     protected override Task OnInitializedAsync() =>
@@ -40,10 +42,13 @@ public partial class AddEditModal<TRequest> : IAddEditModal<TRequest>
 
     private async Task SaveAsync()
     {
+        _buttonStatus = true;
         if (await ApiHelper.ExecuteCallGuardedAsync(
             () => SaveFunc(RequestModel), Snackbar, _customValidation, SuccessMessage))
         {
             MudDialog.Close();
         }
+
+        _buttonStatus = false;
     }
 }

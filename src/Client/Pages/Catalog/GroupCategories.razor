@@ -6,7 +6,20 @@
 
 <FshTitle Title="@L["GroupCategories"]" Description="@L["Manage GroupCategories."]" />
 
-<EntityTable TEntity="GroupCategorieDto" TId="Guid" TRequest="UpdateGroupCategorieRequest" Context="@Context">
+<EntityTable @ref="_table" TEntity="GroupCategorieDto" TId="Guid" TRequest="UpdateGroupCategorieRequest" Context="@Context">
+    <AdvancedSearchContent>
+
+        <GroupCategorieAutocomplete @bind-Value="SearchBusinessLineId" />
+
+        <MudSelect Label="CatalogType" @bind-Value="SearchCatalogType" Variant="Variant.Filled">
+            @foreach (CatalogType item in Enum.GetValues(typeof(CatalogType)))
+            {
+                <MudSelectItem Value="@item">@item</MudSelectItem>
+            }
+        </MudSelect>
+
+    </AdvancedSearchContent>
+
     <EditFormContent>
         @if (!Context.AddEditModal.IsCreate)
         {
@@ -25,7 +38,7 @@
             <MudTextField T="string" For="@(() => context.Name)" @bind-Value="context.Name" Label="@L["Name"]" />
         </MudItem>
         <MudItem xs="12" md="3">
-            <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+            <MudCheckBox @bind-Value="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
         </MudItem>
         <MudItem xs="12" md="3">
             <BusinessLineAutocomplete For="@(() => context.BusinessLineId)" @bind-Value="context.BusinessLineId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />

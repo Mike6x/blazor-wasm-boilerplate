@@ -6,7 +6,21 @@
 
 <FshTitle Title="@L["SubCategories"]" Description="@L["Manage SubCategories."]" />
 
-<EntityTable TEntity="SubCategorieDto" TId="Guid" TRequest="UpdateSubCategorieRequest" Context="@Context">
+<EntityTable @ref="_table" TEntity="SubCategorieDto" TId="Guid" TRequest="UpdateSubCategorieRequest" Context="@Context">
+    <AdvancedSearchContent>
+
+        <CategorieAutocomplete @bind-Value="SearchCategorieId" />
+
+        <MudSelect Label="CatalogType" @bind-Value="SearchCatalogType" Variant="Variant.Filled">
+            @foreach (CatalogType item in Enum.GetValues(typeof(CatalogType)))
+            {
+                <MudSelectItem Value="@item">@item</MudSelectItem>
+            }
+        </MudSelect>
+
+    </AdvancedSearchContent>
+
+
     <EditFormContent>
         @if (!Context.AddEditModal.IsCreate)
         {
@@ -25,7 +39,7 @@
             <MudTextField T="string" For="@(() => context.Name)" @bind-Value="context.Name" Label="@L["Name"]" />
         </MudItem>
         <MudItem xs="12" md="3">
-            <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+            <MudCheckBox @bind-Value="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
         </MudItem>
         <MudItem xs="12" md="3">
             <CategorieAutocomplete For="@(() => context.CategorieId)" @bind-Value="context.CategorieId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />

@@ -5,24 +5,16 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
 namespace FSH.BlazorWebAssembly.Client.Infrastructure.Auth.Jwt;
 
-public class JwtAuthenticationService : AuthenticationStateProvider, IAuthenticationService, IAccessTokenProvider
+public class JwtAuthenticationService(ILocalStorageService localStorage, IPersonalClient personalClient, ITokensClient tokensClient, NavigationManager navigation) : AuthenticationStateProvider, IAuthenticationService, IAccessTokenProvider
 {
     private readonly SemaphoreSlim _semaphore = new(1, 1);
 
-    private readonly ILocalStorageService _localStorage;
-    private readonly ITokensClient _tokensClient;
-    private readonly IPersonalClient _personalClient;
-    private readonly NavigationManager _navigation;
+    private readonly ILocalStorageService _localStorage = localStorage;
+    private readonly ITokensClient _tokensClient = tokensClient;
+    private readonly IPersonalClient _personalClient = personalClient;
+    private readonly NavigationManager _navigation = navigation;
 
     public AuthProvider ProviderType => AuthProvider.Jwt;
-
-    public JwtAuthenticationService(ILocalStorageService localStorage, IPersonalClient personalClient, ITokensClient tokensClient, NavigationManager navigation)
-    {
-        _localStorage = localStorage;
-        _personalClient = personalClient;
-        _tokensClient = tokensClient;
-        _navigation = navigation;
-    }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
@@ -174,7 +166,7 @@ public class JwtAuthenticationService : AuthenticationStateProvider, IAuthentica
     private ValueTask<ICollection<string>> GetCachedPermissionsAsync() =>
         _localStorage.GetItemAsync<ICollection<string>>(StorageConstants.Local.Permissions);
 
-    private IEnumerable<Claim> GetClaimsFromJwt(string jwt)
+    private static IEnumerable<Claim> GetClaimsFromJwt(string jwt)
     {
         var claims = new List<Claim>();
         string payload = jwt.Split('.')[1];
@@ -214,7 +206,7 @@ public class JwtAuthenticationService : AuthenticationStateProvider, IAuthentica
         return claims;
     }
 
-    private byte[] ParseBase64WithoutPadding(string payload)
+    private static byte[] ParseBase64WithoutPadding(string payload)
     {
         payload = payload.Trim().Replace('-', '+').Replace('_', '/');
         string base64 = payload.PadRight(payload.Length + ((4 - (payload.Length % 4)) % 4), '=');

@@ -16,11 +16,19 @@ public partial class NavMenu
 
     private string? _hangfireUrl;
 
+    private bool _canViewCronJobs;
+    private bool _canViewApiSerials;
+    private bool CanViewIntegrationGroup => _canViewCronJobs || _canViewApiSerials;
+
     private bool _canViewHangfire;
     private bool _canViewSwagger;
     private bool _canViewAuditTrails;
+
     private bool _canViewMenus;
-    private bool CanViewSystemGroup => _canViewHangfire || _canViewSwagger || _canViewAuditTrails || _canViewMenus;
+    private bool _canViewDimensions;
+    private bool _canViewBackgroundJobs;
+    private bool _canViewEntityCodes;
+    private bool CanViewSystemGroup => _canViewHangfire || _canViewSwagger || _canViewAuditTrails || _canViewMenus || _canViewDimensions || _canViewBackgroundJobs || _canViewEntityCodes;
 
     private bool _canViewChatMessages;
 
@@ -48,11 +56,12 @@ public partial class NavMenu
     private bool _canViewDepartments;
     private bool _canViewSubDepartments;
     private bool _canViewTeams;
-    private bool CanViewOrganizationGroup => _canViewBusinessUnits || _canViewDepartments || _canViewSubDepartments || _canViewTeams;
-
     private bool _canViewEmployees;
-    private bool _canViewTitles;
-    private bool CanViewPeopleGroup => _canViewTitles || _canViewEmployees || _canViewEmployeeStats;
+    private bool CanViewOrganizationGroup => _canViewBusinessUnits || _canViewDepartments || _canViewSubDepartments || _canViewTeams || _canViewEmployees || _canViewEmployeeStats;
+
+    private bool _canViewLeaveAllocations;
+    private bool _canViewLeaveApplications;
+    private bool CanViewTimeOffGroup => _canViewLeaveAllocations || _canViewLeaveApplications;
 
     private bool _canViewQuizs;
     private bool _canViewQuizResults;
@@ -70,8 +79,7 @@ public partial class NavMenu
 
     private bool _canViewAssets;
     private bool _canViewAssetHistorys;
-    private bool _canViewAssetStatuses;
-    private bool CanViewPropertyGroup => _canViewAssets || _canViewAssetHistorys || _canViewAssetStatuses || _canViewAssetStats;
+    private bool CanViewPropertyGroup => _canViewAssets || _canViewAssetHistorys || _canViewAssetStats;
 
     private bool _canViewChannels;
     private bool _canViewRetailers;
@@ -84,6 +92,10 @@ public partial class NavMenu
     private bool _canViewProducts;
     private bool CanViewProductionGroup => _canViewProducts || _canViewPriceGroups || _canViewPricePlans || _canViewProductStats;
 
+    private bool _canViewVnPowers;
+    private bool _canViewVnPowerForcasts;
+    private bool CanViewGameGroup => _canViewVnPowers || _canViewVnPowerForcasts;
+
     protected override async Task OnParametersSetAsync()
     {
         var user = (await AuthState).User;
@@ -91,14 +103,23 @@ public partial class NavMenu
         _hangfireUrl = Config[ConfigNames.ApiBaseUrl] + "jobs";
 
         _canViewHangfire = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Hangfire);
+        _canViewBackgroundJobs = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.BackgroundJobs);
+
+        _canViewCronJobs = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.CronJobs);
+        _canViewApiSerials = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.ApiSerials);
+
+        _canViewMenus = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Menus);
+        _canViewDimensions = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Dimensions);
+        _canViewEntityCodes = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.EntityCodes);
+
+        _canViewSwagger = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Swagger);
+        _canViewAuditTrails = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.AuditTrails);
 
         _canViewUserStats = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.UserStats);
         _canViewProductStats = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.ProductStats);
         _canViewAssetStats = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.AssetStats);
         _canViewEmployeeStats = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.EmployeeStats);
         _canViewDistributionStats = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.DistributionStats);
-
-        _canViewMenus = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Menus);
 
         _canViewTenants = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Tenants);
         _canViewRoles = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Roles);
@@ -120,7 +141,8 @@ public partial class NavMenu
         _canViewTeams = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Teams);
 
         _canViewEmployees = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Employees);
-        _canViewTitles = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Titles);
+        _canViewLeaveAllocations = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.LeaveAllocations);
+        _canViewLeaveApplications = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.LeaveApplications);
 
         _canViewQuizs = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Quizs);
         _canViewQuizResults = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.QuizResults);
@@ -135,8 +157,6 @@ public partial class NavMenu
 
         _canViewAssets = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Assets);
         _canViewAssetHistorys = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.AssetHistorys);
-        _canViewAssetStatuses = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.AssetStatuses);
-
         _canViewChannels = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Channels);
         _canViewRetailers = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Retailers);
         _canViewStores = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Stores);
@@ -145,5 +165,8 @@ public partial class NavMenu
         _canViewPricePlans = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.PricePlans);
 
         _canViewProducts = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.Products);
+
+        _canViewVnPowers = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.VnPowers);
+        _canViewVnPowerForcasts = await AuthService.HasPermissionAsync(user, FSHAction.View, FSHResource.VnPowerForcasts);
     }
 }

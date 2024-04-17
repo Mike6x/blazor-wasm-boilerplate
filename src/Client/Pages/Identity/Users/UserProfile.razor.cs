@@ -136,7 +136,7 @@ public partial class UserProfile
     {
         var forgotPasswordRequest = new ForgotPasswordRequest
         {
-            Email = _profileModel.Email
+            Email = _profileModel.Email!
         };
 
         await ApiHelper.ExecuteCallGuardedAsync(

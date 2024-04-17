@@ -35,13 +35,13 @@
             </MudButton>
             @if (IsCreate)
             {
-                <MudButton DisableElevation Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" ButtonType="ButtonType.Submit" Color="Color.Success">
+                <MudButton DisableElevation Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save" ButtonType="ButtonType.Submit" Color="Color.Success" Disabled="@_buttonStatus">
                     @L["Save"]
                 </MudButton>
             }
             else
             {
-                <MudButton DisableElevation Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Update" ButtonType="ButtonType.Submit" Color="Color.Secondary">
+                   <MudButton DisableElevation Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Update" ButtonType="ButtonType.Submit" Color="Color.Secondary" Disabled="@_buttonStatus">
                     @L["Update"]
                 </MudButton>
             }

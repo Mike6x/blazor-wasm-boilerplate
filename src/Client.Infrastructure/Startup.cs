@@ -39,19 +39,11 @@ public static class Startup
                 {
                     client.DefaultRequestHeaders.AcceptLanguage.Clear();
                     client.DefaultRequestHeaders.AcceptLanguage.ParseAdd(CultureInfo.DefaultThreadCurrentCulture?.TwoLetterISOLanguageName);
-                    client.BaseAddress = new Uri(config[ConfigNames.ApiBaseUrl]);
+                    client.BaseAddress = new Uri(uriString: config[ConfigNames.ApiBaseUrl] ?? string.Empty);
                 })
                 .AddAuthenticationHandler(config)
                 .Services
             .AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient(ClientName));
-
-    private static void RegisterPermissionClaims(AuthorizationOptions options)
-    {
-        foreach (var permission in FSHPermissions.All)
-        {
-            options.AddPolicy(permission.Name, policy => policy.RequireClaim(FSHClaims.Permission, permission.Name));
-        }
-    }
 
     public static IServiceCollection AutoRegisterInterfaces<T>(this IServiceCollection services)
     {
@@ -77,5 +69,13 @@ public static class Startup
         }
 
         return services;
+    }
+
+    private static void RegisterPermissionClaims(AuthorizationOptions options)
+    {
+        foreach (var permission in FSHPermissions.All)
+        {
+            options.AddPolicy(permission.Name, policy => policy.RequireClaim(FSHClaims.Permission, permission.Name));
+        }
     }
 }

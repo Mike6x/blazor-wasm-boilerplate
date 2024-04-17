@@ -26,6 +26,7 @@ public partial class Countries
 
                 // new(Country => Country.FullNativeName, L["Full Native"], "FullNativeName"),
                 // (Country => Country.Description, L["Description"], "Description"),
+                new(Country => Country.IsActive,  L["Active"], Type: typeof(bool)),
             },
             idFunc: Country => Country.Id,
             searchFunc: async filter => (await CountriesClient

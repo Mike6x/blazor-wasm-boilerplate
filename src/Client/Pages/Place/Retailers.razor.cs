@@ -84,7 +84,6 @@ public partial class Retailers
         {
             if (value != _districtId)
             {
-
                 _districtId = value;
                 _wardId = Guid.Empty;
 
@@ -119,11 +118,9 @@ public partial class Retailers
     protected override void OnInitialized()
     {
         Context = new(
-            entityName: L["Retailer"],
-            entityNamePlural: L["Retailers"],
-            entityResource: FSHResource.Retailers,
-            fields: new()
-            {
+            fields:
+            [
+
                 // new(Retailer => Retailer.Id, L["Id"], "Id"),
                 new(Retailer => Retailer.Order, L["Order"], "Order"),
                 new(Retailer => Retailer.Code, L["Code"], "Code"),
@@ -137,14 +134,19 @@ public partial class Retailers
 
                 new(Retailer => Retailer.IsActive, L["Active"], Type: typeof(bool)),
 
-            },
-            idFunc: Retailer => Retailer.Id,
+            ],
             searchFunc: async filter => (await RetailersClient
                 .SearchAsync(filter.Adapt<SearchRetailersRequest>()))
                 .Adapt<PaginationResponse<RetailerDto>>(),
+            exportFunc: async filter =>
+            {
+                var exportFilter = filter.Adapt<ExportRetailersRequest>();
+                return await RetailersClient.ExportAsync(exportFilter);
+            },
+            idFunc: Retailer => Retailer.Id,
             createFunc: async Retailer =>
             {
-               // CountryId = StateId = ProvinceId = DistrictId = WardId = Guid.Empty;
+                // CountryId = StateId = ProvinceId = DistrictId = WardId = Guid.Empty;
                 await RetailersClient.CreateAsync(Retailer.Adapt<CreateRetailerRequest>());
             },
             updateFunc: async (id, Retailer) =>
@@ -152,16 +154,13 @@ public partial class Retailers
                 await RetailersClient.UpdateAsync(id, Retailer);
             },
             deleteFunc: async id => await RetailersClient.DeleteAsync(id),
-            exportFunc: async filter =>
-            {
-                var exportFilter = filter.Adapt<ExportRetailersRequest>();
-                return await RetailersClient.ExportAsync(exportFilter);
-            },
             importFunc: async FileUploadRequest =>
             {
                 var request = new ImportRetailersRequest() { ExcelFile = FileUploadRequest };
                 await RetailersClient.ImportAsync(request);
-            }
-            );
+            },
+            entityName: L["Retailer"],
+            entityNamePlural: L["Retailers"],
+            entityResource: FSHResource.Retailers);
     }
 }

@@ -1,0 +1,116 @@
+﻿@page "/leave/LeaveAllocations"
+@using FSH.BlazorWebAssembly.Client.Pages.Organization
+@using FSH.BlazorWebAssembly.Client.Pages.People
+@using FSH.BlazorWebAssembly.Client.Pages.Settings
+@attribute [MustHavePermission(FSHAction.View, FSHResource.LeaveAllocations)]
+
+@inject IStringLocalizer<LeaveAllocations> L
+
+<FshTitle Title="@L["LeaveAllocations"]" Description="@L["Manage Leave Allocations."]" />
+
+<EntityTable @ref="_table" TEntity="LeaveAllocationDto" TId="Guid" TRequest="LeaveAllocationViewModel" Context="@Context">
+
+    <AdvancedSearchContent>
+        <MudTextField Label="@L["Period"]" For="@(() => SearchPeriod)" @bind-Value="SearchPeriod"/>
+        <EmployeeAutocomplete For="@(() => SearchEmployeeId)" @bind-Value="SearchEmployeeId"
+                              TransformOrigin="Origin.TopCenter" />
+
+        <DimensionAutocomplete @bind-Value="SearchTypeId"
+                               Label="@L["Allocation Type"]" DimensionType="LeaveAllocation"
+                               AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+
+        <MudDatePicker Label="@L["From Date"]" Editable="true" @bind-Date="SearchFromDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+        <MudDatePicker Label="@L["To Date"]" Editable="true" @bind-Date="SearchToDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+    </AdvancedSearchContent>
+
+    <ExtraActions>
+        <MudMenuItem OnClick="(() => UnlockLeaveAllocation(context.Id))">@L["Toggle Lock"]</MudMenuItem>
+    </ExtraActions>
+
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="6">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"Quiz Id"]" />
+            </MudItem>
+            <MudItem xs="12" md="6"></MudItem>
+        }
+
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Period"]" For="@(() => context.Period)" @bind-Value="context.Period" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="@L["From Date"]" Editable="true" @bind-Date="context.FromDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="@L["To Date"]" Editable="true" @bind-Date="context.ToDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <DimensionAutocomplete For="@(() => context.LeaveAllocationTypeId)" @bind-Value="context.LeaveAllocationTypeId"
+                                   Label="@L["Allocation Type"]" DimensionType="LeaveAllocation"
+                                   AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <BusinessUnitAutocomplete For="@(() => BusinessUnitId)" @bind-Value="BusinessUnitId"
+                                        AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <DepartmentAutocomplete For="@(() => DepartmentId)" @bind-Value="DepartmentId" FatherId="BusinessUnitId"
+                                    AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <SubDepartmentAutocomplete For="@(() => SubDepartmentId)" @bind-Value="SubDepartmentId" FatherId="DepartmentId"
+                                        AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <TeamAutocomplete For="@(() => TeamId)" @bind-Value="TeamId" FatherId="SubDepartmentId"
+                                AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+        </MudItem>
+
+        <MudItem xs="12" md="6">
+            <EmployeeAutocomplete For="@(() => context.EmployeeId)" @bind-Value="context.EmployeeId"
+                                  BusinessUnitId="BusinessUnitId" DepartmentId="DepartmentId" SubDepartmentId="SubDepartmentId" TeamId="TeamId"
+                                  TransformOrigin="Origin.TopCenter" />
+        </MudItem>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="3">
+                <MudTextField Label="@L["Valid Days"]" For="@(() => context.NumberOfValidDays)" @bind-Value="context.NumberOfValidDays" />
+            </MudItem>
+            <MudItem xs="12" md="3">
+                <MudTextField Label="@L["OnHand Days"]" For="@(() => context.NumberOfOnHandDays)" @bind-Value="context.NumberOfOnHandDays" />
+            </MudItem>
+
+        }
+        else
+        {
+            <MudItem xs="12" md="6">
+            </MudItem>
+        }
+
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Annual Days"]" For="@(() => context.NumberOfAnnualDays)" @bind-Value="context.NumberOfAnnualDays" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Extra Days"]" For="@(() => context.NumberOfExtraDays)" @bind-Value="context.NumberOfExtraDays" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["CarryOver Days"]" For="@(() => context.NumberOfCarryOverDays)" @bind-Value="context.NumberOfCarryOverDays" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Compensation Days"]" For="@(() => context.NumberOfCompensationDays)" @bind-Value="context.NumberOfCompensationDays" />
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <MudCheckBox @bind-Value="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+        </MudItem>
+
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="3">
+                <MudCheckBox @bind-Value="context.IsLocked" For="@(() => context.IsLocked)" Label="@L["Locked"]"></MudCheckBox>
+        </MudItem>
+        }
+    </EditFormContent>
+</EntityTable>

@@ -9,13 +9,23 @@
 @using FSH.BlazorWebAssembly.Client.Pages.Purchase
 @using FSH.BlazorWebAssembly.Client.Pages.People
 @using FSH.BlazorWebAssembly.Client.Pages.Organization
+@using FSH.BlazorWebAssembly.Client.Pages.Settings
 
 <FshTitle Title="@L["Assets"]" Description="@L["Manage Assets."]" />
 
-<EntityTable TEntity="AssetDto" TId="Guid" TRequest="AssetViewModel" Context="@Context">
-   <ExtraActions>
+<EntityTable @ref="_table" TEntity="AssetDto" TId="Guid" TRequest="AssetViewModel" Context="@Context">
+    <AdvancedSearchContent>
+        <CategorieAutocomplete @bind-Value="SearchCategorieId" Label="@L["Categorie"]" />
+        <SubCategorieAutocomplete @bind-Value="SearchSubCategorieId" Label="@L["SubCategorie"]" />
+        <DimensionAutocomplete @bind-Value="SearchQualityStatusId" Label="@L["QualityStatus"]" DimensionType="QualityStatus" />
+        <DimensionAutocomplete @bind-Value="SearchUsingStatusId" Label="@L["UsingStatus"]" DimensionType="UsingStatus" />
+
+    </AdvancedSearchContent>
+
+    <ExtraActions>
         <MudMenuItem OnClick="(() => ExportAssetDeliveryForm(context.EmployeeId))">@L["Create Delivery Form"]</MudMenuItem>
     </ExtraActions>
+
     <EditFormContent>
         @if (!Context.AddEditModal.IsCreate)
         {
@@ -50,15 +60,25 @@
                         <AssetSubCategorieAutocomplete For="@(() => context.SubCategorieId)" @bind-Value="context.SubCategorieId"
                                                        TransformOrigin="Origin.TopCenter" />
                     </MudItem>
-                    <MudItem xs="12" md="3">
+@*                     <MudItem xs="12" md="3">
                         <AssetStatusAutocomplete For="@(() => context.QualityStatusId)" @bind-Value="context.QualityStatusId"
                                                  AnchorOrigin="Origin.BottomCenter" Label="@L["Quality Status"]" StatusType="AssetStatusType.Quality" />
                     </MudItem>
                     <MudItem xs="12" md="3">
                         <AssetStatusAutocomplete For="@(() => context.UsingStatusId)" @bind-Value="context.UsingStatusId" CoerceValue="true"
                                                  AnchorOrigin="Origin.BottomCenter" Label="@L["Using Status"]" StatusType="AssetStatusType.Using" />
+                    </MudItem> *@
+                    <MudItem xs="12" md="3">
+                        <DimensionAutocomplete For="@(() => context.QualityStatusId)" @bind-Value="context.QualityStatusId"
+                                               Label="@L["Quality Status"]" DimensionType="QualityStatus"
+                                               AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
                     </MudItem>
-                </MudGrid>
+                    <MudItem xs="12" md="3">
+                        <DimensionAutocomplete For="@(() => context.UsingStatusId)" @bind-Value="context.UsingStatusId" CoerceValue="true"
+                                               Label="@L["Using Status"]" DimensionType="UsingStatus"
+                                               AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+                    </MudItem>
+                 </MudGrid>
             </MudTabPanel>
             <MudTabPanel Text="Other Info">
                 <MudGrid>

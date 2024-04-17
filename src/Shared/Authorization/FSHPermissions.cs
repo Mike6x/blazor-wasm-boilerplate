@@ -20,6 +20,14 @@ public static class FSHAction
 public static class FSHResource
 {
     public const string Menus = nameof(Menus);
+    public const string Dimensions = nameof(Dimensions);
+    public const string EntityCodes = nameof(EntityCodes);
+
+    public const string Hangfire = nameof(Hangfire);
+    public const string BackgroundJobs = nameof(BackgroundJobs);
+    public const string CronJobs = nameof(CronJobs);
+
+    public const string ApiSerials = nameof(ApiSerials);
 
     public const string UserStats = nameof(UserStats);
     public const string ProductStats = nameof(ProductStats);
@@ -27,7 +35,8 @@ public static class FSHResource
     public const string EmployeeStats = nameof(EmployeeStats);
     public const string DistributionStats = nameof(DistributionStats);
 
-    public const string Hangfire = nameof(Hangfire);
+    public const string AuditTrails = nameof(AuditTrails);
+    public const string Swagger = nameof(Swagger);
 
     public const string Chats = nameof(Chats);
     public const string ChatMessages = nameof(ChatMessages);
@@ -52,7 +61,8 @@ public static class FSHResource
     public const string Teams = nameof(Teams);
 
     public const string Employees = nameof(Employees);
-    public const string Titles = nameof(Titles);
+    public const string LeaveAllocations = nameof(LeaveAllocations);
+    public const string LeaveApplications = nameof(LeaveApplications);
 
     public const string Quizs = nameof(Quizs);
     public const string QuizResults = nameof(QuizResults);
@@ -66,7 +76,6 @@ public static class FSHResource
     public const string SubCategories = nameof(SubCategories);
 
     public const string Assets = nameof(Assets);
-    public const string AssetStatuses = nameof(AssetStatuses);
     public const string AssetHistorys = nameof(AssetHistorys);
 
     public const string Channels = nameof(Channels);
@@ -77,25 +86,78 @@ public static class FSHResource
     public const string PricePlans = nameof(PricePlans);
 
     public const string Products = nameof(Products);
+
+    public const string VnPowers = nameof(VnPowers);
+    public const string VnPowerForcasts = nameof(VnPowerForcasts);
+    public const string VnPowerResults = nameof(VnPowerResults);
 }
 
 public static class FSHPermissions
 {
-    private static readonly FSHPermission[] _all = new FSHPermission[]
-    {
-        #region Menu
-        new("View Menus", FSHAction.View, FSHResource.Menus),
-        new("Search Menus", FSHAction.Search, FSHResource.Menus),
+    private static readonly FSHPermission[] _all =
+    [
+        #region Settings
+        new("View Menus", FSHAction.View, FSHResource.Menus, IsBasic: true),
+        new("Search Menus", FSHAction.Search, FSHResource.Menus, IsBasic: true),
         new("Create Menus", FSHAction.Create, FSHResource.Menus),
         new("Update Menus", FSHAction.Update, FSHResource.Menus),
         new("Delete Menus", FSHAction.Delete, FSHResource.Menus),
         new("Export Menus", FSHAction.Export, FSHResource.Menus),
         new("Import Menus", FSHAction.Import, FSHResource.Menus),
 
+        new("View Dimensions", FSHAction.View, FSHResource.Dimensions, IsBasic: true),
+        new("Search Dimensions", FSHAction.Search, FSHResource.Dimensions, IsBasic: true),
+        new("Create Dimensions", FSHAction.Create, FSHResource.Dimensions),
+        new("Update Dimensions", FSHAction.Update, FSHResource.Dimensions),
+        new("Delete Dimensions", FSHAction.Delete, FSHResource.Dimensions),
+        new("Export Dimensions", FSHAction.Export, FSHResource.Dimensions),
+        new("Import Dimensions", FSHAction.Import, FSHResource.Dimensions),
+
+        new("View EntityCodes", FSHAction.View, FSHResource.EntityCodes),
+        new("Search EntityCodes", FSHAction.Search, FSHResource.EntityCodes),
+        new("Create EntityCodes", FSHAction.Create, FSHResource.EntityCodes),
+        new("Update EntityCodes", FSHAction.Update, FSHResource.EntityCodes),
+        new("Delete EntityCodes", FSHAction.Delete, FSHResource.EntityCodes),
+        new("Export EntityCodes", FSHAction.Export, FSHResource.EntityCodes),
+        new("Import EntityCodes", FSHAction.Import, FSHResource.EntityCodes),
+
         #endregion
 
-        #region Systems job
+        #region BackgroundJobs
         new("View Hangfire", FSHAction.View, FSHResource.Hangfire),
+
+        new("View BackgroundJobs", FSHAction.View, FSHResource.BackgroundJobs),
+        new("Search BackgroundJobs", FSHAction.Search, FSHResource.BackgroundJobs),
+        new("Create BackgroundJobs", FSHAction.Create, FSHResource.BackgroundJobs),
+        new("Update BackgroundJobs", FSHAction.Update, FSHResource.BackgroundJobs),
+        new("Delete BackgroundJobs", FSHAction.Delete, FSHResource.BackgroundJobs),
+        new("Export BackgroundJobs", FSHAction.Export, FSHResource.BackgroundJobs),
+        new("Import BackgroundJobs", FSHAction.Import, FSHResource.BackgroundJobs),
+
+        new("View CronJobs", FSHAction.View, FSHResource.CronJobs),
+        new("Search CronJobs", FSHAction.Search, FSHResource.CronJobs),
+        new("Create CronJobs", FSHAction.Create, FSHResource.CronJobs),
+        new("Update CronJobs", FSHAction.Update, FSHResource.CronJobs),
+        new("Delete CronJobs", FSHAction.Delete, FSHResource.CronJobs),
+        new("Export CronJobs", FSHAction.Export, FSHResource.CronJobs),
+        new("Import CronJobs", FSHAction.Import, FSHResource.CronJobs),
+
+        #endregion
+
+        #region Integations
+        new("View ApiSerials", FSHAction.View, FSHResource.ApiSerials),
+        new("Search ApiSerials", FSHAction.Search, FSHResource.ApiSerials),
+        new("Create ApiSerials", FSHAction.Create, FSHResource.ApiSerials),
+        new("Update ApiSerials", FSHAction.Update, FSHResource.ApiSerials),
+        new("Delete ApiSerials", FSHAction.Delete, FSHResource.ApiSerials),
+        new("Export ApiSerials", FSHAction.Export, FSHResource.ApiSerials),
+        new("Import ApiSerials", FSHAction.Import, FSHResource.ApiSerials),
+
+        #endregion
+
+        #region Systems
+        new("View AuditTrails", FSHAction.View, FSHResource.AuditTrails),
+        new("View Swagger", FSHAction.View, FSHResource.Swagger),
 
         #endregion
 
@@ -109,8 +171,8 @@ public static class FSHPermissions
         #endregion
 
         #region Chat
-        new("View Messages", FSHAction.View, FSHResource.Chats),
-        new("Create Messages", FSHAction.Create, FSHResource.Chats),
+        new("View Messages", FSHAction.View, FSHResource.Chats, IsBasic: true),
+        new("Create Messages", FSHAction.Create, FSHResource.Chats, IsBasic: true),
 
         new("View ChatMessages", FSHAction.View, FSHResource.ChatMessages),
         new("Search ChatMessages", FSHAction.Search, FSHResource.ChatMessages),
@@ -264,13 +326,21 @@ public static class FSHPermissions
         new("Export Employees", FSHAction.Export, FSHResource.Employees),
         new("Import Employees", FSHAction.Import, FSHResource.Employees),
 
-        new("View Titles", FSHAction.View, FSHResource.Titles),
-        new("Search Titles", FSHAction.Search, FSHResource.Titles),
-        new("Create Titles", FSHAction.Create, FSHResource.Titles),
-        new("Update Titles", FSHAction.Update, FSHResource.Titles),
-        new("Delete Titles", FSHAction.Delete, FSHResource.Titles),
-        new("Export Titles", FSHAction.Export, FSHResource.Titles),
-        new("Import Titles", FSHAction.Import, FSHResource.Titles),
+        new("View LeaveAllocations", FSHAction.View, FSHResource.LeaveAllocations),
+        new("Search LeaveAllocations", FSHAction.Search, FSHResource.LeaveAllocations),
+        new("Create LeaveAllocations", FSHAction.Create, FSHResource.LeaveAllocations),
+        new("Update LeaveAllocations", FSHAction.Update, FSHResource.LeaveAllocations),
+        new("Delete LeaveAllocations", FSHAction.Delete, FSHResource.LeaveAllocations),
+        new("Export LeaveAllocations", FSHAction.Export, FSHResource.LeaveAllocations),
+        new("Import LeaveAllocations", FSHAction.Import, FSHResource.LeaveAllocations),
+
+        new("View LeaveApplications", FSHAction.View, FSHResource.LeaveApplications),
+        new("Search LeaveApplications", FSHAction.Search, FSHResource.LeaveApplications),
+        new("Create LeaveApplications", FSHAction.Create, FSHResource.LeaveApplications),
+        new("Update LeaveApplications", FSHAction.Update, FSHResource.LeaveApplications),
+        new("Delete LeaveApplications", FSHAction.Delete, FSHResource.LeaveApplications),
+        new("Export LeaveApplications", FSHAction.Export, FSHResource.LeaveApplications),
+        new("Import LeaveApplications", FSHAction.Import, FSHResource.LeaveApplications),
 
         #endregion
 
@@ -389,14 +459,6 @@ public static class FSHPermissions
         new("Export Assets", FSHAction.Export, FSHResource.Assets),
         new("Import Assets", FSHAction.Import, FSHResource.Assets),
 
-        new("View AssetStatuses", FSHAction.View, FSHResource.AssetStatuses),
-        new("Search AssetStatuses", FSHAction.Search, FSHResource.AssetStatuses),
-        new("Create AssetStatuses", FSHAction.Create, FSHResource.AssetStatuses),
-        new("Update AssetStatuses", FSHAction.Update, FSHResource.AssetStatuses),
-        new("Delete AssetStatuses", FSHAction.Delete, FSHResource.AssetStatuses),
-        new("Export AssetStatuses", FSHAction.Export, FSHResource.AssetStatuses),
-        new("Import AssetStatuses", FSHAction.Import, FSHResource.AssetStatuses),
-
         new("View AssetHistorys", FSHAction.View, FSHResource.AssetHistorys),
         new("Search AssetHistorys", FSHAction.Search, FSHResource.AssetHistorys),
         new("Create AssetHistorys", FSHAction.Create, FSHResource.AssetHistorys),
@@ -405,7 +467,7 @@ public static class FSHPermissions
         new("Export AssetHistorys", FSHAction.Export, FSHResource.AssetHistorys),
         new("Import AssetHistorys", FSHAction.Import, FSHResource.AssetHistorys),
 
-#endregion
+        #endregion
 
         #region Price
         new("View PriceGroups", FSHAction.View, FSHResource.PriceGroups),
@@ -436,7 +498,28 @@ public static class FSHPermissions
         new("Clean Products", FSHAction.Clean, FSHResource.Products),
 
         #endregion
-    };
+
+        #region Games
+        new("View VnPowers", FSHAction.View, FSHResource.VnPowers, IsBasic: true),
+        new("Search VnPowers", FSHAction.Search, FSHResource.VnPowers, IsBasic: true),
+        new("Create VnPowers", FSHAction.Create, FSHResource.VnPowers),
+        new("Update VnPowers", FSHAction.Update, FSHResource.VnPowers),
+        new("Delete VnPowers", FSHAction.Delete, FSHResource.VnPowers),
+        new("Export VnPowers", FSHAction.Export, FSHResource.VnPowers),
+        new("Import VnPowers", FSHAction.Import, FSHResource.VnPowers),
+        new("Clean VnPowers", FSHAction.Clean, FSHResource.VnPowers),
+
+        new("View VnPowerForcasts", FSHAction.View, FSHResource.VnPowerForcasts, IsBasic: true),
+        new("Search VnPowerForcasts", FSHAction.Search, FSHResource.VnPowerForcasts, IsBasic: true),
+        new("Create VnPowerForcasts", FSHAction.Create, FSHResource.VnPowerForcasts),
+        new("Update VnPowerForcasts", FSHAction.Update, FSHResource.VnPowerForcasts),
+        new("Delete VnPowerForcasts", FSHAction.Delete, FSHResource.VnPowerForcasts),
+        new("Export VnPowerForcasts", FSHAction.Export, FSHResource.VnPowerForcasts),
+        new("Import VnPowerForcasts", FSHAction.Import, FSHResource.VnPowerForcasts),
+        new("Clean VnPowerForcasts", FSHAction.Clean, FSHResource.VnPowerForcasts),
+
+        #endregion
+    ];
 
     public static IReadOnlyList<FSHPermission> All { get; } = new ReadOnlyCollection<FSHPermission>(_all);
     public static IReadOnlyList<FSHPermission> Root { get; } = new ReadOnlyCollection<FSHPermission>(_all.Where(p => p.IsRoot).ToArray());

@@ -27,6 +27,7 @@ public partial class GeoAdminUnits
                 new(GeoAdminUnit => GeoAdminUnit.FullNativeName, L["Full Native"], "FullNativeName"),
 
                 new(GeoAdminUnit => GeoAdminUnit.Description, L["Description"], "Description"),
+                new(GeoAdminUnit => GeoAdminUnit.IsActive,  L["Active"], Type: typeof(bool)),
             },
             idFunc: GeoAdminUnit => GeoAdminUnit.Id,
             searchFunc: async filter => (await GeoAdminUnitsClient

@@ -1,0 +1,95 @@
+﻿@page "/game/vnpowers"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.VnPowers)]
+@inject IStringLocalizer<VnPowers> L
+@inject IVnPowersClient VnPowersClient
+
+@using System.Globalization
+
+<FshTitle Title="@L["Power 6/55"]" Description="@L["Vietnam Power 6/55 Results"]" />
+
+<EntityTable TEntity="VnPowerDto" TId="Guid" TRequest="UpdateVnPowerRequest" Context="@Context">
+    <ExtraActions>
+        @if (context.DrawId >= 0)
+        {
+            <MudMenuItem OnClick="() => GetVnPowerForcastsAsync(context.Id,context.DrawId,context.VnPowerResultRoundId, context.VnPowerResultSubRoundId)">@L["Forcast"]</MudMenuItem>
+        }
+    </ExtraActions>
+
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="12">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"VnPower Id"]" />
+            </MudItem>
+        }
+
+        <MudItem xs="12" md="2">
+            <MudTextField Label="@L["Draw Id"]" For="@(() => context.DrawId)" @bind-Value="context.DrawId"
+                          Format="N0" Culture="@CultureInfo.CurrentCulture" />
+        </MudItem>
+
+        <MudItem xs="12" md="2">
+            <MudTextField Label="@L["RoundId"]" For="@(() => context.RoundId)" @bind-Value="context.RoundId" />
+        </MudItem>
+        <MudItem xs="12" md="2">
+            <MudTextField Label="@L["SubRoundId"]" For="@(() => context.SubRoundId)" @bind-Value="context.SubRoundId" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="@L["DrawDate"]" Editable="true" @bind-Date="context.DrawDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+        </MudItem>
+
+        <MudItem xs="12" md="2">
+            <MudTextField Label="@L["Win Number 1"]" For="@(() => context.WinNumber1)" @bind-Value="context.WinNumber1" />
+        </MudItem>
+        <MudItem xs="12" md="2">
+            <MudTextField Label="@L["Win Number 2"]" For="@(() => context.WinNumber2)" @bind-Value="context.WinNumber2" />
+        </MudItem>
+        <MudItem xs="12" md="2">
+            <MudTextField Label="@L["Win Number 3"]" For="@(() => context.WinNumber3)" @bind-Value="context.WinNumber3" />
+        </MudItem>
+        <MudItem xs="12" md="2">
+            <MudTextField Label="@L["Win Number 4"]" For="@(() => context.WinNumber4)" @bind-Value="context.WinNumber4" />
+        </MudItem>
+        <MudItem xs="12" md="2">
+            <MudTextField Label="@L["Win Number 5"]" For="@(() => context.WinNumber5)" @bind-Value="context.WinNumber5" />
+        </MudItem>
+        <MudItem xs="12" md="2">
+            <MudTextField Label="@L["Win Number 6"]" For="@(() => context.WinNumber6)" @bind-Value="context.WinNumber6" />
+        </MudItem>
+
+        <MudItem xs="12" md="2">
+            <MudTextField Label="@L["Jackpot1"]" For="@(() => context.Jackpot1)" @bind-Value="context.Jackpot1" />
+        </MudItem>
+        <MudItem xs="12" md="4">
+            <MudNumericField Label="@L["Jackpot 1 Value"]" For="@(() => context.Jackpot1Value)" @bind-Value="context.Jackpot1Value"
+                Format="N0" Culture = "@CultureInfo.CurrentCulture"/>
+        </MudItem>
+        <MudItem xs="12" md="4">
+        </MudItem>
+        <MudItem xs="12" md="2">
+            <MudTextField Label="@L["Bonus Number"]" For="@(() => context.BonusNumber)" @bind-Value="context.BonusNumber" />
+        </MudItem>
+
+        <MudItem xs="12" md="2">
+            <MudTextField Label="@L["Jackpot2"]" For="@(() => context.Jackpot2)" @bind-Value="context.Jackpot2" />
+        </MudItem>
+        <MudItem xs="12" md="4">
+            <MudTextField Label="@L["Jackpot 2 Value"]" For="@(() => context.Jackpot2Value)" @bind-Value="context.Jackpot2Value"
+                          Format="N0" Culture="@CultureInfo.CurrentCulture" />
+        </MudItem>
+        <MudItem xs="12" md="2">
+            <MudTextField Label="@L["First Prize"]" For="@(() => context.FirstPrize)" @bind-Value="context.FirstPrize"
+                          Format="N0" Culture="@CultureInfo.CurrentCulture" />
+        </MudItem>
+        <MudItem xs="12" md="2">
+            <MudTextField Label="@L["First Prize"]" For="@(() => context.SecondPrize)" @bind-Value="context.SecondPrize"
+                          Format="N0" Culture="@CultureInfo.CurrentCulture" />
+        </MudItem>
+        <MudItem xs="12" md="2">
+            <MudTextField Label="@L["Third Prize"]" For="@(() => context.ThirdPrize)" @bind-Value="context.ThirdPrize"
+                          Format="N0" Culture="@CultureInfo.CurrentCulture" />
+        </MudItem>
+    </EditFormContent>
+</EntityTable>

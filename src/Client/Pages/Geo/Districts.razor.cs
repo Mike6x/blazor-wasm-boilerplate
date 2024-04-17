@@ -54,6 +54,7 @@ public partial class Districts
                 new(District => District.NativeName, L["Native Name"], "NativeName"),
                 new(District => District.TypeNativeName, L["Native Type"], "Type.NativeName" ),
                 new(District => District.ProvinceNativeName, L["City"], "Province.NativeName"),
+                new(District => District.IsActive,  L["Active"], Type: typeof(bool)),
             },
             idFunc: District => District.Id,
             searchFunc: async filter => (await DistrictsClient

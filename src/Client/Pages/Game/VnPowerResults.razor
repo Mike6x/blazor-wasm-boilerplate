@@ -1,0 +1,215 @@
+﻿@page "/game/VnPowerResults"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.VnPowers)]
+@inject IStringLocalizer<VnPowerResults> L
+@inject IVnPowerResultsClient VnPowerResultsClient
+
+<FshTitle Title="@L["Power 6/55 Details"]" Description="@L["Vietnam Power 6/55 Details"]" />
+
+<EntityTable TEntity="VnPowerResultDto" TId="Guid" TRequest="UpdateVnPowerResultRequest" Context="@Context">
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="12">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"VnPower Id"]" />
+            </MudItem>
+        }
+        <MudItem xs="12" md="1">
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N01"]" For="@(() => context.Number1)" @bind-Value="context.Number1" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N02"]" For="@(() => context.Number2)" @bind-Value="context.Number2" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N03"]" For="@(() => context.Number3)" @bind-Value="context.Number3" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N04"]" For="@(() => context.Number4)" @bind-Value="context.Number4" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N05"]" For="@(() => context.Number5)" @bind-Value="context.Number5" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N06"]" For="@(() => context.Number6)" @bind-Value="context.Number6" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N07"]" For="@(() => context.Number7)" @bind-Value="context.Number7" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N08"]" For="@(() => context.Number8)" @bind-Value="context.Number8" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N09"]" For="@(() => context.Number9)" @bind-Value="context.Number9" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N10"]" For="@(() => context.Number10)" @bind-Value="context.Number10" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+        </MudItem>
+
+        <MudItem xs="12" md="1">
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N11"]" For="@(() => context.Number11)" @bind-Value="context.Number11" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N12"]" For="@(() => context.Number12)" @bind-Value="context.Number12" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N13"]" For="@(() => context.Number13)" @bind-Value="context.Number13" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N14"]" For="@(() => context.Number14)" @bind-Value="context.Number14" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N15"]" For="@(() => context.Number15)" @bind-Value="context.Number15" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N16"]" For="@(() => context.Number16)" @bind-Value="context.Number16" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N17"]" For="@(() => context.Number17)" @bind-Value="context.Number17" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N18"]" For="@(() => context.Number18)" @bind-Value="context.Number18" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N19"]" For="@(() => context.Number19)" @bind-Value="context.Number19" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N20"]" For="@(() => context.Number20)" @bind-Value="context.Number20" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+        </MudItem>
+
+        <MudItem xs="12" md="1">
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N21"]" For="@(() => context.Number21)" @bind-Value="context.Number21" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N22"]" For="@(() => context.Number22)" @bind-Value="context.Number22" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N23"]" For="@(() => context.Number23)" @bind-Value="context.Number23" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N24"]" For="@(() => context.Number24)" @bind-Value="context.Number24" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N25"]" For="@(() => context.Number25)" @bind-Value="context.Number25" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N26"]" For="@(() => context.Number26)" @bind-Value="context.Number26" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N27"]" For="@(() => context.Number27)" @bind-Value="context.Number27" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N28"]" For="@(() => context.Number28)" @bind-Value="context.Number28" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N29"]" For="@(() => context.Number29)" @bind-Value="context.Number29" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N30"]" For="@(() => context.Number30)" @bind-Value="context.Number30" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+        </MudItem>
+
+        <MudItem xs="12" md="1">
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N31"]" For="@(() => context.Number31)" @bind-Value="context.Number31" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N32"]" For="@(() => context.Number32)" @bind-Value="context.Number32" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N33"]" For="@(() => context.Number33)" @bind-Value="context.Number33" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N34"]" For="@(() => context.Number34)" @bind-Value="context.Number34" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N35"]" For="@(() => context.Number35)" @bind-Value="context.Number35" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N36"]" For="@(() => context.Number36)" @bind-Value="context.Number36" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N37"]" For="@(() => context.Number37)" @bind-Value="context.Number37" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N38"]" For="@(() => context.Number38)" @bind-Value="context.Number38" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N39"]" For="@(() => context.Number39)" @bind-Value="context.Number39" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N40"]" For="@(() => context.Number40)" @bind-Value="context.Number40" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+        </MudItem>
+
+        <MudItem xs="12" md="1">
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N41"]" For="@(() => context.Number41)" @bind-Value="context.Number41" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N42"]" For="@(() => context.Number42)" @bind-Value="context.Number42" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N43"]" For="@(() => context.Number43)" @bind-Value="context.Number43" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N44"]" For="@(() => context.Number44)" @bind-Value="context.Number44" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N45"]" For="@(() => context.Number45)" @bind-Value="context.Number45" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N46"]" For="@(() => context.Number46)" @bind-Value="context.Number46" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N47"]" For="@(() => context.Number47)" @bind-Value="context.Number47" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N48"]" For="@(() => context.Number48)" @bind-Value="context.Number48" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N49"]" For="@(() => context.Number49)" @bind-Value="context.Number49" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N50"]" For="@(() => context.Number50)" @bind-Value="context.Number50" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+        </MudItem>
+
+        <MudItem xs="12" md="1">
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N51"]" For="@(() => context.Number51)" @bind-Value="context.Number51" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N52"]" For="@(() => context.Number52)" @bind-Value="context.Number52" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N53"]" For="@(() => context.Number53)" @bind-Value="context.Number53" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N54"]" For="@(() => context.Number54)" @bind-Value="context.Number54" />
+        </MudItem>
+        <MudItem xs="12" md="1">
+            <MudTextField Label="@L["N55"]" For="@(() => context.Number55)" @bind-Value="context.Number55" />
+        </MudItem>
+        <MudItem xs="12" md="2">
+            <MudTextField Label="@L["RoundId"]" For="@(() => context.RoundId)" @bind-Value="context.RoundId" />
+        </MudItem>
+        <MudItem xs="12" md="2">
+            <MudTextField Label="@L["SubRoundId"]" For="@(() => context.SubRoundId)" @bind-Value="context.SubRoundId" />
+        </MudItem>
+    </EditFormContent>
+</EntityTable>

@@ -1,0 +1,69 @@
+﻿@page "/Integration/CronJobs"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.CronJobs)]
+
+@inject IStringLocalizer<CronJobs> L
+@inject ICronJobsClient CronJobsClient
+@using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
+
+<FshTitle Title="@L["Cron Jobs"]" Description="@L["Manage CronJobs."]" />
+
+<EntityTable @ref="_table" TEntity="CronJobDto" TId="Guid" TRequest="CronJobViewModel" Context="@Context">
+    <AdvancedSearchContent>
+        <MudDatePicker Label="@L[" From Date"]" Editable="true" @bind-Date="SearchFromDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" />
+        <MudDatePicker Label="@L[" To Date"]" Editable="true" @bind-Date="SearchToDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" />
+
+    </AdvancedSearchContent>
+
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="12">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"CronJob Internal Id"]" />
+            </MudItem>
+        }
+
+        <MudItem xs="12" md="6">
+            <MudTextField Label="@L["Code"]" For="@(() => context.Code)" @bind-Value="context.Code" T="string" />
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="@L["Run Date"]" Editable="true" @bind-Date="context.LocalDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined"/>
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTimePicker Label="@L["Run Time"]" Editable="true" @bind-Time="context.LocalTimeOfDay" DisableToolbar="true" Variant="Variant.Outlined" />
+        </MudItem>
+
+        <MudItem xs="12" md="6">
+            <MudTextField Label="@L["Name: Command_yyyyMMdd_HHmm"]" For="@(() => context.Name)" @bind-Value="context.Name" T="string" />
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="@L["From Date"]" Editable="true" @bind-Date="context.FromDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined"/>
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="@L["To Date"]" Editable="true" @bind-Date="context.ToDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+        </MudItem>
+
+
+        <MudItem xs="12" md="9">
+            <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Total Records"]" For="@(() => context.TotalRecord)" @bind-Value="context.TotalRecord" />
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Number Of Successed"]" For="@(() => context.NumberOfSuccessed)" @bind-Value="context.NumberOfSuccessed"/>
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Number Of Duplicated"]" For="@(() => context.NumberOfDuplicated)" @bind-Value="context.NumberOfDuplicated"/>
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Number Of Existed"]" For="@(() => context.NumberOfExisted)" @bind-Value="context.NumberOfExisted"/>
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Others Failed"]" For="@(() => context.NumberOfFailed)" @bind-Value="context.NumberOfFailed"/>
+        </MudItem>
+
+    </EditFormContent>
+</EntityTable>

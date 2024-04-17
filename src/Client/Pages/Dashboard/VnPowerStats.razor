@@ -1,0 +1,68 @@
+﻿@page "/Game/VnPowerStats"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.VnPowerForcasts)]
+
+@inject IStringLocalizer<VnPowerStats> L
+
+<FshTitle Title="@L["VnPowerStats"]" Description="@L["Realtime Updates & Insights with SignalR."]" />
+
+@if (!_loaded)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    <div>
+        <MudChart ChartType="ChartType.Bar" ChartSeries="@_series" XAxisLabels="@_barChartXAxisLabels"
+                  Width="100%" Height="400px"></MudChart>
+    </div>
+    <MudPaper Elevation="25" Class="pa-4" Style="height:500px;">
+        <MudChart ChartType="ChartType.Bar" ChartSeries="@_series" XAxisLabels="@_barChartXAxisLabels"
+                  Width="100%" Height="400px"></MudChart>
+    </MudPaper>
+
+    <MudGrid>
+        <MudItem xs="12" sm="6" md="3">
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                <MudIcon Icon="@Icons.Material.Filled.Face" Color="Color.Tertiary" Class="mx-4"
+                Style="width:54px; height:54px;"></MudIcon>
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">@L["Registered VnPowers"]
+                    </MudText>
+                    <MudText Typo="Typo.h5">@VnPowerCount</MudText>
+                </div>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Elevation="25" Class="d-flex flex-row pt-6 pb-4" Style="height:100px;">
+                <MudIcon Icon="@Icons.Material.Filled.Face" Color="Color.Success" Class="mx-4"
+                         Style="width:54px; height:54px;"></MudIcon>
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">
+                        @L["Online VnPowers"]
+                    </MudText>
+@*                     <MudText Typo="Typo.h5">@VnPowerOnlineCount</MudText> *@
+                </div>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" sm="12">
+            <MudPaper Elevation="25" Class="pa-4" Style="height:500px;">
+                <MudChart ChartType="ChartType.Bar" ChartSeries="@_series" XAxisLabels="@_barChartXAxisLabels"
+                          Width="100%" Height="400px"></MudChart>
+            </MudPaper>
+        </MudItem>
+
+@*         <MudItem xs="12" sm="12">
+            <MudPaper Elevation="25" Class="pa-4" Style="height:500px;">
+                <MudChart ChartType="ChartType.Bar" ChartSeries="@_dataEnterBarChartSeries"
+                XAxisLabels="@_dataEnterBarChartXAxisLabels.Select(a => L[a].Value).ToArray()" Width="100%"
+                Height="400px"></MudChart>
+            </MudPaper>
+        </MudItem> *@
+    </MudGrid>
+
+}

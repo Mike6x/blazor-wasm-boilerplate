@@ -29,11 +29,11 @@
                     {
                         <MudNavGroup Title="@L["Columns"]" Icon="@Icons.Material.Outlined.FilterListOff" Class="mt-2 mb-n2" Expanded="false">
                             <div style="margin-top:10px!important">
-                                <MudCheckBox Label="All" T="bool" Checked="Context.AllColumnsChecked"
-                                                CheckedChanged="Context.AllColumnsCheckChanged"></MudCheckBox>
+                                <MudCheckBox Label="All" T="bool" Value="Context.AllColumnsChecked"
+                                                ValueChanged="Context.AllColumnsCheckChanged"></MudCheckBox>
                                 @foreach (var field in Context.Fields)
                                 {
-                                    <MudCheckBox @bind-Checked="@field.CheckedForSearch" Label="@(field.DisplayName)"></MudCheckBox>
+                                    <MudCheckBox @bind-Value="@field.CheckedForSearch" Label="@(field.DisplayName)"></MudCheckBox>
                                 }
                             </div>
                         </MudNavGroup>
@@ -186,7 +186,7 @@
                                 }
                                 else if (field.Type == typeof(bool))
                                 {
-                                    <MudCheckBox Checked="@field.ValueFunc(context)" ReadOnly></MudCheckBox>
+                                    <MudCheckBox Value="@field.ValueFunc(context)" ReadOnly></MudCheckBox>
                                 }
                                 else
                                 {
@@ -230,7 +230,7 @@
                             CheckedChanged="Context.AllColumnsCheckChanged"></MudCheckBox>
                         @foreach (var field in Context.Fields)
                         {
-                            <MudCheckBox @bind-Checked="@field.CheckedForSearch" Label="@(field.DisplayName)"></MudCheckBox>
+                            <MudCheckBox @bind-Value="@field.CheckedForSearch" Label="@(field.DisplayName)"></MudCheckBox>
                         }
                     </div>
                 }
@@ -437,7 +437,7 @@
                             CheckedChanged="Context.AllColumnsCheckChanged"></MudCheckBox>
                         @foreach (var field in Context.Fields)
                         {
-                            <MudCheckBox @bind-Checked="@field.CheckedForSearch" Label="@(field.DisplayName)"></MudCheckBox>
+                            <MudCheckBox @bind-Value="@field.CheckedForSearch" Label="@(field.DisplayName)"></MudCheckBox>
                         }
                     </div>
                 }

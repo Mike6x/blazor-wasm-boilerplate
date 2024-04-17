@@ -74,6 +74,7 @@ public partial class Wards
                 // new(Ward => Ward.FullName, L["Formal Name"], "FullName"),
                 // new(Ward => Ward.FullNativeName, L["Full Native"], "FullNativeName"),
                 // new(Ward => Ward.Description, L["Description"], "Description"),
+                new(Ward => Ward.IsActive,  L["Active"], Type: typeof(bool)),
             },
             idFunc: Ward => Ward.Id,
             searchFunc: async filter => (await WardsClient

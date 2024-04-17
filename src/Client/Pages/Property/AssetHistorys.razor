@@ -5,6 +5,7 @@
 @inject IAssetHistorysClient AssetHistorysClient
 
 @using FSH.BlazorWebAssembly.Client.Pages.People
+@using FSH.BlazorWebAssembly.Client.Pages.Settings
 
 <FshTitle Title="@L["AssetHistorys"]" Description="@L["Manage AssetHistorys."]" />
 
@@ -24,13 +25,23 @@
             <AssetAutocomplete For="@(() => context.AssetId)" @bind-Value="context.AssetId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
         </MudItem>
         <MudItem xs="12" md="3"></MudItem>
-        <MudItem xs="12" md="3">
+@*         <MudItem xs="12" md="3">
             <AssetStatusAutocomplete For="@(() => context.PreviousQualityStatusId)" @bind-Value="context.PreviousQualityStatusId" OffsetY="true"
                                      Label="@L["Prev. Quality Sta."]" StatusType="AssetStatusType.Quality" />
         </MudItem>
         <MudItem xs="12" md="3">
             <AssetStatusAutocomplete For="@(() => context.QualityStatusId)" @bind-Value="context.QualityStatusId" OffsetY="true"
                                      Label="@L["Quality Sta."]" StatusType="AssetStatusType.Quality" />
+        </MudItem> *@
+        <MudItem xs="12" md="3">
+            <DimensionAutocomplete For="@(() => context.PreviousQualityStatusId)" @bind-Value="context.PreviousQualityStatusId"
+                                    Label="@L["Prev. Quality Sta."]" DimensionType="QualityStatus"
+                                    AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <DimensionAutocomplete For="@(() => context.QualityStatusId)" @bind-Value="context.QualityStatusId"
+                                   Label="@L["Quality Sta."]" DimensionType="QualityStatus"
+                                   AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
         </MudItem>
 
         <MudItem xs="12" md="3">
@@ -38,14 +49,25 @@
         </MudItem>
 
         <MudItem xs="12" md="3"></MudItem>
-        <MudItem xs="12" md="3">
+@*         <MudItem xs="12" md="3">
             <AssetStatusAutocomplete For="@(() => context.PreviousUsingStatusId)" @bind-Value="context.PreviousUsingStatusId" OffsetY="true"
                                      Label="@L["Prev. Using Sta."]" StatusType="AssetStatusType.Using" />
         </MudItem>
         <MudItem xs="12" md="3">
             <AssetStatusAutocomplete For="@(() => context.UsingStatusId)" @bind-Value="context.UsingStatusId" OffsetY="true"
                                      Label="@L["Using Sta."]" StatusType="AssetStatusType.Using" />
+        </MudItem> *@
+        <MudItem xs="12" md="3">
+            <DimensionAutocomplete For="@(() => context.PreviousUsingStatusId)" @bind-Value="context.PreviousUsingStatusId"
+                                   Label="@L["Prev. Using Sta."]" DimensionType="UsingStatus"
+                                   AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
         </MudItem>
+        <MudItem xs="12" md="3">
+            <DimensionAutocomplete For="@(() => context.UsingStatusId)" @bind-Value="context.UsingStatusId"
+                                   Label="@L["Using Sta."]" DimensionType="UsingStatus"
+                                   AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+        </MudItem>
+
         <MudItem xs="12" md="12">
             <MudTextField Label="@L["DoccumentLink"]" For="@(() => context.DoccumentLink)" @bind-Value="context.DoccumentLink" T="string" />
         </MudItem>
@@ -86,7 +108,7 @@
                 @if (!Context.AddEditModal.IsCreate && !string.IsNullOrEmpty(context.DoccumentPath) && string.IsNullOrEmpty(context.DoccumentInBytes))
                 {
                     <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" Target="_blank"
-                           StartIcon="@Icons.Material.Filled.CloudDownload" Link="@(Config[ConfigNames.ApiBaseUrl] + @context.DoccumentPath)" Style="margin-left: 5px;">
+                           StartIcon="@Icons.Material.Filled.CloudDownload" Href="@(Config[ConfigNames.ApiBaseUrl] + @context.DoccumentPath)" Style="margin-left: 5px;">
                         @L["Download"]
                     </MudButton>
                     <MudButton HtmlTag="label" DisableElevation Variant="Variant.Filled" Color="Color.Error" Size="Size.Small"

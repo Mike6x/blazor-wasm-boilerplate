@@ -14,13 +14,13 @@ public partial class Employees
 
     protected EntityServerTableContext<EmployeeDto, Guid, EmployeeViewModel> Context { get; set; } = default!;
 
+    private EntityTable<EmployeeDto, Guid, EmployeeViewModel>? _table;
+
     protected override void OnInitialized() =>
         Context = new(
-            entityName: L["Employee"],
-            entityNamePlural: L["Employees"],
-            entityResource: FSHResource.Employees,
-            fields: new()
-            {
+            fields:
+            [
+
                 // new(Employee => Employee.Id, L["Id"], "Id"),
                 new(Employee => Employee.Code, L["Code"], "Code"),
                 new(Employee => Employee.FirstName, L["F.Name"], "FirstName"),
@@ -30,8 +30,8 @@ public partial class Employees
                 // new(Employee => Employee.Email, L["Email"], "Email"),
                 // new(Employee => Employee.Address, L["Address"], "Address"),
                 // new(Employee => Employee.Description, L["Description"], "Description"),
+                new(Employee => Employee.TitleValue, L["Grade"], "Title.Value"),
                 new(Employee => Employee.TitleName, L["Title"], "Title.Name"),
-
                 new(Employee => Employee.SuperiorFirstName, L["Superior F.Name "], "Superior.FirstName"),
                 new(Employee => Employee.SuperiorLastName, L["Superior L.Name"], "Superior.LastName"),
                 new(Employee => Employee.BusinessUnitName, L["BU."], "BusinessUnit.Name"),
@@ -39,11 +39,35 @@ public partial class Employees
                 new(Employee => Employee.SubDepartmentName, L["Section"], "SubDepartment.Name"),
                 new(Employee => Employee.TeamName, L["Team"], "Team.Name"),
                 new(Employee => Employee.IsActive, L["Active"], Type: typeof(bool)),
+            ],
+            searchFunc: async filter =>
+            {
+                var employeeFilter = filter.Adapt<SearchEmployeesRequest>();
+
+                employeeFilter.BusinessUnitId = SearchBusinessUnitId == default ? null : SearchBusinessUnitId;
+                employeeFilter.DepartmentId = SearchDepartmentId == default ? null : SearchDepartmentId;
+                employeeFilter.SubDepartmentId = SearchSubDepartmentId == default ? null : SearchSubDepartmentId;
+                employeeFilter.TeamId = SearchTeamId == default ? null : SearchTeamId;
+                employeeFilter.Gender = SearchGender == default ? null : SearchGender;
+
+                var result = await EmployeesClient.SearchAsync(employeeFilter);
+                return result.Adapt<PaginationResponse<EmployeeDto>>();
             },
+            exportFunc: async filter =>
+            {
+                var employeeFilter = filter.Adapt<ExportEmployeesRequest>();
+
+                employeeFilter.BusinessUnitId = SearchBusinessUnitId == default ? null : SearchBusinessUnitId;
+                employeeFilter.DepartmentId = SearchDepartmentId == default ? null : SearchDepartmentId;
+                employeeFilter.SubDepartmentId = SearchSubDepartmentId == default ? null : SearchSubDepartmentId;
+                employeeFilter.TeamId = SearchTeamId == default ? null : SearchTeamId;
+
+                employeeFilter.Gender = SearchGender == Gender.All ? null : SearchGender;
+
+                return await EmployeesClient.ExportAsync(employeeFilter);
+            },
+            enableAdvancedSearch: true,
             idFunc: Employee => Employee.Id,
-            searchFunc: async filter => (await EmployeesClient
-                .SearchAsync(filter.Adapt<SearchEmployeesRequest>()))
-                .Adapt<PaginationResponse<EmployeeDto>>(),
             createFunc: async Employee =>
             {
                 if (Employee.CreateOrDeleteUser)
@@ -69,18 +93,73 @@ public partial class Employees
                 await EmployeesClient.UpdateAsync(id, Employee);
             },
             deleteFunc: async id => await EmployeesClient.DeleteAsync(id),
-            exportFunc: async filter =>
-            {
-                var exportFilter = filter.Adapt<ExportEmployeesRequest>();
-                return await EmployeesClient.ExportAsync(exportFilter);
-            },
             importFunc: async FileUploadRequest =>
             {
                 var request = new ImportEmployeesRequest() { ExcelFile = FileUploadRequest };
                 await EmployeesClient.ImportAsync(request);
-            }
-            );
+            },
+            entityName: L["Employee"],
+            entityNamePlural: L["Employees"],
+            entityResource: FSHResource.Employees);
 
+    #region Advanced Search
+
+    private Guid _searchBusinessUnitId;
+    private Guid SearchBusinessUnitId
+    {
+        get => _searchBusinessUnitId;
+        set
+        {
+            _searchBusinessUnitId = value;
+            _ = _table?.ReloadDataAsync();
+        }
+    }
+
+    private Guid _searchDepartmentId;
+    private Guid SearchDepartmentId
+    {
+        get => _searchDepartmentId;
+        set
+        {
+            _searchDepartmentId = value;
+            _ = _table?.ReloadDataAsync();
+        }
+    }
+
+    private Guid _searchSubDepartmentId;
+    private Guid SearchSubDepartmentId
+    {
+        get => _searchSubDepartmentId;
+        set
+        {
+            _searchSubDepartmentId = value;
+            _ = _table?.ReloadDataAsync();
+        }
+    }
+
+    private Guid _searchTeamId;
+    private Guid SearchTeamId
+    {
+        get => _searchTeamId;
+        set
+        {
+            _searchTeamId = value;
+            _ = _table?.ReloadDataAsync();
+        }
+    }
+
+    private Gender _searchGender = Gender.All;
+    private Gender SearchGender
+    {
+        get => _searchGender;
+        set
+        {
+            _searchGender = value;
+            _ = _table?.ReloadDataAsync();
+        }
+    }
+
+    #endregion
     private void UpdateUser(in string userCode) =>
             Navigation.NavigateTo($"/users/{userCode}/Emp2User");
 
@@ -118,7 +197,7 @@ public partial class Employees
             CreateUserRequest creatUserRequest = new()
             {
                 UserName = employeeViewModel.Code,
-                Email = employeeViewModel.Email,
+                Email = employeeViewModel.Email!,
                 FirstName = employeeViewModel.FirstName,
                 LastName = employeeViewModel.LastName,
                 PhoneNumber = employeeViewModel.PhoneNumber,

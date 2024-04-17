@@ -32,11 +32,8 @@ public partial class States
     protected EntityServerTableContext<StateDto, Guid, UpdateStateRequest> Context { get; set; } = default!;
     protected override void OnInitialized() =>
         Context = new(
-            entityName: L["State"],
-            entityNamePlural: L["States"],
-            entityResource: FSHResource.States,
-            fields: new()
-            {
+            fields:
+            [
                 new(State => State.Order, L["Order"], "Order"),
                 new(State => State.NumericCode, L["Numeric"], "NumericCode"),
                 new(State => State.Code, L["Code"], "Code"),
@@ -51,23 +48,26 @@ public partial class States
 
                // new(State => State.TypeName, L["Type"], "Type" ),
                // new(State => State.Description, L["Description"], "Description"),
-            },
-            idFunc: State => State.Id,
+                new(State => State.IsActive,  L["Active"], Type: typeof(bool)),
+            ],
             searchFunc: async filter => (await StatesClient
                 .SearchAsync(filter.Adapt<SearchStatesRequest>()))
                 .Adapt<PaginationResponse<StateDto>>(),
-            createFunc: async State => await StatesClient.CreateAsync(State.Adapt<CreateStateRequest>()),
-            updateFunc: async (id, State) => await StatesClient.UpdateAsync(id, State),
-            deleteFunc: async id => await StatesClient.DeleteAsync(id),
             exportFunc: async filter =>
             {
                 var exportFilter = filter.Adapt<ExportStatesRequest>();
                 return await StatesClient.ExportAsync(exportFilter);
             },
+            idFunc: State => State.Id,
+            createFunc: async State => await StatesClient.CreateAsync(State.Adapt<CreateStateRequest>()),
+            updateFunc: async (id, State) => await StatesClient.UpdateAsync(id, State),
+            deleteFunc: async id => await StatesClient.DeleteAsync(id),
             importFunc: async FileUploadRequest =>
             {
                 var request = new ImportStatesRequest() { ExcelFile = FileUploadRequest };
                 await StatesClient.ImportAsync(request);
-            }
-        );
+            },
+            entityName: L["State"],
+            entityNamePlural: L["States"],
+            entityResource: FSHResource.States);
 }

@@ -95,10 +95,10 @@
                             </MudItem>
 
                             <MudItem xs="12" md="6">
-                                <MudCheckBox @bind-Checked="context.IsRead" For="@(() => context.IsRead)" Label="@L["Read"]"></MudCheckBox>
+                                <MudCheckBox @bind-Value="context.IsRead" For="@(() => context.IsRead)" Label="@L["Read"]"></MudCheckBox>
                             </MudItem>
                             <MudItem xs="12" md="6">
-                                <MudCheckBox @bind-Checked="context.IsImageMesage" For="@(() => context.IsImageMesage)" Label="@L["ImageMesage"]"></MudCheckBox>
+                                <MudCheckBox @bind-Value="context.IsImageMesage" For="@(() => context.IsImageMesage)" Label="@L["ImageMesage"]"></MudCheckBox>
                             </MudItem>
                         </MudGrid>
                     </MudCardContent>

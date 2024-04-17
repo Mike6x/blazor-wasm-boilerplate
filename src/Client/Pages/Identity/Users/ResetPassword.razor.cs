@@ -26,13 +26,12 @@ public partial class ResetPassword
         if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("Token", out var param))
         {
             string? queryToken = param[0];
-            _resetPasswordRequest.Token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(queryToken));
+            _resetPasswordRequest.Token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(queryToken ?? string.Empty));
         }
         else
         {
             Navigation.NavigateTo("/login");
         }
-
     }
 
     private async Task SubmitAsync()

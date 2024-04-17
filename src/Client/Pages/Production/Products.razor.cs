@@ -17,17 +17,13 @@ public partial class Products
     protected IBrandsClient BrandsClient { get; set; } = default!;
 
     protected EntityServerTableContext<ProductDto, Guid, ProductViewModel> Context { get; set; } = default!;
-
-    // private EntityTable<ProductDto, Guid, ProductViewModel> _table = default!;
     private EntityTable<ProductDto, Guid, ProductViewModel>? _table;
 
     protected override void OnInitialized() =>
         Context = new(
-            entityName: L["Product"],
-            entityNamePlural: L["Products"],
-            entityResource: FSHResource.Products,
-            fields: new()
-            {
+            fields:
+            [
+
                 // new(prod => prod.Id, L["Id"], "Id"),
                 // new(prod => prod.Order, L["Order"], "Order"),
                 new(prod => prod.Code, L["Code"], "Code"),
@@ -38,9 +34,7 @@ public partial class Products
                 new(prod => prod.CategorieName, L["Categorie"], "Categorie.Name"),
                 new(prod => prod.SubCategorieName, L["SubCategorie"], "SubCategorie.Name"),
                 new(prod => prod.IsActive,  L["Active"], Type: typeof(bool)),
-            },
-            enableAdvancedSearch: true,
-            idFunc: prod => prod.Id,
+            ],
             searchFunc: async filter =>
             {
                 var productFilter = filter.Adapt<SearchProductsRequest>();
@@ -56,6 +50,18 @@ public partial class Products
                 var result = await ProductsClient.SearchAsync(productFilter);
                 return result.Adapt<PaginationResponse<ProductDto>>();
             },
+            exportFunc: async filter =>
+            {
+                var exportFilter = filter.Adapt<ExportProductsRequest>();
+
+                exportFilter.BrandId = SearchBrandId == default ? null : SearchBrandId;
+                exportFilter.MinimumRate = SearchMinimumRate;
+                exportFilter.MaximumRate = SearchMaximumRate;
+
+                return await ProductsClient.ExportAsync(exportFilter);
+            },
+            enableAdvancedSearch: true,
+            idFunc: prod => prod.Id,
             createFunc: async prod =>
             {
                 if (!string.IsNullOrEmpty(prod.ImageInBytes))
@@ -78,22 +84,14 @@ public partial class Products
                 prod.ImageInBytes = string.Empty;
             },
             deleteFunc: async id => await ProductsClient.DeleteAsync(id),
-            exportFunc: async filter =>
-            {
-                var exportFilter = filter.Adapt<ExportProductsRequest>();
-
-                exportFilter.BrandId = SearchBrandId == default ? null : SearchBrandId;
-                exportFilter.MinimumRate = SearchMinimumRate;
-                exportFilter.MaximumRate = SearchMaximumRate;
-
-                return await ProductsClient.ExportAsync(exportFilter);
-            },
             importFunc: async FileUploadRequest =>
             {
                 var request = new ImportProductsRequest() { ExcelFile = FileUploadRequest };
                 await ProductsClient.ImportAsync(request);
-            }
-            );
+            },
+            entityName: L["Product"],
+            entityNamePlural: L["Products"],
+            entityResource: FSHResource.Products);
 
     // Advanced Search
 

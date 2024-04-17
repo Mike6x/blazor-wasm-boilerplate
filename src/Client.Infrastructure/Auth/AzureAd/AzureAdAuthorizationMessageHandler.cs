@@ -7,6 +7,6 @@ public class AzureAdAuthorizationMessageHandler : AuthorizationMessageHandler
 {
     public AzureAdAuthorizationMessageHandler(IAccessTokenProvider provider, NavigationManager navigation, IConfiguration config)
         : base(provider, navigation) => ConfigureHandler(
-            new[] { config[ConfigNames.ApiBaseUrl] },
-            new[] { config[$"{nameof(AuthProvider.AzureAd)}:{ConfigNames.ApiScope}"] });
+            [config[ConfigNames.ApiBaseUrl]],
+            [config[$"{nameof(AuthProvider.AzureAd)}:{ConfigNames.ApiScope}"]]);
 }

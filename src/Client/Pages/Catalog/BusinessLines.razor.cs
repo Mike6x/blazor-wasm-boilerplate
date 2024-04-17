@@ -11,34 +11,34 @@ public partial class BusinessLines
 
     protected override void OnInitialized() =>
         Context = new(
-            entityName: L["BusinessLine"],
-            entityNamePlural: L["BusinessLines"],
-            entityResource: FSHResource.BusinessLines,
-            fields: new()
-            {
+            fields:
+            [
+
                 // new(BusinessLine => BusinessLine.Id, L["Id"], "Id"),
                 new(BusinessLine => BusinessLine.Order, L["Order"], "Order"),
                 new(BusinessLine => BusinessLine.Code, L["Code"], "Code"),
                 new(BusinessLine => BusinessLine.Name, L["Name"], "Name"),
                 new(BusinessLine => BusinessLine.Description, L["Description"], "Description"),
                 new(BusinessLine => BusinessLine.IsActive, L["Active"], Type: typeof(bool)),
-            },
-            idFunc: BusinessLine => BusinessLine.Id,
+            ],
             searchFunc: async filter => (await BusinessLinesClient
                 .SearchAsync(filter.Adapt<SearchBusinessLinesRequest>()))
                 .Adapt<PaginationResponse<BusinessLineDto>>(),
-            createFunc: async BusinessLine => await BusinessLinesClient.CreateAsync(BusinessLine.Adapt<CreateBusinessLineRequest>()),
-            updateFunc: async (id, BusinessLine) => await BusinessLinesClient.UpdateAsync(id, BusinessLine),
-            deleteFunc: async id => await BusinessLinesClient.DeleteAsync(id),
             exportFunc: async filter =>
             {
                 var exportFilter = filter.Adapt<ExportBusinessLinesRequest>();
                 return await BusinessLinesClient.ExportAsync(exportFilter);
             },
+            idFunc: BusinessLine => BusinessLine.Id,
+            createFunc: async BusinessLine => await BusinessLinesClient.CreateAsync(BusinessLine.Adapt<CreateBusinessLineRequest>()),
+            updateFunc: async (id, BusinessLine) => await BusinessLinesClient.UpdateAsync(id, BusinessLine),
+            deleteFunc: async id => await BusinessLinesClient.DeleteAsync(id),
             importFunc: async FileUploadRequest =>
             {
                 var request = new ImportBusinessLinesRequest() { ExcelFile = FileUploadRequest };
                 await BusinessLinesClient.ImportAsync(request);
-            }
-            );
+            },
+            entityName: L["BusinessLine"],
+            entityNamePlural: L["BusinessLines"],
+            entityResource: FSHResource.BusinessLines);
 }

@@ -4,43 +4,44 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
 
-namespace FSH.BlazorWebAssembly.Client.Pages.People;
+namespace FSH.BlazorWebAssembly.Client.Pages.Integration;
 
-public class TitleAutocomplete : MudAutocomplete<Guid>
+public class CronJobAutocomplete : MudAutocomplete<Guid>
 {
     [Inject]
-    private IStringLocalizer<TitleAutocomplete> L { get; set; } = default!;
+    private IStringLocalizer<CronJobAutocomplete> L { get; set; } = default!;
     [Inject]
-    private ITitlesClient TitlesClient { get; set; } = default!;
+    private ICronJobsClient CronJobsClient { get; set; } = default!;
     [Inject]
     private ISnackbar Snackbar { get; set; } = default!;
 
-    private List<TitleDto> _entityList = new();
+    private List<CronJobDto> _entityList = new();
 
     // supply default parameters, but leave the possibility to override them
+
     public override Task SetParametersAsync(ParameterView parameters)
     {
-        Label = L["Title"];
+        Label = L["CronJob"];
         Variant = Variant.Filled;
         Dense = true;
         Margin = Margin.None;
         ResetValueOnEmptyText = true;
-        SearchFunc = SearchTitles;
-        ToStringFunc = GetTitleName;
+        SearchFunc = SearchCronJobs;
+        ToStringFunc = GetCronJobName;
         Clearable = true;
         return base.SetParametersAsync(parameters);
     }
 
-    // when the value parameter is set, we have to load that one Title to be able to show the name
+    // when the value parameter is set, we have to load that one CronJob to be able to show the name
     // we can't do that in OnInitialized because of a strange bug (https://github.com/MudBlazor/MudBlazor/issues/3818)
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender &&
             _value != default &&
             await ApiHelper.ExecuteCallGuardedAsync(
-                () => TitlesClient.GetAsync(_value), Snackbar) is { } entityDetailsDto)
+                () => CronJobsClient.GetAsync(_value), Snackbar) is { } entityDetailsDto)
         {
-            var entity = new TitleDto
+            var entity = new CronJobDto
             {
                 Id = entityDetailsDto.Id,
                 Code = entityDetailsDto.Code,
@@ -51,17 +52,17 @@ public class TitleAutocomplete : MudAutocomplete<Guid>
         }
     }
 
-    private async Task<IEnumerable<Guid>> SearchTitles(string value)
+    private async Task<IEnumerable<Guid>> SearchCronJobs(string value)
     {
-        var filter = new SearchTitlesRequest
+        var filter = new SearchCronJobsRequest
         {
             PageSize = 10,
-            AdvancedSearch = new() { Fields = new[] { "code", "name"}, Keyword = value }
+            AdvancedSearch = new() { Fields = new[] { "name" }, Keyword = value }
         };
 
         if (await ApiHelper.ExecuteCallGuardedAsync(
-                () => TitlesClient.SearchAsync(filter), Snackbar)
-            is PaginationResponseOfTitleDto response)
+                () => CronJobsClient.SearchAsync(filter), Snackbar)
+            is PaginationResponseOfCronJobDto response)
         {
             _entityList = response.Data.ToList();
         }
@@ -69,6 +70,6 @@ public class TitleAutocomplete : MudAutocomplete<Guid>
         return _entityList.Select(x => x.Id);
     }
 
-    private string GetTitleName(Guid id) =>
+    private string GetCronJobName(Guid id) =>
         _entityList.Find(e => e.Id == id)?.Name ?? string.Empty;
 }

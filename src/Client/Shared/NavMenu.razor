@@ -4,17 +4,146 @@
 <PersonCard
     Style="background-color: var(--mud-palette-drawer-background);color: var(--mud-palette-drawer-text); margin-bottom:0px!important" />
 <MudNavMenu>
-    <MudDivider Class="my-2" />
 @*    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">@L["Home"]</MudNavLink>
 *@
+   
     @if (_canViewChatMessages)
     {
+        <MudDivider Class="my-2" />
         <MudNavLink Href="/Communication/chat" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Message">@L["Chat"]</MudNavLink>
     }
 
+    @if (CanViewGameGroup)
+    {
+        <MudDivider Class="my-2" />
+        <MudNavGroup Title="@L["Game"]" Icon="@Icons.Material.Outlined.Games" Class="mt-2 mb-n2" Expanded="false">
+            @if (_canViewVnPowers)
+            {
+                <MudNavLink Href="/Game/VnPowers" Icon="@Icons.Material.Outlined.LibraryBooks" Class="fsh-nav-child"> @L["Power 6/55"] </MudNavLink>
+            }
+
+            @if (_canViewVnPowerForcasts)
+            {
+                <MudNavLink Href="/Game/VnPowerForcasts" Icon="@Icons.Material.Outlined.LocalLibrary" Class="fsh-nav-child"> @L["Power Forcasts"] </MudNavLink>
+            }
+            @if (_canViewVnPowers)
+            {
+                <MudNavLink Href="/Game/VnPowerResults" Icon="@Icons.Material.Outlined.LibraryBooks" Class="fsh-nav-child"> @L["Power Results"] </MudNavLink>
+            }
+            <MudNavLink Href="/Game/VnPowerStats" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard" Class="fsh-nav-child">
+                @L["Dashboard"]
+            </MudNavLink>
+
+        </MudNavGroup>
+    }
+
+    @if (CanViewElearningGroup)
+    {
+
+        <MudDivider Class="my-2" />
+        <MudNavGroup Title="@L["ELearning"]" Icon="@Icons.Material.Outlined.School" Class="mt-2 mb-n2" Expanded="false">
+            @if (_canViewQuizs)
+            {
+                <MudNavLink Href="/Elearning/Quizs" Icon="@Icons.Material.Outlined.LibraryBooks" Class="fsh-nav-child"> @L["Quizs"] </MudNavLink>
+            }
+            @if (_canViewQuizResults)
+            {
+                <MudNavLink Href="/Elearning/QuizResults" Icon="@Icons.Material.Outlined.Info" Class="fsh-nav-child"> @L["Quiz Results"] </MudNavLink>
+            }
+        </MudNavGroup>
+    }
+
+
+    @if (CanViewPropertyGroup)
+    {
+        <MudDivider Class="my-2" />
+        <MudNavGroup Title="@L["Property"]" Icon="@Icons.Material.Outlined.VideogameAsset" Class="mt-2 mb-n2" Expanded="false">
+            @if (_canViewAssetStats)
+            {
+                <MudNavLink Href="/dashboard/assetstats" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard" Class="fsh-nav-child">
+                    @L["Dashboard"]
+                </MudNavLink>
+            }
+            @if (_canViewAssets)
+            {
+                <MudNavLink Href="/Property/Assets" Icon="@Icons.Material.Outlined.WebAsset" Class="fsh-nav-child"> @L["Assets"] </MudNavLink>
+            }
+            @if (_canViewAssetHistorys)
+            {
+                <MudNavLink Href="/Property/AssetHistorys" Icon="@Icons.Material.Outlined.History" Class="fsh-nav-child"> @L["Asset Histories"] </MudNavLink>
+            }
+        </MudNavGroup>
+    }
+
+    @if (CanViewTimeOffGroup)
+    {
+        <MudDivider Class="my-2" />
+        <MudNavGroup Title="@L["TimeOff"]" Icon="@Icons.Material.Outlined.PeopleAlt" Class="mt-2 mb-n2" Expanded="false">
+
+            @if (_canViewLeaveAllocations)
+            {
+                <MudNavLink Href="/leave/LeaveAllocations" Icon="@Icons.Material.Outlined.Groups2" Class="fsh-nav-child"> @L["Leave Allocation"] </MudNavLink>
+            }
+            @if (_canViewLeaveApplications)
+            {
+                <MudNavLink Href="/leave/LeaveApplications" Icon="@Icons.Material.Outlined.Groups2" Class="fsh-nav-child"> @L["Leave Application"] </MudNavLink>
+            }
+        </MudNavGroup>
+    }
+
+    @if (CanViewOrganizationGroup)
+    {
+        <MudDivider Class="my-2" />
+
+        <MudNavGroup Title="@L["Organization"]" Icon="@Icons.Material.Outlined.AccountBalance" Class="mt-2 mb-n2" Expanded="false">
+            @if (_canViewEmployeeStats)
+            {
+                <MudNavLink Href="/dashboard/employeestats" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard" Class="fsh-nav-child">
+                    @L["Dashboard"]
+                </MudNavLink>
+            }
+
+            @if (_canViewEmployees)
+            {
+                <MudNavLink Href="/People/Employees" Icon="@Icons.Material.Outlined.Groups2" Class="fsh-nav-child"> @L["Employees"] </MudNavLink>
+            }
+
+            @if (_canViewBusinessUnits)
+            {
+                <MudNavLink Href="/Organization/BusinessUnits" Icon="@Icons.Material.Outlined.AccountBalanceWallet" Class="fsh-nav-child"> @L["BusinessUnits"] </MudNavLink>
+            }
+            @if (_canViewDepartments)
+            {
+                <MudNavLink Href="/Organization/Departments" Icon="@Icons.Material.Outlined.SwitchAccount" Class="fsh-nav-child"> @L["Departments"] </MudNavLink>
+            }
+            @if (_canViewSubDepartments)
+            {
+                <MudNavLink Href="/Organization/SubDepartments" Icon="@Icons.Material.Outlined.Groups" Class="fsh-nav-child"> @L["SubDepartments"] </MudNavLink>
+            }
+            @if (_canViewTeams)
+            {
+                <MudNavLink Href="/Organization/Teams" Icon="@Icons.Material.Outlined.Group" Class="fsh-nav-child"> @L["Teams"] </MudNavLink>
+            }
+        </MudNavGroup>
+    }
+
+    @if (CanViewIntegrationGroup)
+    {
+        <MudDivider Class="my-2" />
+        <MudNavGroup Title="@L["Integration"]" Icon="@Icons.Material.Outlined.Settings" Class="mt-2 mb-n2" Expanded="false">
+            @if (_canViewCronJobs)
+            {
+                <MudNavLink Href="/integration/CronJobs" Icon="@Icons.Material.Outlined.QueryStats" Class="fsh-nav-child"> @L["Cron Jobs"] </MudNavLink>
+            }
+            @if (_canViewApiSerials)
+            {
+                <MudNavLink Href="/integration/ApiSerials" Icon="@Icons.Material.Outlined.QueryStats" Class="fsh-nav-child"> @L["Serials Api"] </MudNavLink>
+            }
+
+        </MudNavGroup>
+    }
+
     @if (CanViewGeographyGroup       
-        || CanViewOrganizationGroup
-        || CanViewPeopleGroup
         || CanViewElearningGroup
         || CanViewPurchaseGroup
         || CanViewCatalogGroup
@@ -60,63 +189,7 @@
         </MudNavGroup>
     }
 
-    @if (CanViewOrganizationGroup)
-    {
-        <MudNavGroup Title="@L["Organization"]" Icon="@Icons.Material.Outlined.AccountBalance" Class="mt-2 mb-n2" Expanded="false">
-            @if (_canViewBusinessUnits)
-            {
-                <MudNavLink Href="/Organization/BusinessUnits" Icon="@Icons.Material.Outlined.AccountBalanceWallet" Class="fsh-nav-child"> @L["BusinessUnits"] </MudNavLink>
-            }
-            @if (_canViewDepartments)
-            {
-                <MudNavLink Href="/Organization/Departments" Icon="@Icons.Material.Outlined.SwitchAccount" Class="fsh-nav-child"> @L["Departments"] </MudNavLink>
-            }
-            @if (_canViewSubDepartments)
-            {
-                <MudNavLink Href="/Organization/SubDepartments" Icon="@Icons.Material.Outlined.Groups" Class="fsh-nav-child"> @L["SubDepartments"] </MudNavLink>
-            }
-            @if (_canViewTeams)
-            {
-                <MudNavLink Href="/Organization/Teams" Icon="@Icons.Material.Outlined.Group" Class="fsh-nav-child"> @L["Teams"] </MudNavLink>
-            }
 
-        </MudNavGroup>
-    }
-
-    @if (CanViewPeopleGroup)
-    {
-        <MudNavGroup Title="@L["People"]" Icon="@Icons.Material.Outlined.PeopleAlt" Class="mt-2 mb-n2" Expanded="false">
-            @if (_canViewEmployeeStats)
-            {
-                <MudNavLink Href="/dashboard/employeestats" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard" Class="fsh-nav-child">
-                    @L["Dashboard"]
-                </MudNavLink>
-            }
-            @if (_canViewEmployees)
-            {
-                <MudNavLink Href="/People/Employees" Icon="@Icons.Material.Outlined.Groups2" Class="fsh-nav-child"> @L["Employees"] </MudNavLink>
-            }
-            @if (_canViewTitles)
-            {
-                <MudNavLink Href="/People/Titles" Icon="@Icons.Material.Outlined.Title" Class="fsh-nav-child"> @L["Titles"] </MudNavLink>
-            }
-
-        </MudNavGroup>
-    }
-
-    @if (CanViewElearningGroup)
-    {
-        <MudNavGroup Title="@L["ELearning"]" Icon="@Icons.Material.Outlined.School" Class="mt-2 mb-n2" Expanded="false">
-            @if (_canViewQuizs)
-            {
-                <MudNavLink Href="/Elearning/Quizs" Icon="@Icons.Material.Outlined.LibraryBooks" Class="fsh-nav-child"> @L["Quizs"] </MudNavLink>
-            }
-            @if (_canViewQuizResults)
-            {
-                <MudNavLink Href="/Elearning/QuizResults" Icon="@Icons.Material.Outlined.Info" Class="fsh-nav-child"> @L["Quiz Results"] </MudNavLink>
-            }
-        </MudNavGroup>
-    }
 
     @if (CanViewPurchaseGroup)
     {
@@ -154,30 +227,6 @@
                 <MudNavLink Href="/catalog/SubCategories" Icon="@Icons.Material.Outlined.ViewAgenda" Class="fsh-nav-child"> @L["Sub Categories"] </MudNavLink>
             }
 
-        </MudNavGroup>
-    }
-
-    @if (CanViewPropertyGroup)
-    {
-        <MudNavGroup Title="@L["Property"]" Icon="@Icons.Material.Outlined.VideogameAsset" Class="mt-2 mb-n2" Expanded="false">
-            @if (_canViewAssetStats)
-            {
-                <MudNavLink Href="/dashboard/assetstats" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard" Class="fsh-nav-child">
-                    @L["Dashboard"]
-                </MudNavLink>
-            }
-            @if (_canViewAssets)
-            {
-                <MudNavLink Href="/Property/Assets" Icon="@Icons.Material.Outlined.WebAsset" Class="fsh-nav-child"> @L["Assets"] </MudNavLink>
-            }
-            @if (_canViewAssetHistorys)
-            {
-                <MudNavLink Href="/Property/AssetHistorys" Icon="@Icons.Material.Outlined.History" Class="fsh-nav-child"> @L["Asset Histories"] </MudNavLink>
-            }
-            @if (_canViewAssetStatuses)
-            {
-                <MudNavLink Href="/Property/AssetStatuses" Icon="@Icons.Material.Outlined.QueryStats" Class="fsh-nav-child"> @L["Asset Statuses"] </MudNavLink>
-            }
         </MudNavGroup>
     }
 
@@ -231,9 +280,10 @@
         </MudNavGroup>
     }
 
-    <MudDivider Class="my-2" />
+
     @if (CanViewUserGroup || CanViewSystemGroup)
     {
+        <MudDivider Class="my-2" />
         <MudText Typo="Typo.subtitle2" Color="Color.Primary" Class="ml-4 my-3">@L["Administration"]</MudText>
 
         @if (CanViewUserGroup)
@@ -262,25 +312,48 @@
             </MudNavGroup>
         }
 
+
         @if (CanViewSystemGroup)
         {
             <MudNavGroup Title="@L["System"]" Icon="@Icons.Material.Outlined.Settings" Class="mt-2 mb-n2" Expanded="false">
-                @if (_canViewMenus)
+                @if (_canViewAuditTrails)
                 {
-                    <MudNavLink Href="/settings/menus" Match="NavLinkMatch.All" Target="_blank" Icon="@Icons.Material.Filled.SettingsApplications"
-                                Class="fsh-nav-child">
-                        @L["Menu Settings"]
+                    <MudNavLink Href="/audit-logs" Icon="@Icons.Material.Filled.SecurityUpdateGood" Class="fsh-nav-child">@L["Logs"]</MudNavLink>
+                }
+
+                @if (_canViewDimensions)
+                {
+                    <MudNavLink Href="/settings/dimensions" Icon="@Icons.Material.Filled.Rule" Class="fsh-nav-child"> @L["Dimensions"]
                     </MudNavLink>
+                }
+                @if (_canViewEntityCodes)
+                {
+                    <MudNavLink Href="/settings/EntityCodes" Icon="@Icons.Material.Outlined.Title" Class="fsh-nav-child"> @L["EntityCodes"] </MudNavLink>
+                }
+
+                @if (_canViewBackgroundJobs)
+                {
+                    <MudNavLink Href="/settings/BackgroundJobs" Icon="@Icons.Material.Outlined.QueryStats" Class="fsh-nav-child"> @L["BackgroundJobs"] </MudNavLink>
                 }
                 @if (_canViewHangfire)
                 {
-                    <MudNavLink Href="@_hangfireUrl" Match="NavLinkMatch.All" Target="_blank" Icon="@Icons.Material.Filled.WorkOutline"
-                                Class="fsh-nav-child">@L["Hangfire"]</MudNavLink>
+                    <MudNavLink Href="@_hangfireUrl" Match="NavLinkMatch.All" Target="_blank"
+                        Icon="@Icons.Material.Filled.WorkOutline" Class="fsh-nav-child">@L["Hangfire"]</MudNavLink>
                 }
-                <MudNavLink Href="/audit-logs" Icon="@Icons.Material.Filled.SecurityUpdateGood" Class="fsh-nav-child">@L["Logs"]</MudNavLink>
 
-                <MudNavLink Href="https://localhost:5001/swagger/index.html" Icon="@Icons.Material.Filled.Api" Class="fsh-nav-child">@L["Swagger API"]</MudNavLink>
 
+                @if (_canViewMenus)
+                {
+                    <MudNavLink Href="/settings/menus" Icon="@Icons.Material.Filled.SettingsApplications"
+                                Class="fsh-nav-child">
+                        @L["Menu List"]
+                    </MudNavLink>
+                }
+
+                @if (_canViewSwagger)
+                {
+                    <MudNavLink Href="https://localhost:5001/swagger/index.html" Icon="@Icons.Material.Filled.Api" Class="fsh-nav-child">@L["Swagger API"]</MudNavLink>
+                }
             </MudNavGroup>
         }     
     }

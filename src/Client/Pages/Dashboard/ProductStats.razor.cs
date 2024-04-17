@@ -28,7 +28,9 @@ public partial class ProductStats
     private ICourier Courier { get; set; } = default!;
 
     private readonly string[] _dataEnterBarChartXAxisLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-    private readonly List<MudBlazor.ChartSeries> _dataEnterBarChartSeries = new();
+
+    // private readonly string[] _dataEnterBarChartXAxisLabels = { "Product" };
+    private readonly List<MudBlazor.ChartSeries> _dataEnterBarChartSeries = [];
     private bool _loaded;
 
     protected override async Task OnInitializedAsync()

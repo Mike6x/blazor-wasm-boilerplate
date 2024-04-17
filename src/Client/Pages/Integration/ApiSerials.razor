@@ -1,0 +1,81 @@
+﻿@page "/Integration/ApiSerials"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.ApiSerials)]
+
+@inject IStringLocalizer<ApiSerials> L
+@inject IApiSerialsClient ApiSerialsClient
+@using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
+
+<FshTitle Title="@L["API Serial Infro"]" Description="@L["Manage ApiSerials."]" />
+
+<EntityTable @ref="_table" TEntity="ApiSerialDto" TId="Guid" TRequest="ApiSerialViewModel" Context="@Context">
+    <AdvancedSearchContent>
+        <CronJobAutocomplete @bind-Value="SearchCronJobId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+
+        <MudTextField Placeholder="@L["PoNumber"]" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.FilterAlt" IconSize="Size.Medium"
+                      Style="flex:none!important;margin:0px!important"
+                      @bind-Value="SearchPoNumberString" TextChanged="OnPoNumberStringChanged" Immediate="false" />
+        <MudTextField Placeholder="@L["ItemCode"]" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.FilterAlt" IconSize="Size.Medium"
+                      Style="flex:none!important;margin:0px!important"
+                      @bind-Value="SearchItemCodeString" TextChanged="OnItemCodeStringChanged" Immediate="false" />
+    </AdvancedSearchContent>
+
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="12">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"ApiSerial Internal Id"]" />
+            </MudItem>
+        }
+
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["ItemSerial"]" For="@(() => context.ItemSerial)" @bind-Value="context.ItemSerial" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["ItemCode"]" For="@(() => context.ItemCode)" @bind-Value="context.ItemCode" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["ItemName"]" For="@(() => context.ItemName)" @bind-Value="context.ItemName" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["ItemClass"]" For="@(() => context.ItemClass)" @bind-Value="context.ItemClass" T="string" />
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["PoNumber"]" For="@(() => context.PoNumber)" @bind-Value="context.PoNumber" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["PoStatus"]" For="@(() => context.PoStatus)" @bind-Value="context.PoStatus" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["PoProcessStatus"]" For="@(() => context.PoProcessStatus)" @bind-Value="context.PoProcessStatus" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["ItemBrand"]" For="@(() => context.ItemBrand)" @bind-Value="context.ItemBrand" T="string" />
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="@L["PO Created Date"]" Editable="true" @bind-Date="context.PoCreatedDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="@L["PO Modified Date"]" Editable="true" @bind-Date="context.PoModifiedDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["CustomStatusSys"]" For="@(() => context.CustomStatusSys)" @bind-Value="context.CustomStatusSys" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["CustomStatusIbsm"]" For="@(() => context.CustomStatusIbsm)" @bind-Value="context.CustomStatusIbsm" T="string" />
+        </MudItem>
+
+        <MudItem xs="12" md="6">
+            <CronJobAutocomplete For="@(() => context.CronJobId)" @bind-Value="context.CronJobId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["ImportStatus"]" For="@(() => context.ImportStatus)" @bind-Value="context.ImportStatus" />
+        </MudItem>
+
+    </EditFormContent>
+</EntityTable>

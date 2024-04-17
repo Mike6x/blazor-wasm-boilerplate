@@ -1,0 +1,80 @@
+﻿@page "/Settings/BackgroundJobs"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.BackgroundJobs)]
+
+@inject IStringLocalizer<BackgroundJobs> L
+@inject IBackgroundJobsClient BackgroundJobsClient
+@using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient
+
+<FshTitle Title="@L["Background Jobs"]" Description="@L["Manage BackgroundJobs."]" />
+
+<EntityTable @ref="_table" TEntity="BackgroundJobDto" TId="Guid" TRequest="BackgroundJobViewModel" Context="@Context">
+    <AdvancedSearchContent>
+        <MudSelect Label="Type" @bind-Value="SearchBackgroundJobType" Variant="Variant.Filled">
+            @foreach (BackgroundJobType item in Enum.GetValues(typeof(BackgroundJobType)))
+            {
+                <MudSelectItem Value="@item">@item</MudSelectItem>
+            }
+        </MudSelect>
+
+        <MudDatePicker Label="@L[" From Date"]" Editable="true" @bind-Date="SearchFromDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" />
+        <MudDatePicker Label="@L[" To Date"]" Editable="true" @bind-Date="SearchToDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" />
+
+    </AdvancedSearchContent>
+
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="12">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"BackgroundJob Internal Id"]" />
+            </MudItem>
+        }
+
+        <MudItem xs="12" md="6">
+            <MudTextField Label="@L["Hangfire JobId"]" For="@(() => context.Code)" @bind-Value="context.Code" Disabled="true" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudSelect Label="Command" @bind-Value="context.Command" Variant="Variant.Filled">
+                @foreach (CommandList item in Enum.GetValues(typeof(CommandList)))
+                {
+                    <MudSelectItem Value="@item">@item</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudSelect Label="Type" @bind-Value="context.Type" Variant="Variant.Filled">
+                @foreach (BackgroundJobType item in Enum.GetValues(typeof(BackgroundJobType)))
+                {
+                    <MudSelectItem Value="@item">@item</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+
+        <MudItem xs="12" md="6">
+            <MudTextField Label="@L["Name: Command_yyyyMMdd_HHmm"]" For="@(() => context.Name)" @bind-Value="context.Name" T="string" Disabled="true" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="@L["Run Date"]" Editable="true" @bind-Date="context.LocalDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTimePicker Label="@L["Run Time"]" Editable="true" @bind-Time="context.LocalTimeOfDay" DisableToolbar="true" Variant="Variant.Outlined" />
+        </MudItem>
+
+        <MudItem xs="12" md="6">
+            <BackgroundJobAutocomplete Label="Prevous Job" For="@(() => context.FatherId)" @bind-Value="context.FatherId"
+                                       AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="@L["From Date"]" Editable="true" @bind-Date="context.FromDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudDatePicker Label="@L["To Date"]" Editable="true" @bind-Date="context.ToDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+        </MudItem>
+
+        <MudItem xs="12" md="9">
+            <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Repeat Times"]" For="@(() => context.RepeatTimes)" @bind-Value="context.RepeatTimes" T="int?" />
+        </MudItem>
+    </EditFormContent>
+</EntityTable>

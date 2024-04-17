@@ -41,6 +41,7 @@ public partial class Provinces
 
                 // new(Province => Province.Metropolis, L["Metropolis"], "Metropolis"),
                 // new(Province => Province.Description, L["Description"], "Description"),
+                new(Province => Province.IsActive,  L["Active"], Type: typeof(bool)),
             },
             idFunc: Province => Province.Id,
             searchFunc: async filter => (await ProvincesClient

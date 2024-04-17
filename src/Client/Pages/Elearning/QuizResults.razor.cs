@@ -14,16 +14,11 @@ public partial class QuizResults
     protected IQuizsClient QuizsClient { get; set; } = default!;
 
     protected EntityServerTableContext<QuizResultDto, Guid, QuizResultViewModel> Context { get; set; } = default!;
-
-    private EntityTable<QuizResultDto, Guid, QuizResultViewModel>? _table;
-
     protected override void OnInitialized() =>
     Context = new(
-        entityName: L["QuizResult"],
-        entityNamePlural: L["QuizResults"],
-        entityResource: FSHResource.QuizResults,
-        fields: new()
-        {
+        fields:
+        [
+
                 // new(QuizResult => QuizResult.Id, L["Id"], "Id"),
                 new(QuizResult => QuizResult.QuizCode, L["Quiz Code"], "Quiz.Code"),
                 new(QuizResult => QuizResult.QuizName, L["Quiz Name"], "Quiz.Name"),
@@ -45,18 +40,26 @@ public partial class QuizResults
 
                 new(QuizResult => QuizResult.Rating, L["Rating"], "Rating"),
                 new(QuizResult => QuizResult.IsPass, L["Passed"], Type: typeof(bool)),
+        ],
+        searchFunc: async filter =>
+        {
+            var searchFilter = filter.Adapt<SearchQuizResultsRequest>();
+
+            searchFilter.QuizId = SearchQuizId == default ? null : SearchQuizId;
+
+            var result = await QuizResultsClient.SearchAsync(searchFilter);
+            return result.Adapt<PaginationResponse<QuizResultDto>>();
+        },
+        exportFunc: async filter =>
+        {
+            var exportFilter = filter.Adapt<ExportQuizResultsRequest>();
+
+            exportFilter.QuizId = SearchQuizId == default ? null : SearchQuizId;
+
+            return await QuizResultsClient.ExportAsync(exportFilter);
         },
         enableAdvancedSearch: true,
         idFunc: QuizResult => QuizResult.Id,
-        searchFunc: async filter =>
-        {
-            var quizResultFilter = filter.Adapt<SearchQuizResultsRequest>();
-
-            quizResultFilter.QuizId = SearchQuizId == default ? null : SearchQuizId;
-
-            var result = await QuizResultsClient.SearchAsync(quizResultFilter);
-            return result.Adapt<PaginationResponse<QuizResultDto>>();
-        },
 
         createFunc: async QuizResult =>
         {
@@ -69,17 +72,14 @@ public partial class QuizResults
         },
 
         deleteFunc: async id => await QuizResultsClient.DeleteAsync(id),
+        entityName: L["QuizResult"],
+        entityNamePlural: L["QuizResults"],
+        entityResource: FSHResource.QuizResults);
 
-        exportFunc: async filter =>
-        {
-            var exportFilter = filter.Adapt<ExportQuizResultsRequest>();
+    #region Advanced Search
 
-            exportFilter.QuizId = SearchQuizId == default ? null : SearchQuizId;
+    private EntityTable<QuizResultDto, Guid, QuizResultViewModel>? _table;
 
-            return await QuizResultsClient.ExportAsync(exportFilter);
-        });
-
-    // Advanced Search
     private Guid _searchQuizId;
     private Guid SearchQuizId
     {
@@ -91,7 +91,12 @@ public partial class QuizResults
         }
     }
 
-    // View Student info
+    #endregion
+
+    /// <summary>
+    /// View Student info.
+    /// </summary>
+    /// <param name="userId"></param>
     private void ViewProfile(string userId)
     {
         // if (!string.IsNullOrEmpty(userId))

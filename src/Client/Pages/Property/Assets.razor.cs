@@ -12,77 +12,13 @@ namespace FSH.BlazorWebAssembly.Client.Pages.Property;
 
 public partial class Assets
 {
-    private Guid _businessUnitId;
-    public Guid BusinessUnitId
-    {
-        get => _businessUnitId;
-        set
-        {
-            if(value == Guid.Empty)
-            {
-                DepartmentId = Guid.NewGuid();
-                SubDepartmentId = Guid.NewGuid();
-                TeamId = Guid.NewGuid();
-            }
-
-            _businessUnitId = value;
-            Context.AddEditModal.ForceRender();
-        }
-    }
-
-    private Guid _departmentId;
-    public Guid DepartmentId
-    {
-        get => _departmentId;
-        set
-        {
-            if (value == Guid.Empty)
-            {
-                SubDepartmentId = Guid.NewGuid();
-                TeamId = Guid.NewGuid();
-            }
-
-            _departmentId = value;
-            Context.AddEditModal.ForceRender();
-        }
-    }
-
-    private Guid _subDepartmentId;
-    public Guid SubDepartmentId
-    {
-        get => _subDepartmentId;
-        set
-        {
-            if (value == Guid.Empty)
-            {
-                TeamId = Guid.NewGuid();
-            }
-
-            _subDepartmentId = value;
-            Context.AddEditModal.ForceRender();
-        }
-    }
-
-    private Guid _teamId;
-    public Guid TeamId
-    {
-        get => _teamId;
-        set
-        {
-            _teamId = value;
-            Context.AddEditModal.ForceRender();
-        }
-    }
-
-    public IBrowserFile? File2Upload { get; set; }
     protected EntityServerTableContext<AssetDto, Guid, AssetViewModel> Context { get; set; } = default!;
+    private EntityTable<AssetDto, Guid, AssetViewModel>? _table;
     protected override void OnInitialized() =>
         Context = new(
-            entityName: L["Asset"],
-            entityNamePlural: L["Assets"],
-            entityResource: FSHResource.Assets,
-            fields: new()
-            {
+            fields:
+            [
+
                 // new(Asset => Asset.Id, L["Id"], "Id"),
                 new(asset => asset.Code, L["Code"], "Code"),
                 new(asset => asset.Name, L["Name"], "Name"),
@@ -92,11 +28,30 @@ public partial class Assets
                 new(asset => asset.UsingStatusName, L["Status"], "UsingStatus.Name"),
                 new(asset => asset.EmployeeFirstName, L["FirstName"], "Employee.FirstName"),
                 new(asset => asset.EmployeeLastName, L["LastName"], "Employee.LastName"),
+            ],
+            searchFunc: async filter =>
+            {
+                var assetFilter = filter.Adapt<SearchAssetsRequest>();
+
+                assetFilter.QualityStatusId = SearchQualityStatusId == default ? null : SearchQualityStatusId;
+                assetFilter.UsingStatusId = SearchUsingStatusId == default ? null : SearchUsingStatusId;
+                assetFilter.CategorieId = SearchCategorieId == default ? null : SearchCategorieId;
+                assetFilter.SubCategorieId = SearchSubCategorieId == default ? null : SearchSubCategorieId;
+                var result = await AssetsClient.SearchAsync(assetFilter);
+                return result.Adapt<PaginationResponse<AssetDto>>();
             },
+            exportFunc: async filter =>
+            {
+                var assetFilter = filter.Adapt<ExportAssetsRequest>();
+
+                assetFilter.QualityStatusId = SearchQualityStatusId == default ? null : SearchQualityStatusId;
+                assetFilter.UsingStatusId = SearchUsingStatusId == default ? null : SearchUsingStatusId;
+                assetFilter.CategorieId = SearchCategorieId == default ? null : SearchCategorieId;
+                assetFilter.SubCategorieId = SearchSubCategorieId == default ? null : SearchSubCategorieId;
+                return await AssetsClient.ExportAsync(assetFilter);
+            },
+            enableAdvancedSearch: true,
             idFunc: asset => asset.Id,
-            searchFunc: async filter => (await AssetsClient
-                .SearchAsync(filter.Adapt<SearchAssetsRequest>()))
-                .Adapt<PaginationResponse<AssetDto>>(),
             createFunc: async asset =>
             {
                 if (!string.IsNullOrEmpty(asset.ImageInBytes))
@@ -117,21 +72,132 @@ public partial class Assets
 
                 await AssetsClient.UpdateAsync(id, asset);
                 asset.ImageInBytes = string.Empty;
-
             },
             deleteFunc: async id => await AssetsClient.DeleteAsync(id),
-            exportFunc: async filter =>
-            {
-                var exportFilter = filter.Adapt<ExportAssetsRequest>();
-                return await AssetsClient.ExportAsync(exportFilter);
-            },
             importFunc: async FileUploadRequest =>
             {
                 var request = new ImportAssetsRequest() { ExcelFile = FileUploadRequest };
                 await AssetsClient.ImportAsync(request);
-            }
-            );
+            },
+            entityName: L["Asset"],
+            entityNamePlural: L["Assets"],
+            entityResource: FSHResource.Assets);
 
+    #region Advanced Search
+    private Guid _searchQualityStatusId;
+    private Guid SearchQualityStatusId
+    {
+        get => _searchQualityStatusId;
+        set
+        {
+            _searchQualityStatusId = value;
+            _ = _table?.ReloadDataAsync();
+        }
+    }
+
+    private Guid _searchUsingStatusId;
+    private Guid SearchUsingStatusId
+    {
+        get => _searchUsingStatusId;
+        set
+        {
+            _searchUsingStatusId = value;
+            _ = _table?.ReloadDataAsync();
+        }
+    }
+
+    private Guid _searchCategorieId;
+    private Guid SearchCategorieId
+    {
+        get => _searchCategorieId;
+        set
+        {
+            _searchCategorieId = value;
+            _ = _table?.ReloadDataAsync();
+        }
+    }
+
+    private Guid _searchSubCategorieId;
+    private Guid SearchSubCategorieId
+    {
+        get => _searchSubCategorieId;
+        set
+        {
+            _searchSubCategorieId = value;
+            _ = _table?.ReloadDataAsync();
+        }
+    }
+
+    #endregion
+
+    #region Organization Select
+
+    private Guid _businessUnitId;
+    private Guid BusinessUnitId
+    {
+        get => _businessUnitId;
+        set
+        {
+            if (value == Guid.Empty)
+            {
+                DepartmentId = Guid.NewGuid();
+                SubDepartmentId = Guid.NewGuid();
+                TeamId = Guid.NewGuid();
+            }
+
+            _businessUnitId = value;
+            Context.AddEditModal.ForceRender();
+        }
+    }
+
+    private Guid _departmentId;
+    private Guid DepartmentId
+    {
+        get => _departmentId;
+        set
+        {
+            if (value == Guid.Empty)
+            {
+                SubDepartmentId = Guid.NewGuid();
+                TeamId = Guid.NewGuid();
+            }
+
+            _departmentId = value;
+            Context.AddEditModal.ForceRender();
+        }
+    }
+
+    private Guid _subDepartmentId;
+    private Guid SubDepartmentId
+    {
+        get => _subDepartmentId;
+        set
+        {
+            if (value == Guid.Empty)
+            {
+                TeamId = Guid.NewGuid();
+            }
+
+            _subDepartmentId = value;
+            Context.AddEditModal.ForceRender();
+        }
+    }
+
+    private Guid _teamId;
+    private Guid TeamId
+    {
+        get => _teamId;
+        set
+        {
+            _teamId = value;
+            Context.AddEditModal.ForceRender();
+        }
+    }
+
+    #endregion
+
+    #region File upload
+    private IBrowserFile? File2Upload { get; set; }
     private async Task UploadFiles(InputFileChangeEventArgs e)
     {
         if (e.File != null)
@@ -152,13 +218,13 @@ public partial class Assets
         }
     }
 
-    public void ClearImageInBytes()
+    private void ClearImageInBytes()
     {
         Context.AddEditModal.RequestModel.ImageInBytes = string.Empty;
         Context.AddEditModal.ForceRender();
     }
 
-    public void SetDeleteCurrentImageFlag()
+    private void SetDeleteCurrentImageFlag()
     {
         Context.AddEditModal.RequestModel.ImageInBytes = string.Empty;
         Context.AddEditModal.RequestModel.ImagePath = string.Empty;
@@ -188,20 +254,22 @@ public partial class Assets
         }
     }
 
-    public void ClearDoccumentInBytes()
+    private void ClearDoccumentInBytes()
     {
         File2Upload = null;
         Context.AddEditModal.RequestModel.DoccumentInBytes = string.Empty;
         Context.AddEditModal.ForceRender();
     }
 
-    public void SetDeleteCurrentDoccumentFlag()
+    private void SetDeleteCurrentDoccumentFlag()
     {
         Context.AddEditModal.RequestModel.DoccumentInBytes = string.Empty;
         Context.AddEditModal.RequestModel.DoccumentPath = string.Empty;
         Context.AddEditModal.RequestModel.DeleteCurrentDoccument = true;
         Context.AddEditModal.ForceRender();
     }
+
+    #endregion
 
     private async Task ExportAssetDeliveryForm(Guid? id)
     {

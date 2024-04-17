@@ -1,0 +1,164 @@
+﻿@page "/leave/LeaveApplications"
+@using FSH.BlazorWebAssembly.Client.Pages.Organization
+@using FSH.BlazorWebAssembly.Client.Pages.People
+@using FSH.BlazorWebAssembly.Client.Pages.Settings
+@using System.Globalization
+@attribute [MustHavePermission(FSHAction.View, FSHResource.LeaveApplications)]
+
+@inject IStringLocalizer<LeaveApplications> L
+
+<FshTitle Title="@L["LeaveApplications"]" Description="@L["Manage Leave Applications."]" />
+
+<EntityTable @ref="_table" TEntity="LeaveApplicationDto" TId="Guid" TRequest="LeaveApplicationViewModel" Context="@Context">
+
+    <AdvancedSearchContent>
+        <EmployeeAutocomplete For="@(() => SearchEmployeeId)" @bind-Value="SearchEmployeeId" TransformOrigin="Origin.TopCenter" />
+
+        <EmployeeAutocomplete For="@(() => SearchAppoverId)" @bind-Value="SearchAppoverId" TransformOrigin="Origin.TopCenter" />
+
+        <DimensionAutocomplete @bind-Value="SearchLeaveTypeId"
+                               Label="@L["Leave Type"]" DimensionType="LeaveType"
+                               AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+
+        <MudSelect Label="Status" @bind-Value="SearchRequestStatus" Variant="Variant.Filled">
+            @foreach (RequestStatus item in Enum.GetValues(typeof(RequestStatus)))
+            {
+                <MudSelectItem Value="@item">@item</MudSelectItem>
+            }
+        </MudSelect>
+
+        <MudDatePicker Label="@L["From Date"]" Editable="true" @bind-Date="SearchFromDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+        <MudDatePicker Label="@L["To Date"]" Editable="true" @bind-Date="SearchToDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+    </AdvancedSearchContent>
+
+    <ExtraActions>
+        <MudMenuItem OnClick="(() => ApproveRequest(context.Id))">@L["Approve"]</MudMenuItem>
+        <MudMenuItem OnClick="(() => RejectRequest(context.Id))">@L["Reject"]</MudMenuItem>
+    </ExtraActions>
+
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="6">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"Quiz Id"]" />
+            </MudItem>
+            <MudItem xs="12" md="6"></MudItem>
+        }
+        <MudCard Elevation="25">
+            <MudCardContent>
+                <MudGrid>
+                    @if (Context.AddEditModal.IsCreate)
+                    {
+                        <MudItem xs="12" md="3">
+                            <BusinessUnitAutocomplete For="@(() => BusinessUnitId)" @bind-Value="BusinessUnitId"
+                            AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+                        </MudItem>
+                        <MudItem xs="12" md="3">
+                            <DepartmentAutocomplete For="@(() => DepartmentId)" @bind-Value="DepartmentId" FatherId="BusinessUnitId"
+                            AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+                        </MudItem>
+                        <MudItem xs="12" md="3">
+                            <SubDepartmentAutocomplete For="@(() => SubDepartmentId)" @bind-Value="SubDepartmentId" FatherId="DepartmentId"
+                            AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+                        </MudItem>
+                        <MudItem xs="12" md="3">
+                            <TeamAutocomplete For="@(() => TeamId)" @bind-Value="TeamId" FatherId="SubDepartmentId"
+                                          AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+                    </MudItem>
+                    }
+                    <MudItem xs="12" md="6">
+                        <EmployeeAutocomplete For="@(() => context.EmployeeId)" @bind-Value="context.EmployeeId"
+                                              BusinessUnitId="BusinessUnitId" DepartmentId="DepartmentId" SubDepartmentId="SubDepartmentId" TeamId="TeamId"
+                                              TransformOrigin="Origin.TopCenter" Disabled="!Context.AddEditModal.IsCreate" />
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <EmployeeAutocomplete For="@(() => context.ApproverId)" @bind-Value="context.ApproverId" Label=" Superior"
+                                              BusinessUnitId="BusinessUnitId" DepartmentId="DepartmentId" SubDepartmentId="SubDepartmentId" TeamId="TeamId"
+                                              TransformOrigin="Origin.TopCenter" />
+                    </MudItem>
+
+                    <MudItem xs="12" md="3">
+                        <MudDatePicker Label="@L["From Date"]" Editable="true" @bind-Date="context.LocalFromDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudDatePicker Label="@L["To Date"]" Editable="true" @bind-Date="context.LocalToDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <DimensionAutocomplete For="@(() => context.LeaveTypeId)" @bind-Value="context.LeaveTypeId"
+                                               Label="@L["Leave Type"]" DimensionType="LeaveApplication"
+                                               AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+                    </MudItem>
+
+                    <MudItem xs="12" md="3">
+                        <MudSelect Label="FirstLeaveDay" @bind-Value="context.FirstLeaveDay" Variant="Variant.Filled">
+                            @foreach (DayOffType item in Enum.GetValues(typeof(DayOffType)))
+                            {
+                                <MudSelectItem Value="@item">@item</MudSelectItem>
+                            }
+                        </MudSelect>
+
+                    </MudItem>
+                    <MudItem xs="12" md="3">
+                        <MudSelect Label="LastLeaveDay" @bind-Value="context.LastLeaveDay" Variant="Variant.Filled">
+                            @foreach (DayOffType item in Enum.GetValues(typeof(DayOffType)))
+                            {
+                                <MudSelectItem Value="@item">@item</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+
+
+                    @if (!Context.AddEditModal.IsCreate)
+                    {
+                        <MudItem xs="12" md="3">
+                        </MudItem>
+                        <MudItem xs="12" md="3">
+                            <MudSelect Label="Status" @bind-Value="context.Status" Variant="Variant.Filled" Disabled="true">
+                                @foreach (RequestStatus item in Enum.GetValues(typeof(RequestStatus)))
+                                {
+                                    <MudSelectItem Value="@item">@item</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                    }
+
+                    <MudItem xs="12" md="6">
+                        <MudTextField Label="@L["RequestRemarks"]" For="@(() => context.RequestRemarks)" @bind-Value="context.RequestRemarks" />
+                    </MudItem>
+
+                    @if (!Context.AddEditModal.IsCreate)
+                    {
+                        <MudItem xs="12" md="6">
+                            <MudTextField Label="@L["ApproverRemarks"]" For="@(() => context.ApproverRemarks)" @bind-Value="context.ApproverRemarks" Disabled="Context.AddEditModal.IsCreate" />
+                        </MudItem>
+
+                        <MudItem xs="12" md="3">
+                            <MudTextField Label="@L["Valid Days"]" For="@(() => context.NumberOfValidDays)" @bind-Value="context.NumberOfValidDays" Disabled = "true" />
+                        </MudItem>
+                        <MudItem xs="12" md="3">
+                            <MudTextField Label="@L["OnHand Days"]" For="@(() => context.NumberOfOnHandDays)" @bind-Value="context.NumberOfOnHandDays" Disabled = "true"/>
+                        </MudItem>
+                        <MudItem xs="12" md="3">
+                            <MudDatePicker Label="@L["RequestOn"]" Editable="true" @bind-Date="context.RequestOn" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" Disabled="true" />
+                        </MudItem>
+                        <MudItem xs="12" md="3">
+                            <MudDatePicker Label="@L["ApprovedOn"]" Editable="true" @bind-Date="context.ApprovedOn" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" Disabled="true" />
+                        </MudItem>
+                    }
+
+                </MudGrid>
+            </MudCardContent>
+            <MudCardActions Class="pb-4 pl-4">
+                <MudButton OnClick="(() => SubmitRequest())" Variant="Variant.Filled" Color="Color.Info"
+                           StartIcon="@Icons.Material.Filled.ToggleOn" Style="margin-right: 5px;">@L["Submit"]</MudButton>
+                @if (!Context.AddEditModal.IsCreate)
+                {
+                    <MudButton OnClick="() => ApproveRequest(context.Id)" Variant="Variant.Filled" Color="Color.Success"
+                               StartIcon="@Icons.Material.Filled.MarkEmailUnread" Style="margin-right: 5px;">@L["Approve"]</MudButton>
+                    <MudButton OnClick="() => RejectRequest(context.Id)" Variant="Variant.Filled" Color="Color.Warning"
+                               StartIcon="@Icons.Material.Filled.MarkEmailUnread" Style="margin-right: 5px;">@L["Reject"]</MudButton>
+                }
+            </MudCardActions>
+        </MudCard>
+    </EditFormContent>
+</EntityTable>

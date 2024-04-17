@@ -113,16 +113,16 @@ else
                                 </MudItem>
 
                                 <MudItem xs="12" md="3">
-                                    <MudCheckBox @bind-Checked="_profileModel.IsActive" For="@(() => _profileModel.IsActive)" Label="@_localizer["Active"]"></MudCheckBox>
+                                    <MudCheckBox @bind-Value="_profileModel.IsActive" For="@(() => _profileModel.IsActive)" Label="@_localizer["Active"]"></MudCheckBox>
                                 </MudItem>
                                 <MudItem xs="12" md="3">
-                                    <MudCheckBox @bind-Checked="_profileModel.EmailConfirmed" For="@(() => _profileModel.EmailConfirmed)" Label="@_localizer["Email Confirmation"]"></MudCheckBox>
+                                    <MudCheckBox @bind-Value="_profileModel.EmailConfirmed" For="@(() => _profileModel.EmailConfirmed)" Label="@_localizer["Email Confirmation"]"></MudCheckBox>
                                 </MudItem>
                                 <MudItem xs="12" md="3">
-                                    <MudCheckBox @bind-Checked="IsLocked" For="@(() => IsLocked)" Label="@_localizer["is Locked"]" ReadOnly></MudCheckBox>
+                                    <MudCheckBox @bind-Value="IsLocked" For="@(() => IsLocked)" Label="@_localizer["is Locked"]" ReadOnly></MudCheckBox>
                                 </MudItem>
                                 <MudItem xs="12" md="3">
-                                        <MudCheckBox @bind-Checked="_profileModel.IsLive" For="@(() => _profileModel.IsLive)" Label="@_localizer["Online"]" ReadOnly></MudCheckBox>
+                                        <MudCheckBox @bind-Value="_profileModel.IsLive" For="@(() => _profileModel.IsLive)" Label="@_localizer["Online"]" ReadOnly></MudCheckBox>
                                 </MudItem>
                             </MudGrid>
                         </MudCardContent>

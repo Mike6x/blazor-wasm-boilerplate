@@ -1,4 +1,5 @@
 ﻿@page "/elearning/quizs"
+@using FSH.BlazorWebAssembly.Client.Pages.Settings
 @attribute [MustHavePermission(FSHAction.View, FSHResource.Quizs)]
 
 @inject IStringLocalizer<Quizs> L
@@ -8,26 +9,22 @@
 <EntityTable @ref="_table" TEntity="QuizDto" TId="Guid" TRequest="QuizViewModel" Context="@Context">
     <AdvancedSearchContent>
 
-        <MudSelect Label="Select Type" @bind-Value="SearchQuizTypeId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Filled">
-            @foreach (QuizType item in Enum.GetValues(typeof(QuizType)))
-            {
-                <MudSelectItem Value="@item">@item</MudSelectItem>
-            }
-        </MudSelect>
+        <DimensionAutocomplete @bind-Value="SearchQuizTopicId"
+                                Label="@L["Quiz Topic"]" DimensionType="QuizTopic"
+                                AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
 
-        <MudSelect Label="Select Topic" @bind-Value="SearchQuizTopicId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Filled">
-            @foreach (QuizTopic item in Enum.GetValues(typeof(QuizTopic)))
-            {
-                <MudSelectItem Value="@item">@item</MudSelectItem>
-            }
-        </MudSelect>
 
-        <MudSelect Label="Select Mode" @bind-Value="SearchQuizModeId" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Filled">
-            @foreach (QuizMode item in Enum.GetValues(typeof(QuizMode)))
-            {
-                <MudSelectItem Value="@item">@item</MudSelectItem>
-            }
-        </MudSelect>
+        <DimensionAutocomplete @bind-Value="SearchQuizModeId"
+                                Label="@L["Quiz Mode"]" DimensionType="QuizMode"
+                                AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+
+
+        <DimensionAutocomplete @bind-Value="SearchQuizTypeId"
+                                Label="@L["Quiz Type"]" DimensionType="QuizType"
+                                AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+
+        <MudDatePicker Label="@L["From Date"]" Editable="true" @bind-Date="SearchFromDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+        <MudDatePicker Label="@L["To Date"]" Editable="true" @bind-Date="SearchToDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
 
     </AdvancedSearchContent>
 
@@ -57,11 +54,11 @@
         </MudItem>
 
         <MudItem xs="12" md="3">
-            <MudDatePicker Label="@L["Start Date"]" Editable="true" @bind-Date="context.StartTime" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+            <MudDatePicker Label="@L["Start Date"]" Editable="true" @bind-Date="context.LocalStartDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
         </MudItem>
 
         <MudItem xs="12" md="3">
-            <MudTimePicker Label="@L["Start Time"]" Editable="true" @bind-Time="StartTimeSpan" DisableToolbar="true" Variant="Variant.Outlined" />
+            <MudTimePicker Label="@L["Start Time"]" Editable="true" @bind-Time="context.LocalStartTimeOfDay" DisableToolbar="true" Variant="Variant.Outlined" />
         </MudItem>
 
         <MudItem xs="12" md="3">
@@ -72,10 +69,10 @@
         </MudItem>
 
         <MudItem xs="12" md="3">
-            <MudDatePicker Label="@L["End Date"]" Editable="true" @bind-Date="context.EndTime" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
+            <MudDatePicker Label="@L["End Date"]" Editable="true" @bind-Date="context.LocalEndDate" DateFormat="dd.MM.yyyy" DisableToolbar="true" Variant="Variant.Outlined" />
         </MudItem>
         <MudItem xs="12" md="3">
-            <MudTimePicker Label="@L["End Time"]" Editable="true" @bind-Time="EndTimeSpan" DisableToolbar="true" Variant="Variant.Outlined" />
+            <MudTimePicker Label="@L["End Time"]" Editable="true" @bind-Time="context.LocalEndTimeOfDay" DisableToolbar="true" Variant="Variant.Outlined" />
         </MudItem>
 
         <MudItem xs="12" md="6">
@@ -86,31 +83,23 @@
          </MudItem>
 
         <MudItem xs="12" md="3">
-            <MudCheckBox @bind-Checked="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+            <MudCheckBox @bind-Value="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <DimensionAutocomplete For="@(() => context.QuizTopicId)" @bind-Value="context.QuizTopicId"
+                                    Label="@L["Quiz Topic"]" DimensionType="QuizTopic"
+                                    AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
+        </MudItem>
+                            <MudItem xs="12" md="3">
+            <DimensionAutocomplete For="@(() => context.QuizModeId)" @bind-Value="context.QuizModeId"
+                                    Label="@L["Quiz Mode"]" DimensionType="QuizMode"
+                                    AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
         </MudItem>
         <MudItem xs="12" md="3">
-            <MudSelect Label="Select Topic" @bind-Value="context.QuizTopic" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Filled">
-                @foreach (QuizTopic item in Enum.GetValues(typeof(QuizTopic)))
-                {
-                    <MudSelectItem Value="@item">@item</MudSelectItem>
-                }
-            </MudSelect>
-        </MudItem>
-        <MudItem xs="12" md="3">
-            <MudSelect Label="Select Mode" @bind-Value="context.QuizMode" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Filled">
-                @foreach (QuizMode item in Enum.GetValues(typeof(QuizMode)))
-                {
-                    <MudSelectItem Value="@item">@item</MudSelectItem>
-                }
-            </MudSelect>
-        </MudItem>
-        <MudItem xs="12" md="3">
-            <MudSelect Label="Select Type" @bind-Value="context.QuizType" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Variant="Variant.Filled">
-                @foreach (QuizType item in Enum.GetValues(typeof(QuizType)))
-                {
-                    <MudSelectItem Value="@item">@item</MudSelectItem>
-                }
-            </MudSelect>
+            <DimensionAutocomplete For="@(() => context.QuizTypeId)" @bind-Value="context.QuizTypeId"
+                                    Label="@L["Quiz Type"]" DimensionType="QuizType"
+                                    AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" />
         </MudItem>
 
         <MudItem xs="12" md="6">

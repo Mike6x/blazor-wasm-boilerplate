@@ -1,0 +1,63 @@
+﻿@page "/Settings/EntityCodes"
+@attribute [MustHavePermission(FSHAction.View, FSHResource.EntityCodes)]
+
+@inject IStringLocalizer<EntityCodes> L
+@inject IEntityCodesClient EntityCodesClient
+
+<FshTitle Title="@L["EntityCodes"]" Description="@L["Manage EntityCodes."]" />
+
+<EntityTable @ref="_table" TEntity="EntityCodeDto" TId="Guid" TRequest="UpdateEntityCodeRequest" Context="@Context">
+    <AdvancedSearchContent>
+
+        <MudSelect Label="Type" @bind-Value="SearchCodeType" Variant="Variant.Filled">
+            @foreach (CodeType item in Enum.GetValues(typeof(CodeType)))
+            {
+                <MudSelectItem Value="@item">@item</MudSelectItem>
+            }
+        </MudSelect>
+
+    </AdvancedSearchContent>
+
+    <EditFormContent>
+        @if (!Context.AddEditModal.IsCreate)
+        {
+            <MudItem xs="12" md="12">
+                <MudTextField Value="context.Id" ReadOnly DisableUnderLine Label="@L[$"EntityCode Id"]" />
+            </MudItem>
+        }
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Order"]" For="@(() => context.Order)" @bind-Value="context.Order" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Code"]" For="@(() => context.Code)" @bind-Value="context.Code" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Name"]" For="@(() => context.Name)" @bind-Value="context.Name" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudSelect Label="Type" @bind-Value="context.Type" Variant="Variant.Filled">
+                @foreach (CodeType item in Enum.GetValues(typeof(CodeType)))
+                {
+                    <MudSelectItem Value="@item">@item</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Seperator"]" For="@(() => context.Seperator)" @bind-Value="context.Seperator" T="string" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField Label="@L["Value"]" For="@(() => context.Value)" @bind-Value="context.Value" />
+        </MudItem>
+
+        <MudItem xs="12" md="3">
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudCheckBox @bind-Value="context.IsActive" For="@(() => context.IsActive)" Label="@L["Active"]"></MudCheckBox>
+        </MudItem>
+
+        <MudItem xs="12" md="12">
+            <MudTextField Label="@L["Description"]" For="@(() => context.Description)" @bind-Value="context.Description" T="string" />
+        </MudItem>
+    </EditFormContent>
+</EntityTable>

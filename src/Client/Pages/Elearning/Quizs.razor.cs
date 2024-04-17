@@ -2,6 +2,7 @@
 using FSH.BlazorWebAssembly.Client.Infrastructure.ApiClient;
 using FSH.BlazorWebAssembly.Client.Infrastructure.Common;
 using FSH.WebApi.Shared.Authorization;
+using FSH.WebApi.Shared.Helper;
 using Mapster;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -20,9 +21,6 @@ public partial class Quizs
     protected IQuizsClient QuizsClient { get; set; } = default!;
 
     protected EntityServerTableContext<QuizDto, Guid, QuizViewModel> Context { get; set; } = default!;
-    private IBrowserFile? UploadFile { get; set; }
-
-    private EntityTable<QuizDto, Guid, QuizViewModel>? _table;
 
     protected override async Task OnInitializedAsync()
     {
@@ -32,11 +30,9 @@ public partial class Quizs
         }
 
         Context = new(
-        entityName: L["Quiz"],
-        entityNamePlural: L["Quizs"],
-        entityResource: FSHResource.Quizs,
-        fields: new()
-            {
+        fields:
+            [
+
                 // new(Quiz => Quiz.Id, L["Id"], "Id"),
                 new(Quiz => Quiz.Code, L["Code"], "Code"),
                 new(Quiz => Quiz.Name, L["Name"], "Name"),
@@ -45,9 +41,9 @@ public partial class Quizs
                 new(Quiz => Quiz.StartTime.ToLocalTime(), L["StartTime"], "StartTime", Type: typeof(DateTime)),
                 new(Quiz => Quiz.EndTime.ToLocalTime(), L["EndTime"], "EndTime", Type: typeof(DateTime)),
 
-                new(Quiz => Quiz.QuizTopic, L["Topic"], "QuizTopic"),
-                new(Quiz => Quiz.QuizMode, L["Mode"], "QuizMode"),
-                new(Quiz => Quiz.QuizType, L["Type"], "QuizType"),
+                new(Quiz => Quiz.QuizTopicName, L["Topic"], "QuizTopic.Name"),
+                new(Quiz => Quiz.QuizModeName, L["Mode"], "QuizMode.Name"),
+                new(Quiz => Quiz.QuizTypeName, L["Type"], "QuizType>name"),
 
                 // new(Quiz => Quiz.QuizPath, L["QuizPath"], "QuizPath"),
                 new(Quiz => Quiz.Price, L["Price"], "Price"),
@@ -56,20 +52,34 @@ public partial class Quizs
                 new(Quiz => Quiz.RatingCount, L["RatingCount"], "Reviewers"),
 
                 new(Quiz => Quiz.IsActive, L["Active"], Type: typeof(bool)),
-            },
-        enableAdvancedSearch: true,
-        idFunc: Quiz => Quiz.Id,
+            ],
         searchFunc: async filter =>
         {
-            var quizFilter = filter.Adapt<SearchQuizsRequest>();
+            var searchFilter = filter.Adapt<SearchQuizsRequest>();
+            searchFilter.QuizTypeId = SearchQuizTypeId == default ? null : SearchQuizTypeId;
+            searchFilter.QuizTopicId = SearchQuizTopicId == default ? null : SearchQuizTopicId;
+            searchFilter.QuizModeId = SearchQuizModeId == default ? null : SearchQuizModeId;
 
-            quizFilter.QuizType = SearchQuizTypeId == QuizType.All ? null : SearchQuizTypeId;
-            quizFilter.QuizTopic = SearchQuizTopicId == QuizTopic.All ? null : SearchQuizTopicId;
-            quizFilter.QuizMode = SearchQuizModeId == QuizMode.All ? null : SearchQuizModeId;
+            searchFilter.FromDate = SearchFromDate;
+            searchFilter.ToDate = SearchToDate;
 
-            var result = await QuizsClient.SearchAsync(quizFilter);
+            var result = await QuizsClient.SearchAsync(searchFilter);
             return result.Adapt<PaginationResponse<QuizDto>>();
         },
+
+        exportFunc: async filter =>
+        {
+            var exportFilter = filter.Adapt<ExportQuizsRequest>();
+            exportFilter.QuizTypeId = SearchQuizTypeId == default ? null : SearchQuizTypeId;
+            exportFilter.QuizTopicId = SearchQuizTopicId == default ? null : SearchQuizTopicId;
+            exportFilter.QuizModeId = SearchQuizModeId == default ? null : SearchQuizModeId;
+            exportFilter.FromDate = SearchFromDate;
+            exportFilter.ToDate = SearchToDate;
+
+            return await QuizsClient.ExportAsync(exportFilter);
+        },
+        enableAdvancedSearch: true,
+        idFunc: Quiz => Quiz.Id,
 
         createFunc: async quiz =>
         {
@@ -85,8 +95,9 @@ public partial class Quizs
                 };
             }
 
-            GetStartTime();
-            GetEndTime();
+            quiz.StartTime = DateTimeHelper.Local2UTC(quiz.LocalStartDate ?? DateTime.Now, quiz.LocalStartTimeOfDay ?? TimeSpan.Zero);
+            quiz.EndTime = DateTimeHelper.Local2UTC(quiz.LocalEndDate ?? DateTime.Now, quiz.LocalEndTimeOfDay ?? TimeSpan.Zero);
+
             await QuizsClient.CreateAsync(quiz.Adapt<CreateQuizRequest>());
             quiz.QuizInBytes = string.Empty;
         },
@@ -106,64 +117,21 @@ public partial class Quizs
                 };
             }
 
-            GetStartTime();
-            GetEndTime();
+            quiz.StartTime = DateTimeHelper.Local2UTC(quiz.LocalStartDate ?? DateTime.Now, quiz.LocalStartTimeOfDay ?? TimeSpan.Zero);
+            quiz.EndTime = DateTimeHelper.Local2UTC(quiz.LocalEndDate ?? DateTime.Now, quiz.LocalEndTimeOfDay ?? TimeSpan.Zero);
+
             await QuizsClient.UpdateAsync(id, quiz.Adapt<UpdateQuizRequest>());
             quiz.QuizInBytes = string.Empty;
         },
-
         deleteFunc: async id => await QuizsClient.DeleteAsync(id),
-
-        exportFunc: async filter =>
-        {
-            var exportFilter = filter.Adapt<ExportQuizsRequest>();
-
-            // exportFilter.BrandId = SearchBrandId == default ? null : SearchBrandId;
-            // exportFilter.MinimumRate = SearchMinimumRate;
-            // exportFilter.MaximumRate = SearchMaximumRate;
-
-            return await QuizsClient.ExportAsync(exportFilter);
-        },
         importFunc: async FileUploadRequest =>
         {
             var request = new ImportQuizsRequest() { ExcelFile = FileUploadRequest };
             await QuizsClient.ImportAsync(request);
-        }
-        );
-    }
-
-    // Advanced Search
-    private QuizType _searchQuizTypeId = QuizType.All;
-    private QuizType SearchQuizTypeId
-    {
-        get => _searchQuizTypeId;
-        set
-        {
-            _searchQuizTypeId = value;
-            _ = _table?.ReloadDataAsync();
-        }
-    }
-
-    private QuizTopic _searchQuizTopicId = QuizTopic.All;
-    private QuizTopic SearchQuizTopicId
-    {
-        get => _searchQuizTopicId;
-        set
-        {
-            _searchQuizTopicId = value;
-            _ = _table?.ReloadDataAsync();
-        }
-    }
-
-    private QuizMode _searchQuizModeId = QuizMode.All;
-    private QuizMode SearchQuizModeId
-    {
-        get => _searchQuizModeId;
-        set
-        {
-            _searchQuizModeId = value;
-            _ = _table?.ReloadDataAsync();
-        }
+        },
+        entityName: L["Quiz"],
+        entityNamePlural: L["Quizs"],
+        entityResource: FSHResource.Quizs);
     }
 
     // Take a Quiz
@@ -176,6 +144,8 @@ public partial class Quizs
     // TODO : Make this as a shared service or something? Since it's used by Profile Component also for now, and literally any other component that will have image upload.
     // The new service should ideally return $"data:{ApplicationConstants.StandardImageFormat};base64,{Convert.ToBase64String(buffer)}"
 
+    #region Quiz Upload
+    private IBrowserFile? UploadFile { get; set; }
     public void ClearQuizInBytes()
     {
         UploadFile = null;
@@ -212,66 +182,140 @@ public partial class Quizs
             Context.AddEditModal.ForceRender();
         }
     }
+    #endregion
 
-    private TimeSpan? _startTimeSpan;
-    public TimeSpan? StartTimeSpan
+    #region Advanced Search
+    private EntityTable<QuizDto, Guid, QuizViewModel>? _table;
+
+    private Guid _searchQuizTypeId;
+    private Guid SearchQuizTypeId
     {
-        get
-        {
-            if (_startTimeSpan == null && Context.AddEditModal.RequestModel.StartTime != null)
-                _startTimeSpan = Context.AddEditModal.RequestModel.StartTime.Value.ToLocalTime().TimeOfDay;
-            return _startTimeSpan;
-        }
+        get => _searchQuizTypeId;
         set
         {
-            _startTimeSpan = value;
+            _searchQuizTypeId = value;
+            _ = _table?.ReloadDataAsync();
         }
     }
 
-    private TimeSpan? _endTimeSpan;
-    public TimeSpan? EndTimeSpan
+    private Guid _searchQuizTopicId;
+    private Guid SearchQuizTopicId
     {
-        get
-        {
-            if (_endTimeSpan == null && Context.AddEditModal.RequestModel.EndTime != null)
-                _endTimeSpan = Context.AddEditModal.RequestModel.EndTime.Value.ToLocalTime().TimeOfDay;
-            return _endTimeSpan;
-        }
+        get => _searchQuizTopicId;
         set
         {
-            _endTimeSpan = value;
+            _searchQuizTopicId = value;
+            _ = _table?.ReloadDataAsync();
         }
     }
 
-    private void GetStartTime()
+    private Guid _searchQuizModeId;
+    private Guid SearchQuizModeId
     {
-
-        if (Context.AddEditModal.RequestModel.StartTime == null)
+        get => _searchQuizModeId;
+        set
         {
-            Context.AddEditModal.RequestModel.StartTime = DateTime.Now.ToLocalTime().Date;
-            StartTimeSpan = DateTime.Now.ToLocalTime().TimeOfDay;
+            _searchQuizModeId = value;
+            _ = _table?.ReloadDataAsync();
         }
-
-        DateTime localTime = Context.AddEditModal.RequestModel.StartTime.Value.Date.Add(StartTimeSpan ?? TimeSpan.Zero);
-        Context.AddEditModal.RequestModel.StartTime = TimeZoneInfo.ConvertTimeToUtc(localTime);
     }
 
-    private void GetEndTime()
+    private DateTime? _searchFromDate;
+    private DateTime? SearchFromDate
     {
-        if (Context.AddEditModal.RequestModel.EndTime == null)
+        get => _searchFromDate;
+        set
         {
-            Context.AddEditModal.RequestModel.EndTime = DateTime.Now.ToLocalTime().Date;
-            EndTimeSpan = DateTime.Now.ToLocalTime().TimeOfDay;
+            _searchFromDate = value;
+            _ = _table?.ReloadDataAsync();
         }
-
-        DateTime localTime = Context.AddEditModal.RequestModel.EndTime.Value.Date.Add(EndTimeSpan ?? TimeSpan.Zero);
-        Context.AddEditModal.RequestModel.EndTime = TimeZoneInfo.ConvertTimeToUtc(localTime);
     }
+
+    private DateTime? _searchToDate;
+    private DateTime? SearchToDate
+    {
+        get => _searchToDate;
+        set
+        {
+            _searchToDate = value;
+            _ = _table?.ReloadDataAsync();
+        }
+    }
+    #endregion
 }
 
 public class QuizViewModel : UpdateQuizRequest
 {
+    #region File Upload
     public string? QuizPath { get; set; }
     public string? QuizInBytes { get; set; }
     public string? QuizExtension { get; set; }
+    #endregion
+
+    #region Date and Time Picker
+
+    private TimeSpan? _localStartTimeOfDay;
+    public TimeSpan? LocalStartTimeOfDay
+    {
+        get
+        {
+            if (_localStartTimeOfDay == null && StartTime != null)
+                _localStartTimeOfDay = StartTime.Value.ToLocalTime().TimeOfDay;
+
+            return _localStartTimeOfDay;
+        }
+        set
+        {
+            _localStartTimeOfDay = value;
+        }
+    }
+
+    private DateTime? _localStartDate;
+    public DateTime? LocalStartDate
+    {
+        get
+        {
+            if (_localStartDate == null && StartTime != null)
+                _localStartDate = StartTime.Value.ToLocalTime();
+
+            return _localStartDate;
+        }
+        set
+        {
+            _localStartDate = value;
+        }
+    }
+
+    private TimeSpan? _localEndTimeOfDay;
+    public TimeSpan? LocalEndTimeOfDay
+    {
+        get
+        {
+            if (_localEndTimeOfDay == null && EndTime != null)
+                _localEndTimeOfDay = EndTime.Value.ToLocalTime().TimeOfDay;
+
+            return _localEndTimeOfDay;
+        }
+        set
+        {
+            _localEndTimeOfDay = value;
+        }
+    }
+
+    private DateTime? _localEndDate;
+    public DateTime? LocalEndDate
+    {
+        get
+        {
+            if (_localEndDate == null && EndTime != null)
+                _localEndDate = EndTime.Value.ToLocalTime();
+
+            return _localEndDate;
+        }
+        set
+        {
+            _localEndDate = value;
+        }
+    }
+    #endregion
 }
